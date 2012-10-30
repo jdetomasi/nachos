@@ -86,10 +86,9 @@ class Lock {
   bool isHeldByCurrentThread();	
 
   private:
-    const char* name;				// for debugging
-    Semaphore* semaphore;
-    Thread* lockHolder;
-    // a�adir aqu� otros campos que sean necesarios
+    const char* name;				// para depuraci�n
+    Thread* holderThread;                       // Thread actualmente utilizando el lock.
+    Semaphore* lockSem;                          // Semaforo binario. Maneja el lock.
 };
 
 //  La siguiente clase define una "variable condici�n". Una variable condici�n
@@ -145,7 +144,6 @@ class Condition {
 
   private:
     const char* name;
-    List<Thread> *waitingThreads;
     // aqu� se a�aden otros campos que sean necesarios
 };
 

@@ -100,36 +100,33 @@ Semaphore::V()
 // Dummy functions -- so we can compile our later assignments 
 // Note -- without a correct implementation of Condition::Wait(), 
 // the test case in the network assignment won't work!
-Lock::Lock(const char* debugName) {
+Lock::Lock(const char* debugName) 
+{  
   name = debugName;
-  semaphore = new Semaphore("Lock Semaphore", 1);
+  holderThread = NULL;
+  lockSem = new Semaphore("Semaphore from Lock", 1);
 }
 
-Lock::~Lock() {
-  // TODO aprender c++!!!
-  delete semaphore;
+Lock::~Lock(){
+  delete lockSem;
 }
 
 void Lock::Acquire() {
-  // Chequeo que el que lock pedido no este
-  // actualmente bloqueado por este mismo thread
-  ASSERT(!isHeldByCurrentThread())
-  semaphore->P();
-  lockHolder = currentThread;
+  ASSERT( isHeldByCurrentThread() );       // Arrgh! - Thread already owns the lock!
+  lockSem->P();                            // Si el lock esta libre, lo toma; si no lo esta, espera a que le sea entregado.
 }
 
+
 void Lock::Release() {
-  // Chequeo que el thread actual sea el propietario actual del lock
-  ASSERT (isHeldByCurrentThread())
-  lockHolder = NULL; // Es importante hacer esto antes que V() de lo contrario
-		     // podria ocurrir un cambio de contexto despues de V()
-		     // y al retomar la ejecucion de este thread pisar la variables
-		       // lockHolder
-  semaphore->V();
+  ASSERT(!isHeldByCurrentThread());       // Arrgh! - Thread not in possesion of the lock and doing a Release()!
+  holderThread = NULL;                    // Primero marcamos como NULL el holder, ya que de ocurrir un cambio de contexto
+                                          // antes de realizarlo habiendo desactivado el semaforo, puede hacer que al volver,
+                                          // pisemos el nuevo thread al volver a este punto.
+  lockSem->V();                           // Se libera el lock.
 }
 
 bool Lock::isHeldByCurrentThread() {
-  return (currentThread == lockHolder);
+  return(currentThread == holderThread); // Chequea que el thread actual sea el poseedor del lock.
 }
 
 Condition::Condition(const char* debugName, Lock* conditionLock) { }
