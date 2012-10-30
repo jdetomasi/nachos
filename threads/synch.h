@@ -86,7 +86,9 @@ class Lock {
   bool isHeldByCurrentThread();	
 
   private:
-    const char* name;				// para depuraci�n
+    const char* name;				// for debugging
+    Semaphore* semaphore;
+    Thread* lockHolder;
     // a�adir aqu� otros campos que sean necesarios
 };
 
@@ -143,6 +145,7 @@ class Condition {
 
   private:
     const char* name;
+    List<Thread> *waitingThreads;
     // aqu� se a�aden otros campos que sean necesarios
 };
 
