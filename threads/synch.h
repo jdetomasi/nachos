@@ -91,11 +91,11 @@ class Lock {
     Semaphore* lockSem;                          // Semaforo binario. Maneja el lock.
 };
 
-//  La siguiente clase define una "variable condici�n". Una variable condici�n
+//  La siguiente clase define una "variable condicion". Una variable condicion
 //  no tiene valor alguno. Se utiliza para encolar hilos que esperan (Wait) a
-//  que otro hilo les avise (Signal). Las variables condici�n est�n vinculadas
+//  que otro hilo les avise (Signal). Las variables condicion estan vinculadas
 //  a un cerrojo (Lock). 
-//  Estas son las tres operaciones sobre una variable condici�n:
+//  Estas son las tres operaciones sobre una variable condicion:
 //
 //     Wait()      -- libera el cerrojo y expulsa al hilo de la CPU.
 //                    El hilo se espera hasta que alguien le hace un Signal()
@@ -103,53 +103,54 @@ class Lock {
 //     Signal()    -- si hay alguien esperando en la variable, despierta a uno
 //                    de los hilos. Si no hay nadie esperando, no ocurre nada.
 //
-//     Broadcast() -- despierta a todos los hilos que est�n esperando
+//     Broadcast() -- despierta a todos los hilos que estan esperando
 //
 //
-//  Todas las operaciones sobre una variable condici�n deben ser realizadas
+//  Todas las operaciones sobre una variable condicion deben ser realizadas
 //  adquiriendo previamente el cerrojo. Esto significa que las operaciones
-//  sobre variables condici�n han de ejecutarse en exclusi�n mutua.
+//  sobre variables condicion han de ejecutarse en exclusion mutua.
 //
-//  Las variables condici�n de Nachos deber�an funcionar seg�n el estilo
+//  Las variables condicion de Nachos deberian funcionar segun el estilo
 //  "Mesa". Cuando un Signal() o Broadast() despierta a otro hilo,
-//  �ste se coloca en la cola de preparados. El hilo despertado es responsable
+//  este se coloca en la cola de preparados. El hilo despertado es responsable
 //  de volver a adquirir el cerrojo. Esto lo deben implementar en el cuerpo de
-//  la funci�n Wait().
-//  En contraste, tambi�n existe otro estilo de variables condici�n, seg�n
-//  el estilo "Hoare", seg�n el cual el hilo que hace el Signal() pierde
+//  la funcion Wait().
+//  En contraste, tambien existe otro estilo de variables condicion, segun
+//  el estilo "Hoare", segun el cual el hilo que hace el Signal() pierde
 //  el control del cerrojo y entrega la CPU al hilo despertado, quien se
 //  ejecuta de inmediato y cuando libera el cerrojo, devuelve el control
-//  al hilo que efectu� el Signal().
+//  al hilo que efectuo el Signal().
 //
-//  El estilo "Mesa" es algo m�s f�cil de implementar, pero no garantiza
+//  El estilo "Mesa" es algo mas facil de implementar, pero no garantiza
 //  que el hilo despertado recupere de inmediato el control del cerrojo.
 
 class Condition {
  public:
-    // Constructor: se le indica cu�l es el cerrojo al que pertenece
-    // la variable condici�n
+    // Constructor: se le indica cual es el cerrojo al que pertenece
+    // la variable condicion
     Condition(const char* debugName, Lock* conditionLock);	
 
     // libera el objeto
     ~Condition();	
     const char* getName() { return (name); }
 
-    // Las tres operaciones sobre variables condici�n.
+    // Las tres operaciones sobre variables condicion.
     // El hilo que invoque a cualquiera de estas operaciones debe tener
     // adquirido el cerrojo correspondiente; de lo contrario se debe
     // producir un error.
-    void Wait(); 	
-    void Signal();   
+    void Wait();	
+    void Signal();
     void Broadcast();
 
   private:
     const char* name;
-    // aqu� se a�aden otros campos que sean necesarios
+    Lock* conditionLock;
+    List<Thread*> *waitingList;
 };
 
 /*
 
-C�digo original del Nachos para las variables condici�n - NO USAR
+Codigo original del Nachos para las variables condicion - NO USAR
   
 class Condition {
   public:

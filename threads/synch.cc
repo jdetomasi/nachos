@@ -102,37 +102,69 @@ Semaphore::V()
 // the test case in the network assignment won't work!
 Lock::Lock(const char* debugName) 
 {  
-  name = debugName;
-  holderThread = NULL;
-  lockSem = new Semaphore("Semaphore from Lock", 1);
+    name = debugName;
+    holderThread = NULL;
+    lockSem = new Semaphore("Semaphore from Lock", 1);
 }
 
 Lock::~Lock(){
-  delete lockSem;
+    delete lockSem;
 }
 
 void Lock::Acquire() {
-  ASSERT( isHeldByCurrentThread() );       // Arrgh! - Thread already owns the lock!
-  lockSem->P();                            // Si el lock esta libre, lo toma; si no lo esta, espera a que le sea entregado.
+    ASSERT( isHeldByCurrentThread() );       // Arrgh! - Thread already owns the lock!
+    lockSem->P();                            // Si el lock esta libre, lo toma; si no lo esta, espera a que le sea entregado.
 }
 
 
 void Lock::Release() {
-  ASSERT(!isHeldByCurrentThread());       // Arrgh! - Thread not in possesion of the lock and doing a Release()!
-  holderThread = NULL;                    // Primero marcamos como NULL el holder, ya que de ocurrir un cambio de contexto
+    ASSERT(!isHeldByCurrentThread());       // Arrgh! - Thread not in possesion of the lock and doing a Release()!
+    holderThread = NULL;                    // Primero marcamos como NULL el holder, ya que de ocurrir un cambio de contexto
                                           // antes de realizarlo habiendo desactivado el semaforo, puede hacer que al volver,
                                           // pisemos el nuevo thread al volver a este punto.
-  lockSem->V();                           // Se libera el lock.
+    lockSem->V();                           // Se libera el lock.
 }
 
 bool Lock::isHeldByCurrentThread() {
-  return(currentThread == holderThread); // Chequea que el thread actual sea el poseedor del lock.
+    return(currentThread == holderThread); // Chequea que el thread actual sea el poseedor del lock.
 }
 
-Condition::Condition(const char* debugName, Lock* conditionLock) { }
-Condition::~Condition() { }
-void Condition::Wait() { ASSERT(false); }
-void Condition::Signal() { }
-void Condition::Broadcast() { }
+Condition::Condition(const char* debugName, Lock* condLock) { 
+    name = debugName;
+    this->conditionLock = condLock;
+    waitingList = new List<Thread*>;
+}
+
+Condition::~Condition() {
+    delete conditionLock;
+    delete waitingList;
+ }
+
+void Condition::Wait() { 
+    ASSERT(conditionLock->isHeldByCurrentThread()); // Chequea que el thread actual sea el poseedor del lock
+    waitingList->Append(currentThread);             // Añado el thread actual a la waitingQueue a la espera de la señal
+    conditionLock->Release();                       // Libero el lock
+    currentThread->Sleep();                         // Pongo el thread actual a dormir!
+    conditionLock->Acquire();                       // Recupero el cerrojo
+}
+void Condition::Signal() { 
+    ASSERT(conditionLock->isHeldByCurrentThread()); // Chequea que el thread actual sea el poseedor del lock
+
+    Thread *threadToWake;
+    if (!waitingList->IsEmpty()) {
+      threadToWake = waitingList->Remove();               // Tomo el primer thread de la lista de espera
+      scheduler->ReadyToRun(threadToWake);                // thread esta listo para continuar su ejecucion
+    }
+}
+
+void Condition::Broadcast() { 
+    ASSERT(conditionLock->isHeldByCurrentThread()); // Chequea que el thread actual sea el poseedor del lock
+
+    Thread *threadToWake;
+    while (!waitingList->IsEmpty()) {
+      threadToWake = waitingList->Remove();               // Tomo el primer thread de la lista de espera
+      scheduler->ReadyToRun(threadToWake);                // thread esta listo para continuar su ejecucion
+    }
+}
 
 
