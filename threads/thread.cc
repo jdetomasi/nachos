@@ -24,7 +24,7 @@
 // for detecting stack overflows
 const unsigned STACK_FENCEPOST = 0xdeadbeef;	
 
-//----------------------------------------------------------------------
+//---------------------------------------------------------------------
 // Thread::Thread
 // 	Initialize a thread control block, so that we can then call
 //	Thread::Fork.
@@ -309,4 +309,40 @@ Thread::RestoreUserState()
     for (int i = 0; i < NumTotalRegs; i++)
 	machine->WriteRegister(i, userRegisters[i]);
 }
+
+//---------------------------------------------------------------------
+// Thread::Thread
+// 	Initialize a special thread control block, so that we can then call
+//	Thread::Fork. The created thread is to be join later.
+//
+//	"threadName" is an arbitrary string, useful for debugging.
+//  "" is a ??? that points that a join is to be called in this thread.
+//----------------------------------------------------------------------
+
+Thread::Thread(const char* threadName, ???)
+{
+    name = threadName;
+    stackTop = NULL;
+    stack = NULL;
+    status = JUST_CREATED;
+#ifdef USER_PROGRAM
+    space = NULL;
+#endif
+}
+
+
+
+//---------------------------------------------------------------------
+// Thread::Join()
+// 	Suspend the caller thread and then signals it when if finishes
+//	
+// Note that if the Thread is to be joinable later, it should be marked 
+// at the creation of it.
+//----------------------------------------------------------------------
+
+
+void Thread::Join(){
+	
+}
+
 #endif

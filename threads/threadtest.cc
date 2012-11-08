@@ -14,6 +14,11 @@
 
 #include "copyright.h"
 #include "system.h"
+#include "synch.h"
+#include "string.h"
+
+Lock* lock;
+Condition* condition;
 
 //----------------------------------------------------------------------
 // SimpleThread
@@ -26,10 +31,16 @@
 
 void
 SimpleThread(void* name)
-{
+{ 
+    lock->Acquire();
+    
     // Reinterpret arg "name" as a string
     char* threadName = (char*)name;
-    
+	if (strcmp ("Hilo 0", threadName) != 0)
+		condition->Wait();
+    lock->Release();
+    currentThread->Yield();
+    lock->Acquire();
     // If the lines dealing with interrupts are commented,
     // the code will behave incorrectly, because
     // printf execution may cause race conditions.
@@ -39,9 +50,14 @@ SimpleThread(void* name)
 	//interrupt->SetLevel(oldLevel);
         currentThread->Yield();
     }
+    
+    
     //IntStatus oldLevel = interrupt->SetLevel(IntOff);
     printf(">>> Thread %s has finished\n", threadName);
     //interrupt->SetLevel(oldLevel);
+    lock->Release();
+	printf(">>> FRUTA!!!! %s \n", threadName);
+	
 }
 
 //----------------------------------------------------------------------
@@ -55,14 +71,61 @@ void
 ThreadTest()
 {
     DEBUG('t', "Entering SimpleTest");
-
+	lock = new Lock("Testing Lock");
+	condition = new Condition("Condition Var Test", lock);
+	lock->Acquire();
     for ( int k=1; k<=10; k++) {
       char* threadname = new char[100];
       sprintf(threadname, "Hilo %d", k);
       Thread* newThread = new Thread (threadname);
       newThread->Fork (SimpleThread, (void*)threadname);
     }
-    
-    SimpleThread( (void*)"Hilo 0");
+	lock->Release();
+	
+    currentThread->Yield();
+	currentThread->Yield();
+	currentThread->Yield();
+	currentThread->Yield();
+	currentThread->Yield();
+	currentThread->Yield();
+	currentThread->Yield();
+	currentThread->Yield();
+	currentThread->Yield();
+	
+	lock->Acquire();
+	condition->Broadcast();
+	lock->Release();
+	currentThread->Yield();
+	
+	printf(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>ENTROOOOOOO\n\n");
+    //Thread* newThread = new Thread ("Hilo 0");
+    //newThread->Fork (SimpleThread, (void *)"Hilo 0");
+    SimpleThread((void *) "Hilo 0");
+    printf(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>SALIOOOOOOO\n\n");
+	    
+	
+    //lock->Acquire();
+    //condition->Signal();
+    //lock->Release();
+	
+	lock->Acquire();
+    lock->Release();
+    //MailBoxTest();
+    printf("CHAUUUUUUUUUUUUUUUUUUUUUU\n\n\n\n");
 }
 
+/*
+void MailBoxTest() {
+	Thread* thread1 = new Thread ("thread1");
+	thread1->Fork
+	Thread* thread2 = new Thread ("thread2");
+	Thread* thread3 = new Thread ("thread3");
+	Thread* thread4 = new Thread ("thread4");
+	Thread* thread5 = new Thread ("thread5");
+	thread2->Join();
+	Lock* port = new Lock("port");n
+	MailBox mailBox = new MailBox("mail_box", port)
+	
+	
+}
+*/

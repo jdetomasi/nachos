@@ -145,7 +145,23 @@ class Condition {
   private:
     const char* name;
     Lock* conditionLock;
-    List<Thread*> *waitingList;
+    List<Semaphore*> *waitingList;
+};
+
+class MailBox {
+public: 
+    MailBox(char* debugName, Lock* port);	// initialize a Mail Box for message 
+											// passing 
+    ~MailBox();								// deallocate the Mail Box
+    const char* getName() { return(name);}
+
+    void Send(Lock* port, int msg);			// Sends a message
+    void Receive(Lock* port, int *msg);		// Receive a message
+private:
+    const char* name;
+    int message, isBusy;
+    Condition* mailSnd;
+    Condition* mailRcv;
 };
 
 /*
