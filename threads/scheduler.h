@@ -9,6 +9,8 @@
 #ifndef SCHEDULER_H
 #define SCHEDULER_H
 
+#define NUM_PRIORITY_LEVELS 11
+
 #include "copyright.h"
 #include "list.h"
 #include "thread.h"
@@ -19,18 +21,22 @@
 
 class Scheduler {
   public:
-    Scheduler();			// Initialize list of ready threads 
-    ~Scheduler();			// De-allocate ready list
+    Scheduler();			// Initialize multyqueue of ready threads 
+    ~Scheduler();			// De-allocate ready queues
 
     void ReadyToRun(Thread* thread);	// Thread can be dispatched.
-    Thread* FindNextToRun();		// Dequeue first thread on the ready 
-					// list, if any, and return thread.
-    void Run(Thread* nextThread);	// Cause nextThread to start running
-    void Print();			// Print contents of ready list
+    // Dequeue first thread (priority like) on the ready queues, if any, and return thread.
+    Thread* FindNextToRun();
+    // Changes the priority of a thread
+    void UpdatePriority(Thread* thread, int oldPriority, int newPriority);
+    // Cause nextThread to start running
+    void Run(Thread* nextThread);
+    // Print contents of all ready queues
+    void Print();
     
   private:
-    List<Thread*> *readyList;  		// queue of threads that are ready to run,
-					// but not running
+    // Multiple queues of threads (depending on priority) that are ready to run, but not running
+    List<Thread*> *readyList[NUM_PRIORITY_LEVELS];  
 };
 
 #endif // SCHEDULER_H

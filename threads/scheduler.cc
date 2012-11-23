@@ -24,29 +24,36 @@
 
 //----------------------------------------------------------------------
 // Scheduler::Scheduler
-// 	Initialize the list of ready but not running threads to empty.
+// 	Initialize all the priority queues of ready but not running threads 
+//  to empty.
 //----------------------------------------------------------------------
 
 Scheduler::Scheduler()
 { 
-    readyList = new List<Thread*>; 
+    
+    for (int i=0; i < NUM_PRIORITY_LEVELS; i++){
+        readyList[i] = new List<Thread*>; 
+    }
 } 
 
 //----------------------------------------------------------------------
 // Scheduler::~Scheduler
-// 	De-allocate the list of ready threads.
+// 	De-allocate all the queues of ready threads.
 //----------------------------------------------------------------------
 
 Scheduler::~Scheduler()
 { 
-    delete readyList; 
+    for (int i=0; i < NUM_PRIORITY_LEVELS; i++){
+        delete readyList[i]; 
+    }
+    
 } 
 
 //----------------------------------------------------------------------
 // Scheduler::ReadyToRun
 // 	Mark a thread as ready, but not running.
-//	Put it on the ready list, for later scheduling onto the CPU.
-//
+//	Put it on the corresponding ready queue, for later scheduling onto 
+//  the CPU.
 //	"thread" is the thread to be put on the ready list.
 //----------------------------------------------------------------------
 
@@ -56,7 +63,14 @@ Scheduler::ReadyToRun (Thread *thread)
     DEBUG('t', "Putting thread %s on ready list.\n", thread->getName());
 
     thread->setStatus(READY);
-    readyList->Append(thread);
+    
+    // If the new thread that is ready to run has more priority than the currentThread, switch to it.
+    if (currentThread->GetPriority() < thread->GetPriority()){
+		readyList[currentThread->GetPriority()]->Append(currentThread);
+        currentThread->setStatus(READY);
+        Run(thread);
+    } else 
+        readyList[thread->GetPriority()]->Append(thread);
 }
 
 //----------------------------------------------------------------------
@@ -70,7 +84,34 @@ Scheduler::ReadyToRun (Thread *thread)
 Thread *
 Scheduler::FindNextToRun ()
 {
-    return readyList->Remove();
+    // Search the thread with the max priority
+    for (int i=NUM_PRIORITY_LEVELS - 1 ; i >= 0; i--){
+        if(!readyList[i]->IsEmpty())
+            return readyList[i]->Remove();
+    }
+    
+    // If all lists are empty, return NULL value
+    return NULL; 
+}
+
+//----------------------------------------------------------------------
+// Scheduler::UpdatePriotity
+//  Changes the priority of a a thread currently in one of the ready
+//  queues
+//
+//  NOTE: We assume that the argument 'thread' actually belongs to
+//        the readyList with priority oldPriority.
+//----------------------------------------------------------------------
+void 
+Scheduler::UpdatePriority(Thread* thread, int oldPriority, int newPriority){
+    Thread* tmp;
+    while ((tmp = (readyList[oldPriority]->Remove())) != thread){
+            readyList[oldPriority]->Append(tmp);
+            printf("Whiling :P comparing \n");
+            tmp->Print();
+            thread->Print();
+    }
+    readyList[newPriority]->Append(thread);
 }
 
 //----------------------------------------------------------------------
@@ -95,7 +136,7 @@ Scheduler::Run (Thread *nextThread)
 #ifdef USER_PROGRAM			// ignore until running user programs 
     if (currentThread->space != NULL) {	// if this thread is a user program,
         currentThread->SaveUserState(); // save the user's CPU registers
-	currentThread->space->SaveState();
+        currentThread->space->SaveState();
     }
 #endif
     
@@ -129,15 +170,15 @@ Scheduler::Run (Thread *nextThread)
 #ifdef USER_PROGRAM
     if (currentThread->space != NULL) {		// if there is an address space
         currentThread->RestoreUserState();     // to restore, do it.
-	currentThread->space->RestoreState();
+        currentThread->space->RestoreState();
     }
 #endif
 }
 
 //----------------------------------------------------------------------
 // Scheduler::Print
-// 	Print the scheduler state -- in other words, the contents of
-//	the ready list.  For debugging.
+// 	Print the scheduler state -- in other words, the contents of all
+//	the ready queues.  Used for debugging.
 //----------------------------------------------------------------------
 
 static void
@@ -149,5 +190,10 @@ void
 Scheduler::Print()
 {
     printf("Ready list contents:\n");
-    readyList->Apply(ThreadPrint);
+    for (int i=0; i < NUM_PRIORITY_LEVELS; i++){
+        printf("\t Priority %d:\n",i);
+        printf("\t  ");
+        readyList[i]->Apply(ThreadPrint);
+        printf("\n");
+    }    
 }

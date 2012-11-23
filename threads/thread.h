@@ -39,11 +39,14 @@
 
 #include "copyright.h"
 #include "utility.h"
+#include "synch.h"
 
 #ifdef USER_PROGRAM
 #include "machine.h"
 #include "addrspace.h"
 #endif
+
+class Semaphore;
 
 // CPU register state to be saved on context switch.  
 // x86 processors needs 9 32-bit registers, whereas x64 has 8 extra registers
@@ -76,42 +79,49 @@ class Thread {
     // THEY MUST be in this position for SWITCH to work.
     HostMemoryAddress* stackTop;			// the current stack pointer
     HostMemoryAddress machineState[MachineStateSize];	// all registers except for stackTop
-
+    
   public:
-    Thread(const char* debugName);	// initialize a Thread 
+    Thread(const char* debugName);					// initialize a Thread 
+    Thread(const char* debugName, int isJoinable);	// initialize a Joinable Thread 
     ~Thread(); 				// deallocate a Thread
-					// NOTE -- thread being deleted
-					// must not be running when delete 
-					// is called
+							// NOTE -- thread being deleted
+							// must not be running when delete 
+							// is called
 
     // basic thread operations
 
     void Fork(VoidFunctionPtr func, void* arg);	// Make thread run (*func)(arg)
-    void Yield();  				// Relinquish the CPU if any 
-						// other thread is runnable
-    void Sleep();  				// Put the thread to sleep and 
-						// relinquish the processor
-    void Finish();  				// The thread is done executing
+    void Yield();  								// Relinquish the CPU if any 
+												// other thread is runnable
+    void Sleep();  								// Put the thread to sleep and 
+												// relinquish the processor
+    void Finish();  							// The thread is done executing
+    void Join();								// Current Thread waits for this one to finish
+    void SetPriority(int level);				// Sets thread's priority for scheduling
+    int GetPriority();							// Gets thread's priority for scheduling
     
-    void CheckOverflow();   			// Check if thread has 
-						// overflowed its stack
+    void CheckOverflow();			   			// Check if thread has 
+												// overflowed its stack
     void setStatus(ThreadStatus st) { status = st; }
     const char* getName() { return (name); }
     void Print() { printf("%s, ", name); }
-
+	
+	
   private:
     // some of the private data for this class is listed above
     
     HostMemoryAddress* stack; 		// Bottom of the stack 
-					// NULL if this is the main thread
-					// (If NULL, don't deallocate stack)
-    ThreadStatus status;		// ready, running or blocked
+									// NULL if this is the main thread
+									// (If NULL, don't deallocate stack)
+    ThreadStatus status;			// ready, running or blocked
     const char* name;
 
     void StackAllocate(VoidFunctionPtr func, void* arg);
-    					// Allocate a stack for thread.
-					// Used internally by Fork()
-
+								// Allocate a stack for thread.
+								// Used internally by Fork()
+	Semaphore *joinSemaphore;	// Used for joining the thread
+	int priorityLevel;			// Scheduling priority level. Default is zero.
+	
 #ifdef USER_PROGRAM
 // A thread running a user program actually has *two* sets of CPU registers -- 
 // one for its state while executing user code, one for its state 

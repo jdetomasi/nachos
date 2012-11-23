@@ -17,12 +17,13 @@
 #include "copyright.h"
 #include "thread.h"
 #include "switch.h"
-#include "synch.h"
 #include "system.h"
 
 // this is put at the top of the execution stack,
 // for detecting stack overflows
-const unsigned STACK_FENCEPOST = 0xdeadbeef;	
+const unsigned STACK_FENCEPOST = 0xdeadbeef;
+
+Semaphore* joinSemaphore;
 
 //---------------------------------------------------------------------
 // Thread::Thread
@@ -38,6 +39,7 @@ Thread::Thread(const char* threadName)
     stackTop = NULL;
     stack = NULL;
     status = JUST_CREATED;
+    priorityLevel = 0;			// Priority level is set to default
 #ifdef USER_PROGRAM
     space = NULL;
 #endif
@@ -152,6 +154,10 @@ Thread::Finish ()
     DEBUG('t', "Finishing thread \"%s\"\n", getName());
     
     threadToBeDestroyed = currentThread;
+    
+    if (joinSemaphore != NULL)
+		joinSemaphore -> V();
+    
     Sleep();					// invokes SWITCH
     // not reached
 }
@@ -177,19 +183,28 @@ Thread::Finish ()
 void
 Thread::Yield ()
 {
-    Thread *nextThread;
+    // Thread *nextThread;   DEPRECATED
     IntStatus oldLevel = interrupt->SetLevel(IntOff);
     
     ASSERT(this == currentThread);
     
     DEBUG('t', "Yielding thread \"%s\"\n", getName());
     
+    
+    /*
     nextThread = scheduler->FindNextToRun();
     if (nextThread != NULL) {
-	scheduler->ReadyToRun(this);
-	scheduler->Run(nextThread);
-    }
+	   scheduler->ReadyToRun(this);
+	   scheduler->Run(nextThread);
+    } */
+    
+    // The new implementation is insensitive to any change in the scheduler implementation
+    // There is always some thread ready to run (at least the current one).
+    scheduler->ReadyToRun(this);
+    scheduler->Run(scheduler->FindNextToRun());
+
     interrupt->SetLevel(oldLevel);
+
 }
 
 //----------------------------------------------------------------------
@@ -223,7 +238,7 @@ Thread::Sleep ()
 
     status = BLOCKED;
     while ((nextThread = scheduler->FindNextToRun()) == NULL) {
-	interrupt->Idle();	// no one to run, wait for an interrupt
+	   interrupt->Idle();	// no one to run, wait for an interrupt
     }
         
     scheduler->Run(nextThread); // returns when we've been signalled
@@ -275,6 +290,74 @@ Thread::StackAllocate (VoidFunctionPtr func, void* arg)
     machineState[WhenDonePCState] = (HostMemoryAddress) ThreadFinish;
 }
 
+//---------------------------------------------------------------------
+// Thread::Thread
+// 	Initialize a special thread control block, so that we can then call
+//	Thread::Fork. The created thread is to be join later.
+//
+//	"threadName" is an arbitrary string, useful for debugging.
+//  "" is a ??? that points that a join is to be called in this thread.
+//----------------------------------------------------------------------
+
+Thread::Thread(const char* threadName, int isJoinable)
+{
+    name = threadName;
+    stackTop = NULL;
+    stack = NULL;
+    status = JUST_CREATED;
+    priorityLevel = 0;			// Priority level is set to default
+#ifdef USER_PROGRAM
+    space = NULL;
+#endif
+
+	// Se llamara a un Join sobre este thread.
+	if (isJoinable > 0)	
+		joinSemaphore = new Semaphore("Join Semaphore", 0);
+}
+
+//---------------------------------------------------------------------
+// Thread::Join()
+// 	Suspend the caller thread and then signals it when if finishes
+//	
+// Note that if the Thread is to be joinable later, it should be marked 
+// at the creation of it.
+//----------------------------------------------------------------------
+
+void 
+Thread::Join(){
+	ASSERT(joinSemaphore != NULL);
+	joinSemaphore->P();
+}
+
+//---------------------------------------------------------------------
+// Thread::SetPriority(int level)
+// 	Sets the scheduling priority level for the thread.
+//	
+// Note that no thread is supposed to change its own priority 
+//----------------------------------------------------------------------
+
+void 
+Thread::SetPriority(int level){
+ 
+    // TODO Hay que linkear con NUM_PRIORITY_LEVELS definido en scheduler.h
+    ASSERT(level >= 0 && level <= 10);
+    
+    int oldPriority = priorityLevel;
+	priorityLevel = level;
+    
+    // If the thread was already in the readyList, move it to the new priority level queue
+    if (status == READY)
+        scheduler->UpdatePriority(this, oldPriority, level);
+    
+}
+//---------------------------------------------------------------------
+// Thread::SetPriority(int level)
+// 	Gets the scheduling priority level for this thread.
+//	
+//----------------------------------------------------------------------
+int 
+Thread::GetPriority(){ return priorityLevel;}
+
 #ifdef USER_PROGRAM
 #include "machine.h"
 
@@ -307,42 +390,7 @@ void
 Thread::RestoreUserState()
 {
     for (int i = 0; i < NumTotalRegs; i++)
-	machine->WriteRegister(i, userRegisters[i]);
-}
-
-//---------------------------------------------------------------------
-// Thread::Thread
-// 	Initialize a special thread control block, so that we can then call
-//	Thread::Fork. The created thread is to be join later.
-//
-//	"threadName" is an arbitrary string, useful for debugging.
-//  "" is a ??? that points that a join is to be called in this thread.
-//----------------------------------------------------------------------
-
-Thread::Thread(const char* threadName, ???)
-{
-    name = threadName;
-    stackTop = NULL;
-    stack = NULL;
-    status = JUST_CREATED;
-#ifdef USER_PROGRAM
-    space = NULL;
-#endif
-}
-
-
-
-//---------------------------------------------------------------------
-// Thread::Join()
-// 	Suspend the caller thread and then signals it when if finishes
-//	
-// Note that if the Thread is to be joinable later, it should be marked 
-// at the creation of it.
-//----------------------------------------------------------------------
-
-
-void Thread::Join(){
-	
+	   machine->WriteRegister(i, userRegisters[i]);
 }
 
 #endif

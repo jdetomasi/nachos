@@ -41,7 +41,7 @@ Semaphore::Semaphore(const char* debugName, int initialValue)
 }
 
 //----------------------------------------------------------------------
-// Semaphore::Semaphore
+// Semaphore::~Semaphore
 // 	De-allocate semaphore, when no longer needed.  Assume no one
 //	is still waiting on the semaphore!
 //----------------------------------------------------------------------
@@ -97,9 +97,12 @@ Semaphore::V()
     interrupt->SetLevel(oldLevel);
 }
 
-// Dummy functions -- so we can compile our later assignments 
-// Note -- without a correct implementation of Condition::Wait(), 
-// the test case in the network assignment won't work!
+//----------------------------------------------------------------------
+// Lock::Lock
+//  Initialize a lock for avoiding interference in critical sections
+//
+//  "debugName" is an arbitrary name, useful for debugging.
+//----------------------------------------------------------------------
 Lock::Lock(const char* debugName) 
 {  
     name = debugName;
@@ -107,105 +110,193 @@ Lock::Lock(const char* debugName)
     lockSem = new Semaphore("Semaphore from Lock", 1);
 }
 
+//----------------------------------------------------------------------
+// Lock::~Lock
+//  De-allocate a lock, when no longer needed.  Assume no one
+//  is still using it.
+//----------------------------------------------------------------------
 Lock::~Lock(){
     delete lockSem;
 }
 
+//----------------------------------------------------------------------
+// Lock::Acquire
+//  Ask for the exclusive use of the lock. If idle, gets it, if not
+//  the thread go to sleep.
+//----------------------------------------------------------------------
 void Lock::Acquire() {
-    ASSERT(!isHeldByCurrentThread());	// Arrgh! - Thread already owns the lock!
-    lockSem->P();						// Si el lock esta libre, lo 
-										  // toma; si no, espera a que
-										  // le sea entregado.
-	holderThread = currentThread;		// Indica el poseedor del lock. 
+    
+    // Arrgh! - Thread already owns the lock!
+    ASSERT(!isHeldByCurrentThread());
+
+    // If the lock is already held by other thread with lower priority, sets 
+    // the holderThread priority to be equal to the one trying to get the lock.
+    if (holderThread != NULL)
+        if (holderThread->GetPriority() < currentThread->GetPriority()){
+            oldPriority = holderThread->GetPriority();
+            holderThread->SetPriority(currentThread->GetPriority());
+        }
+
+    // If the lock is free, takes the lock, else it waits for it to be freed.
+    lockSem->P();				
+    
+    // Sets the holder to be the current thread and saves its priority.
+	holderThread = currentThread;
+    oldPriority = currentThread->GetPriority();
 }
 
-
+//----------------------------------------------------------------------
+// Lock::Realease
+//  Releases the lock that must be held by the caller thread.
+//----------------------------------------------------------------------
 void Lock::Release() {
-    ASSERT(isHeldByCurrentThread());	// Arrgh! - Thread not in possesion of the lock and doing a Release()!
-    holderThread = NULL;				// Primero marcamos como NULL el holder, ya que de ocurrir un cambio de contexto
-										  // antes de realizarlo habiendo desactivado el semaforo, puede hacer que al volver,
-										  // pisemos el nuevo thread al volver a este punto.
-    lockSem->V();						// Se libera el lock.
+    
+    // Arrgh! - Thread not in possesion of the lock and doing a Release()!
+    ASSERT(isHeldByCurrentThread());
+    
+    // First we have to set the holder to NULL, otherwise if a change 
+    // of context occurs before doing so and having realeased the lock, 
+    // another thread gets it and it gets erased when this one resumes.
+    holderThread = NULL;
+    
+    // The lock is freed.
+    lockSem->V();
+    
+    // Sets priority to the old level (if any).
+    currentThread->SetPriority(oldPriority);
 }
 
 bool Lock::isHeldByCurrentThread() {
-    return(currentThread == holderThread); // Chequea que el thread actual sea el poseedor del lock.
+    return(currentThread == holderThread);
 }
 
+//----------------------------------------------------------------------
+// Condition::Condition
+//  Initialize a condition variable, sets the lock that will control the
+//  use of it.
+//----------------------------------------------------------------------
 Condition::Condition(const char* debugName, Lock* condLock) { 
     name = debugName;
     this->conditionLock = condLock;
     waitingList = new List<Semaphore*>;
 }
 
+//----------------------------------------------------------------------
+// Condition::~Condition
+//  De-allocate condition variable. Assumes no one is waiting for it.
+//----------------------------------------------------------------------
 Condition::~Condition() {
     delete conditionLock;
     delete waitingList;
  }
 
+//----------------------------------------------------------------------
+// Condition::Wait
+//  Waits for a certain condition to be signaled. It creates a new 
+//  semaphore for every thread waiting. Assumes you have the lock.
+//----------------------------------------------------------------------
 void Condition::Wait() { 
-    ASSERT(conditionLock->isHeldByCurrentThread()); // Chequea que el thread actual sea el poseedor del lock
     
-    Semaphore *tmpSem = new Semaphore("Temporary Semaphore for Cond Var", 0); // Inicialmente cero, asi lo obligo a esperar la señal.
-    waitingList->Append(tmpSem);					// Añado el nuevo semaforo a waitingQueue a la espera de la señal
-    conditionLock->Release();						// Libero el lock
-    tmpSem->P();									// Espero el signal (V()) en el semaforo
-    conditionLock->Acquire();						// Recupero el cerrojo
-    delete tmpSem;									// Elimino el semaforo creado
+    // Checks wheter the thread owns the lock.
+    ASSERT(conditionLock->isHeldByCurrentThread());
 
+    // Initially zero in order to make the thread wait for a signal
+    Semaphore *tmpSem = new Semaphore("Temporary Semaphore for Cond Var", 0); 
+    waitingList->Append(tmpSem);
+    conditionLock->Release();
+    
+    // Since it is created with zero-value, the thread will go to sleep!
+    tmpSem->P();			
+    
+    // Re-adquire the condition variable lock!						
+    conditionLock->Acquire();
+    delete tmpSem;
 }
+
+//----------------------------------------------------------------------
+// Condition::Signal
+//  Sends a signal for current condition variable. If someone is waiting
+//  for it, it is waked up, otherwise the signal get lost.
+//----------------------------------------------------------------------
 void Condition::Signal() { 
-    ASSERT(conditionLock->isHeldByCurrentThread()); // Chequea que el thread actual sea el poseedor del lock
+
+    // Checks wheter the thread owns the lock.
+    ASSERT(conditionLock->isHeldByCurrentThread());
 
     if (!waitingList->IsEmpty())
-      (waitingList->Remove())->V();	// Tomo un thread y le indico que puede continuar
+      (waitingList->Remove())->V();
 }
 
+//----------------------------------------------------------------------
+// Condition::Broadcast
+//  Sends a signal for current condition variable. 
+//  It wakes up all waiting threads.
+//----------------------------------------------------------------------
 void Condition::Broadcast() { 
-    ASSERT(conditionLock->isHeldByCurrentThread());	// Chequea que el thread actual sea el poseedor del lock
+
+    // Checks wheter the thread owns the lock.
+    ASSERT(conditionLock->isHeldByCurrentThread());	
 
     while (!waitingList->IsEmpty())
-      (waitingList->Remove())->V();
-    
+      (waitingList->Remove())->V();    
 }
 
-MailBox::MailBox(char* debugName, Lock* port){
+//----------------------------------------------------------------------
+// Port::Port
+//  Initialize a port used for communication.
+//----------------------------------------------------------------------
+Port::Port(const char* debugName){
     name = debugName;
-    mailRcv = new Condition("Cond of Receiver", port);
-    mailSnd = new Condition("Cond of Sender", port);
+    portLock = new Lock("Condition variable lock");
+    mailRcv = new Condition("Cond of Receiver", portLock);
+    mailSnd = new Condition("Cond of Sender", portLock);
 	isBusy = 0;
 	message = 0;
 }
 
-MailBox::~MailBox(){
+//----------------------------------------------------------------------
+// Port::~Port
+//  De-allocate a port.
+//----------------------------------------------------------------------
+Port::~Port(){
     delete mailRcv;
     delete mailSnd;
 };
 
-void MailBox::Send(Lock* port, int msg){
-    port->Acquire();
-    while (isBusy == 1) mailRcv->Wait(); // Si hay alguien usando el 
-											// puerto, se espera
-    message = msg;						 // Se guarda el mensaje
-    isBusy = 1;							 //	Se indicia que el
-											// puerto esta en uso
-    mailSnd->Signal();				 	 // Aviso a un threads entre los
-											// que estan escuchando ese
-											// puerto que hay un mensaje
-	ASSERT(port->isHeldByCurrentThread());
-    port->Release();					 
+void Port::Send(int msg){
+    portLock->Acquire();
+    
+    // Wait until the port is not busy
+    while (isBusy == 1) mailRcv->Wait();  
+
+    // Copy the sended message
+    message = msg;
+    
+    // Set the port status to BUSY
+    isBusy = 1;							 
+
+    // Notify the waiting thread (if any) that a message has been sent
+    mailSnd->Signal();				 	 
+
+	ASSERT(portLock->isHeldByCurrentThread());
+    portLock->Release();					 
 }
 
-void MailBox:: Receive(Lock* port, int *msg) {
-    port->Acquire();
-	while (isBusy == 0) mailSnd->Wait(); // No hay mensajes en el 
-											//puerto? Espera a que haya
-    *msg = message;					 	 // Obtiene el mensaje.
+void Port:: Receive(int *msg) {
+    portLock->Acquire();
 
-    isBusy = 0;							 //	El mailBox esta libre.
-    mailRcv->Signal();				// Aviso que ya recibi el msj
+    // If no messages wait until a message arrives
+	while (isBusy == 0) mailSnd->Wait(); 
+
+    *msg = message;
+
+    // Set the port status to ~BUSY
+    isBusy = 0;
+
+    // Notify that the message has been recieved
+    mailRcv->Signal();
     
-    ASSERT(port->isHeldByCurrentThread());
+    ASSERT(portLock->isHeldByCurrentThread());
     
-    port->Release();
+    portLock->Release();
 }

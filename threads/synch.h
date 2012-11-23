@@ -1,17 +1,17 @@
 // synch.h
-//	NOTA: �ste es el �nico fichero fuente con los comentarios en espa�ol
-//	2000 - Jos� Miguel Santos Espino - ULPGC
+//	NOTA: Este es el unico fichero fuente con los comentarios en español
+//	2000 - Jose Miguel Santos Espino - ULPGC
 //
 //	Estructuras de datos para sincronizar hilos (threads)
 //
-//	Aqu� se definen tres mecanismos de sincronizaci�n: sem�foros
-//	(semaphores), cerrojos (locks) y variables condici�n (condition var-
-//	iables). S�lo est�n implementados los sem�foros; de los cerrojos y
-//	variables condici�n s�lo se proporciona la interfaz. Precisamente el
-//	primer trabajo incluye realizar esta implementaci�n.
+//	Aqui se definen tres mecanismos de sincronizacion: semaforos
+//	(semaphores), cerrojos (locks) y variables condicion (condition var-
+//	iables). Solo estan implementados los semaforos; de los cerrojos y
+//	variables condicion solo se proporciona la interfaz. Precisamente el
+//	primer trabajo incluye realizar esta implementacion.
 //
-//	Todos los objetos de sincronizaci�n tienen un par�metro "name" en
-//	el constructor; su �nica finalidad es facilitar la depuraci�n del
+//	Todos los objetos de sincronizacion tienen un parametro "name" en
+//	el constructor; su unica finalidad es facilitar la depuracion del
 //	programa.
 //
 // Copyright (c) 1992-1993 The Regents of the University of California.
@@ -25,70 +25,76 @@
 #include "thread.h"
 #include "list.h"
 
-// La siguiente clase define un "sem�foro" cuyo valor es un entero positivo.
-// El sem�foro ofrece s�lo dos operaciones, P() y V():
+class Thread;
+
+// La siguiente clase define un "semaforo" cuyo valor es un entero positivo.
+// El semaforo ofrece solo dos operaciones, P() y V():
 //
 //	P() -- espera a que value>0, luego decrementa value
 //
 //	V() -- incrementa value, despiera a un hilo en espera si lo hay
 //
 // Observen que esta interfaz NO permite leer directamente el valor del
-// sem�foro -- aunque hubieras podido leer el valor, no te sirve de nada,
-// porque mientras tanto otro hilo puede haber modificado el sem�foro,
-// si t� has perdido la CPU durante un tiempo.
+// semaforo -- aunque hubieras podido leer el valor, no te sirve de nada,
+// porque mientras tanto otro hilo puede haber modificado el semaforo,
+// si tu has perdido la CPU durante un tiempo.
 
 class Semaphore {
   public:
-    // Constructor: da un valor inicial al sem�foro  
-    Semaphore(const char* debugName, int initialValue);	// set initial value
-    ~Semaphore();   					// destructor
-    const char* getName() { return name;}			// para depuraci�n
+    // Constructor: da un valor inicial al semaforo
+    Semaphore(const char* debugName, int initialValue);
+    ~Semaphore();   					
+    const char* getName() { return name;}			
 
-    // Las �nicas operaciones p�blicas sobre el sem�foro
-    // ambas deben ser *at�micas*
+    // Las unicas operaciones publicas sobre el semaforo
+    // ambas deben ser *atomicas*
     void P();
     void V();
     
   private:
-    const char* name;        		// para depuraci�n
-    int value;         		// valor del sem�foro, siempre es >= 0
-    List<Thread*> *queue;       // Cola con los hilos que esperan en P() porque el
-                       		// valor es cero
+    const char* name;
+    // valor del semaforo, siempre es >= 0
+    int value;
+    // Cola con los hilos que esperan en P() porque el valor es cero
+    List<Thread*> *queue;
+    
 };
 
 // La siguiente clase define un "cerrojo" (Lock). Un cerrojo puede tener
-// dos estados: libre y ocupado. S�lo se permiten dos operaciones sobre
+// dos estados: libre y ocupado. Solo se permiten dos operaciones sobre
 // un cerrojo:
 //
-//	Acquire -- espera a que el cerrojo est� libre y lo marca como ocupado
+//	Acquire -- espera a que el cerrojo esta libre y lo marca como ocupado
 //
-//	Release -- marca el cerrojo como libre, despertando a alg�n otro
+//	Release -- marca el cerrojo como libre, despertando a algun otro
 //                 hilo que estuviera bloqueado en un Acquire
 //
 // Por conveniencia, nadie excepto el hilo que tiene adquirido el cerrojo
-// puede liberarlo. No hay ninguna operaci�n para leer el estado del cerrojo.
+// puede liberarlo. No hay ninguna operacion para leer el estado del cerrojo.
 
 
 class Lock {
   public:
   // Constructor: inicia el cerrojo como libre
   Lock(const char* debugName);
+  ~Lock();
+  const char* getName() { return name; }
 
-  ~Lock();          // destructor
-  const char* getName() { return name; }	// para depuraci�n
-
-  // Operaciones sobre el cerrojo. Ambas deben ser *at�micas*
+  // Operaciones sobre el cerrojo. Ambas deben ser *atomicas*
   void Acquire(); 
   void Release();
 
   // devuelve 'true' si el hilo actual es quien posee el cerrojo.
-  // �til para comprobaciones en el Release() y en las variables condici�n
+  // util para comprobaciones en el Release() y en las variables condicion
   bool isHeldByCurrentThread();	
 
   private:
-    const char* name;				// para depuraci�n
-    Thread* holderThread;                       // Thread actualmente utilizando el lock.
-    Semaphore* lockSem;                          // Semaforo binario. Maneja el lock.
+    const char* name;
+    // Thread actualmente utilizando el lock.
+    Thread* holderThread;
+    // Semaforo binario. Maneja el lock.
+    Semaphore* lockSem;
+    int oldPriority;
 };
 
 //  La siguiente clase define una "variable condicion". Una variable condicion
@@ -129,8 +135,6 @@ class Condition {
     // Constructor: se le indica cual es el cerrojo al que pertenece
     // la variable condicion
     Condition(const char* debugName, Lock* conditionLock);	
-
-    // libera el objeto
     ~Condition();	
     const char* getName() { return (name); }
 
@@ -144,22 +148,30 @@ class Condition {
 
   private:
     const char* name;
+    // Lock que debe poseer un thread para utilizar las operaciones sobre la var. de cond.
     Lock* conditionLock;
+    // Lista de semaforos creados por cada Thread que espera por un Signal (o Broadcast)
     List<Semaphore*> *waitingList;
 };
 
-class MailBox {
+class Port {
 public: 
-    MailBox(char* debugName, Lock* port);	// initialize a Mail Box for message 
-											// passing 
-    ~MailBox();								// deallocate the Mail Box
+    // Se crea un puerto indicando por que puerto se realizara la comunicacion
+    Port(const char* debugName);
+    ~Port();
     const char* getName() { return(name);}
 
-    void Send(Lock* port, int msg);			// Sends a message
-    void Receive(Lock* port, int *msg);		// Receive a message
+    // Envia un mensaje (msg) a traves del puerto (port)
+    void Send(int msg);
+    // Recibe un mensaje (msg) a traves del puerto (port)
+    void Receive(int *msg);
 private:
     const char* name;
     int message, isBusy;
+
+    Lock* portLock;
+
+    // Indican si se ha enviado o recibido el mensaje
     Condition* mailSnd;
     Condition* mailRcv;
 };
