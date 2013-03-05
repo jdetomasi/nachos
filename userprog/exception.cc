@@ -49,15 +49,83 @@
 //----------------------------------------------------------------------
 
 void
-ExceptionHandler(ExceptionType which)
-{
-    int type = machine->ReadRegister(2);
+ExceptionHandler(ExceptionType which){
+	int type = machine->ReadRegister(2);
+        int arg_1,arg_2,arg_3,pc;
 
-    if ((which == SyscallException) && (type == SC_Halt)) {
-	DEBUG('a', "Shutdown, initiated by user program.\n");
-   	interrupt->Halt();
-    } else {
-	printf("Unexpected user mode exception %d %d\n", which, type);
-	ASSERT(false);
-    }
+	if (which == SyscallException) {
+		switch(type){
+			case SC_Halt:
+                                DEBUG('a', "System Call: [pid] invoked Halt.\n");
+				interrupt->Halt();
+				break;
+			case SC_Exit:
+                                DEBUG('a', "System Call: [pid] invoked Exit.\n");
+				machine->WriteRegister(2, machine->ReadRegister(4));
+				printf("Exception Handler: Exit with value %d\n", machine->ReadRegister(4));
+                                // TODO deallocate physical memory
+                                currentThread->Finish();
+                                delete currentThread;
+				break;
+			case SC_Exec:
+                                DEBUG('a', "System Call: [pid] invoked Exec.\n");
+				printf("Exception Handler: Exec\n");
+				// TODO !
+				break;
+			case SC_Join:
+                                DEBUG('a', "System Call: [pid] invoked Join.\n");
+				printf("Exception Handler: Join\n");
+				// TODO !
+				break;
+			case SC_Create:
+                                DEBUG('a', "System Call: [pid] invoked Create.\n");
+				printf("Exception Handler: Create\n");
+				// TODO !
+				break;
+			case SC_Open:
+                                DEBUG('a', "System Call: [pid] invoked Open.\n");
+				printf("Exception Handler: Open\n");
+				// TODO !
+				break;
+			case SC_Read:
+                                DEBUG('a', "System Call: [pid] invoked Read.\n");
+				printf("Exception Handler: Read\n");
+				// TODO !
+				break;
+			case SC_Write:
+                                DEBUG('a', "System Call: [pid] invoked Write.\n");
+                                pc = machine->ReadRegister(34);
+                                arg_1 = machine->ReadRegister(4);
+                                arg_2 = machine->ReadRegister(5);
+                                arg_3 = machine->ReadRegister(6);
+				printf("Exception Handler: Write %d - %d - %d\n",arg_1,arg_2,arg_3);
+				machine->WriteRegister(2, 0);
+				machine->WriteRegister(PCReg, machine->ReadRegister(NextPCReg));
+				// TODO !
+				break;
+			case SC_Close:
+                                DEBUG('a', "System Call: [pid] invoked Close.\n");
+				printf("Exception Handler: Close\n");
+				// TODO !
+				break;
+			case SC_Fork:
+                                DEBUG('a', "System Call: [pid] invoked Fork.\n");
+				printf("Exception Handler: Fork\n");
+				// TODO !
+				break;
+			case SC_Yield:
+                                DEBUG('a', "System Call: [pid] invoked Yield.\n");
+				machine->WriteRegister(2, 0);
+                                // TODO deallocate physical memory
+                                currentThread->Yield();
+				break;
+			default:
+				machine->WriteRegister(2, -1);
+				printf("Unknown syscall: %d\n", type);
+				break;
+			}
+	} else {
+		printf("Unexpected user mode exception %d %d\n", which, type);
+		ASSERT(false);
+	}
 }
