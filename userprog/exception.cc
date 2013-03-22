@@ -24,6 +24,7 @@
 #include "copyright.h"
 #include "system.h"
 #include "syscall.h"
+#include "syscall_utils.h"
 
 //----------------------------------------------------------------------
 // ExceptionHandler
@@ -50,6 +51,8 @@
 
 void
 ExceptionHandler(ExceptionType which){
+
+        ASSERT(interrupt->getStatus() == SystemMode);
 	int type = machine->ReadRegister(2);
         int arg_1,arg_2,arg_3,pc;
 
@@ -63,8 +66,8 @@ ExceptionHandler(ExceptionType which){
                                 DEBUG('a', "System Call: [pid] invoked Exit.\n");
 				machine->WriteRegister(2, machine->ReadRegister(4));
 				printf("Exception Handler: Exit with value %d\n", machine->ReadRegister(4));
-                                // TODO deallocate physical memory
                                 currentThread->Finish();
+                                // TODO deallocate physical memory. It is sufficient with next line?
                                 delete currentThread;
 				break;
 			case SC_Exec:
@@ -84,7 +87,9 @@ ExceptionHandler(ExceptionType which){
 				break;
 			case SC_Open:
                                 DEBUG('a', "System Call: [pid] invoked Open.\n");
-				printf("Exception Handler: Open\n");
+                                arg_1 = machine->ReadRegister(4);
+                                //char *file_name;
+                                //file_name = readString(arg_1);
 				// TODO !
 				break;
 			case SC_Read:
@@ -98,9 +103,11 @@ ExceptionHandler(ExceptionType which){
                                 arg_1 = machine->ReadRegister(4);
                                 arg_2 = machine->ReadRegister(5);
                                 arg_3 = machine->ReadRegister(6);
-				printf("Exception Handler: Write %d - %d - %d\n",arg_1,arg_2,arg_3);
+                                char *in_buff;
+                                in_buff = readString(arg_1);
+				printf("Exception Handler: Write %s - %d - %d\n",in_buff,arg_2,arg_3);
+                                //printf("%s\n", readString(arg_1));
 				machine->WriteRegister(2, 0);
-				machine->WriteRegister(PCReg, machine->ReadRegister(NextPCReg));
 				// TODO !
 				break;
 			case SC_Close:
@@ -124,6 +131,8 @@ ExceptionHandler(ExceptionType which){
 				printf("Unknown syscall: %d\n", type);
 				break;
 			}
+
+	        machine->WriteRegister(PCReg, machine->ReadRegister(NextPCReg));
 	} else {
 		printf("Unexpected user mode exception %d %d\n", which, type);
 		ASSERT(false);
