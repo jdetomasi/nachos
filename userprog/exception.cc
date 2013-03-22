@@ -103,8 +103,8 @@ ExceptionHandler(ExceptionType which){
                                 arg_1 = machine->ReadRegister(4);
                                 arg_2 = machine->ReadRegister(5);
                                 arg_3 = machine->ReadRegister(6);
-                                char *in_buff;
-                                in_buff = readString(arg_1);
+                                char in_buff[100];
+                                readString(arg_1, in_buff);
 				printf("Exception Handler: Write %s - %d - %d\n",in_buff,arg_2,arg_3);
                                 //printf("%s\n", readString(arg_1));
 				machine->WriteRegister(2, 0);
