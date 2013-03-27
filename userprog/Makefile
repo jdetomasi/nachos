@@ -545,7 +545,7 @@ exception.o: ../userprog/exception.cc ../threads/copyright.h \
  ../machine/disk.h ../userprog/addrspace.h ../filesys/filesys.h \
  ../filesys/openfile.h ../threads/scheduler.h ../machine/interrupt.h \
  ../threads/list.h ../machine/stats.h ../machine/timer.h \
- ../userprog/syscall.h
+ ../userprog/syscall.h ../userprog/syscall_utils.h
 progtest.o: ../userprog/progtest.cc ../threads/copyright.h \
  ../threads/system.h ../threads/copyright.h ../threads/utility.h \
  ../machine/sysdep.h /usr/include/stdlib.h /usr/include/features.h \

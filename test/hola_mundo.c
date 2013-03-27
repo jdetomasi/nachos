@@ -1,6 +1,15 @@
 #include "syscall.h"
 
+int fid;
+char from_file[100];
+
 int main(){
-    Write("Hola mundo!", 0, 1);
+    Create("hola_mundo");
+    fid = Open("hola_mundo");
+    Write("Hola Mundo!", 11,fid);
+    Write("Chau", 4,fid);
+    Read(from_file,12,fid);
+    Write(from_file, 12,fid);
+    Close(fid);
     Exit(0);
 }
