@@ -22,3 +22,12 @@ void readString(int addr, char *buff){
     addr++;
   } while(*(buff - 1) != '\0');
 }
+
+void writeString(int addr, char *buff, int size){
+  for (int i = 0; i <= size; i++) {
+  	//WriteMem(int addr, int size, int value);
+  	machine->WriteMem(addr, 1, (int) *buff);
+  	buff++;
+  	addr++;
+  }
+}

@@ -103,17 +103,22 @@ ExceptionHandler(ExceptionType which){
                 last_open++;
                 break;
             case SC_Read:
+                char chars_read[100];
+                int num_read;
+
                 DEBUG('a', "System Call: [pid] invoked Read.\n");
                 // TODO not working!
+                // char *buffer
                 arg_1 = machine->ReadRegister(4);
+                // int size
                 arg_2 = machine->ReadRegister(5);
+                // OpenFileId
                 arg_3 = machine->ReadRegister(6);
-                char *from_file;
-                int asd;
-                machine->ReadMem(arg_1,2,&asd);
-                OpenedFiles[arg_3]->Read(from_file,arg_2);
-                from_file = (char *) asd;
-                printf("Exception Handler: Readed %s\n", from_file);
+
+                num_read = OpenedFiles[arg_3]->Read(chars_read,arg_2);
+                writeString(arg_1, chars_read, num_read);
+                machine->WriteRegister(2, arg_1);
+                printf("Exception Handler: Readed %s\n", chars_read);
                 break;
             case SC_Write:
                 DEBUG('a', "System Call: [pid] invoked Write.\n");
