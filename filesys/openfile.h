@@ -52,7 +52,17 @@ class OpenFile {
 		}
 
     int Length() { Lseek(file, 0, 2); return Tell(file); }
-    
+
+    int GetCurrentPosition() {return currentOffset;}
+
+    int SetCurrentPosition(int offSet){
+            if(this->Length() < offSet)
+                return -1;
+            else{
+                currentOffset = offSet;
+                return offSet;
+            }
+        };    
   private:
     int file;
     int currentOffset;
@@ -87,6 +97,16 @@ class OpenFile {
 					// than the UNIX idiom -- lseek to 
 					// end of file, tell, lseek back 
     
+    int GetCurrentPosition() {return seekPosition;}
+
+    int SetCurrentPosition(int offSet){
+            if(this->Length() < offSet)
+                return -1;
+            else{
+                seekPosition = offSet;
+                return offSet;
+            }
+        };
   private:
     FileHeader *hdr;			// Header for this file 
     int seekPosition;			// Current position within the file

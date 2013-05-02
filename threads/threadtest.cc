@@ -22,13 +22,13 @@ void SimpleTest();
 void LockTest();
 void CondVarTest();
 void HandShakeTest();
-    void HandShakeSend(void* puerto);
-    void HandShakeReceive(void* puerto);
+void HandShakeSend(void* puerto);
+void HandShakeReceive(void* puerto);
 void MultiPriorityTest();
 void PriorityInheritanceTest();
 void LowFunc(void* lock);
-    void MedFunc(void* tmp);
-    void HighFunc (void* lock);
+void MedFunc(void* tmp);
+void HighFunc (void* lock);
 
 //----------------------------------------------------------------------
 // SimpleThread

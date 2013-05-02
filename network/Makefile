@@ -33,7 +33,7 @@ main.o: ../threads/main.cc ../threads/copyright.h ../threads/utility.h \
  /usr/include/i386-linux-gnu/bits/wordsize.h \
  /usr/include/i386-linux-gnu/gnu/stubs.h \
  /usr/include/i386-linux-gnu/gnu/stubs-32.h \
- /usr/lib/gcc/i686-linux-gnu/4.7/include/stddef.h \
+ /usr/lib/gcc/i686-linux-gnu/4.6/include/stddef.h \
  /usr/include/i386-linux-gnu/bits/waitflags.h \
  /usr/include/i386-linux-gnu/bits/waitstatus.h /usr/include/endian.h \
  /usr/include/i386-linux-gnu/bits/endian.h \
@@ -48,7 +48,7 @@ main.o: ../threads/main.cc ../threads/copyright.h ../threads/utility.h \
  /usr/include/i386-linux-gnu/sys/sysmacros.h \
  /usr/include/i386-linux-gnu/bits/pthreadtypes.h /usr/include/alloca.h \
  /usr/include/stdio.h /usr/include/libio.h /usr/include/_G_config.h \
- /usr/include/wchar.h /usr/lib/gcc/i686-linux-gnu/4.7/include/stdarg.h \
+ /usr/include/wchar.h /usr/lib/gcc/i686-linux-gnu/4.6/include/stdarg.h \
  /usr/include/i386-linux-gnu/bits/stdio_lim.h \
  /usr/include/i386-linux-gnu/bits/sys_errlist.h /usr/include/string.h \
  ../threads/system.h ../threads/thread.h ../threads/synch.h \
@@ -67,7 +67,7 @@ scheduler.o: ../threads/scheduler.cc ../threads/copyright.h \
  /usr/include/i386-linux-gnu/bits/wordsize.h \
  /usr/include/i386-linux-gnu/gnu/stubs.h \
  /usr/include/i386-linux-gnu/gnu/stubs-32.h \
- /usr/lib/gcc/i686-linux-gnu/4.7/include/stddef.h \
+ /usr/lib/gcc/i686-linux-gnu/4.6/include/stddef.h \
  /usr/include/i386-linux-gnu/bits/waitflags.h \
  /usr/include/i386-linux-gnu/bits/waitstatus.h /usr/include/endian.h \
  /usr/include/i386-linux-gnu/bits/endian.h \
@@ -82,7 +82,7 @@ scheduler.o: ../threads/scheduler.cc ../threads/copyright.h \
  /usr/include/i386-linux-gnu/sys/sysmacros.h \
  /usr/include/i386-linux-gnu/bits/pthreadtypes.h /usr/include/alloca.h \
  /usr/include/stdio.h /usr/include/libio.h /usr/include/_G_config.h \
- /usr/include/wchar.h /usr/lib/gcc/i686-linux-gnu/4.7/include/stdarg.h \
+ /usr/include/wchar.h /usr/lib/gcc/i686-linux-gnu/4.6/include/stdarg.h \
  /usr/include/i386-linux-gnu/bits/stdio_lim.h \
  /usr/include/i386-linux-gnu/bits/sys_errlist.h /usr/include/string.h \
  ../threads/thread.h ../threads/synch.h ../machine/machine.h \
@@ -100,7 +100,7 @@ synch.o: ../threads/synch.cc ../threads/copyright.h ../threads/synch.h \
  /usr/include/i386-linux-gnu/bits/wordsize.h \
  /usr/include/i386-linux-gnu/gnu/stubs.h \
  /usr/include/i386-linux-gnu/gnu/stubs-32.h \
- /usr/lib/gcc/i686-linux-gnu/4.7/include/stddef.h \
+ /usr/lib/gcc/i686-linux-gnu/4.6/include/stddef.h \
  /usr/include/i386-linux-gnu/bits/waitflags.h \
  /usr/include/i386-linux-gnu/bits/waitstatus.h /usr/include/endian.h \
  /usr/include/i386-linux-gnu/bits/endian.h \
@@ -115,7 +115,7 @@ synch.o: ../threads/synch.cc ../threads/copyright.h ../threads/synch.h \
  /usr/include/i386-linux-gnu/sys/sysmacros.h \
  /usr/include/i386-linux-gnu/bits/pthreadtypes.h /usr/include/alloca.h \
  /usr/include/stdio.h /usr/include/libio.h /usr/include/_G_config.h \
- /usr/include/wchar.h /usr/lib/gcc/i686-linux-gnu/4.7/include/stdarg.h \
+ /usr/include/wchar.h /usr/lib/gcc/i686-linux-gnu/4.6/include/stdarg.h \
  /usr/include/i386-linux-gnu/bits/stdio_lim.h \
  /usr/include/i386-linux-gnu/bits/sys_errlist.h /usr/include/string.h \
  ../machine/machine.h ../threads/utility.h ../machine/translate.h \
@@ -133,7 +133,7 @@ system.o: ../threads/system.cc ../threads/copyright.h ../threads/system.h \
  /usr/include/i386-linux-gnu/bits/wordsize.h \
  /usr/include/i386-linux-gnu/gnu/stubs.h \
  /usr/include/i386-linux-gnu/gnu/stubs-32.h \
- /usr/lib/gcc/i686-linux-gnu/4.7/include/stddef.h \
+ /usr/lib/gcc/i686-linux-gnu/4.6/include/stddef.h \
  /usr/include/i386-linux-gnu/bits/waitflags.h \
  /usr/include/i386-linux-gnu/bits/waitstatus.h /usr/include/endian.h \
  /usr/include/i386-linux-gnu/bits/endian.h \
@@ -148,7 +148,7 @@ system.o: ../threads/system.cc ../threads/copyright.h ../threads/system.h \
  /usr/include/i386-linux-gnu/sys/sysmacros.h \
  /usr/include/i386-linux-gnu/bits/pthreadtypes.h /usr/include/alloca.h \
  /usr/include/stdio.h /usr/include/libio.h /usr/include/_G_config.h \
- /usr/include/wchar.h /usr/lib/gcc/i686-linux-gnu/4.7/include/stdarg.h \
+ /usr/include/wchar.h /usr/lib/gcc/i686-linux-gnu/4.6/include/stdarg.h \
  /usr/include/i386-linux-gnu/bits/stdio_lim.h \
  /usr/include/i386-linux-gnu/bits/sys_errlist.h /usr/include/string.h \
  ../threads/thread.h ../threads/synch.h ../threads/list.h \
@@ -167,7 +167,7 @@ thread.o: ../threads/thread.cc ../threads/copyright.h ../threads/thread.h \
  /usr/include/i386-linux-gnu/bits/wordsize.h \
  /usr/include/i386-linux-gnu/gnu/stubs.h \
  /usr/include/i386-linux-gnu/gnu/stubs-32.h \
- /usr/lib/gcc/i686-linux-gnu/4.7/include/stddef.h \
+ /usr/lib/gcc/i686-linux-gnu/4.6/include/stddef.h \
  /usr/include/i386-linux-gnu/bits/waitflags.h \
  /usr/include/i386-linux-gnu/bits/waitstatus.h /usr/include/endian.h \
  /usr/include/i386-linux-gnu/bits/endian.h \
@@ -182,7 +182,7 @@ thread.o: ../threads/thread.cc ../threads/copyright.h ../threads/thread.h \
  /usr/include/i386-linux-gnu/sys/sysmacros.h \
  /usr/include/i386-linux-gnu/bits/pthreadtypes.h /usr/include/alloca.h \
  /usr/include/stdio.h /usr/include/libio.h /usr/include/_G_config.h \
- /usr/include/wchar.h /usr/lib/gcc/i686-linux-gnu/4.7/include/stdarg.h \
+ /usr/include/wchar.h /usr/lib/gcc/i686-linux-gnu/4.6/include/stdarg.h \
  /usr/include/i386-linux-gnu/bits/stdio_lim.h \
  /usr/include/i386-linux-gnu/bits/sys_errlist.h /usr/include/string.h \
  ../threads/synch.h ../threads/list.h ../machine/machine.h \
@@ -201,7 +201,7 @@ utility.o: ../threads/utility.cc ../threads/copyright.h \
  /usr/include/i386-linux-gnu/bits/wordsize.h \
  /usr/include/i386-linux-gnu/gnu/stubs.h \
  /usr/include/i386-linux-gnu/gnu/stubs-32.h \
- /usr/lib/gcc/i686-linux-gnu/4.7/include/stddef.h \
+ /usr/lib/gcc/i686-linux-gnu/4.6/include/stddef.h \
  /usr/include/i386-linux-gnu/bits/waitflags.h \
  /usr/include/i386-linux-gnu/bits/waitstatus.h /usr/include/endian.h \
  /usr/include/i386-linux-gnu/bits/endian.h \
@@ -216,7 +216,7 @@ utility.o: ../threads/utility.cc ../threads/copyright.h \
  /usr/include/i386-linux-gnu/sys/sysmacros.h \
  /usr/include/i386-linux-gnu/bits/pthreadtypes.h /usr/include/alloca.h \
  /usr/include/stdio.h /usr/include/libio.h /usr/include/_G_config.h \
- /usr/include/wchar.h /usr/lib/gcc/i686-linux-gnu/4.7/include/stdarg.h \
+ /usr/include/wchar.h /usr/lib/gcc/i686-linux-gnu/4.6/include/stdarg.h \
  /usr/include/i386-linux-gnu/bits/stdio_lim.h \
  /usr/include/i386-linux-gnu/bits/sys_errlist.h /usr/include/string.h
 threadtest.o: ../threads/threadtest.cc ../threads/copyright.h \
@@ -227,7 +227,7 @@ threadtest.o: ../threads/threadtest.cc ../threads/copyright.h \
  /usr/include/i386-linux-gnu/bits/wordsize.h \
  /usr/include/i386-linux-gnu/gnu/stubs.h \
  /usr/include/i386-linux-gnu/gnu/stubs-32.h \
- /usr/lib/gcc/i686-linux-gnu/4.7/include/stddef.h \
+ /usr/lib/gcc/i686-linux-gnu/4.6/include/stddef.h \
  /usr/include/i386-linux-gnu/bits/waitflags.h \
  /usr/include/i386-linux-gnu/bits/waitstatus.h /usr/include/endian.h \
  /usr/include/i386-linux-gnu/bits/endian.h \
@@ -242,7 +242,7 @@ threadtest.o: ../threads/threadtest.cc ../threads/copyright.h \
  /usr/include/i386-linux-gnu/sys/sysmacros.h \
  /usr/include/i386-linux-gnu/bits/pthreadtypes.h /usr/include/alloca.h \
  /usr/include/stdio.h /usr/include/libio.h /usr/include/_G_config.h \
- /usr/include/wchar.h /usr/lib/gcc/i686-linux-gnu/4.7/include/stdarg.h \
+ /usr/include/wchar.h /usr/lib/gcc/i686-linux-gnu/4.6/include/stdarg.h \
  /usr/include/i386-linux-gnu/bits/stdio_lim.h \
  /usr/include/i386-linux-gnu/bits/sys_errlist.h /usr/include/string.h \
  ../threads/thread.h ../threads/synch.h ../threads/list.h \
@@ -260,7 +260,7 @@ interrupt.o: ../machine/interrupt.cc ../threads/copyright.h \
  /usr/include/i386-linux-gnu/bits/wordsize.h \
  /usr/include/i386-linux-gnu/gnu/stubs.h \
  /usr/include/i386-linux-gnu/gnu/stubs-32.h \
- /usr/lib/gcc/i686-linux-gnu/4.7/include/stddef.h \
+ /usr/lib/gcc/i686-linux-gnu/4.6/include/stddef.h \
  /usr/include/i386-linux-gnu/bits/waitflags.h \
  /usr/include/i386-linux-gnu/bits/waitstatus.h /usr/include/endian.h \
  /usr/include/i386-linux-gnu/bits/endian.h \
@@ -275,7 +275,7 @@ interrupt.o: ../machine/interrupt.cc ../threads/copyright.h \
  /usr/include/i386-linux-gnu/sys/sysmacros.h \
  /usr/include/i386-linux-gnu/bits/pthreadtypes.h /usr/include/alloca.h \
  /usr/include/stdio.h /usr/include/libio.h /usr/include/_G_config.h \
- /usr/include/wchar.h /usr/lib/gcc/i686-linux-gnu/4.7/include/stdarg.h \
+ /usr/include/wchar.h /usr/lib/gcc/i686-linux-gnu/4.6/include/stdarg.h \
  /usr/include/i386-linux-gnu/bits/stdio_lim.h \
  /usr/include/i386-linux-gnu/bits/sys_errlist.h /usr/include/string.h \
  ../threads/system.h ../threads/thread.h ../threads/synch.h \
@@ -292,11 +292,11 @@ sysdep.o: ../machine/sysdep.cc ../threads/copyright.h \
  /usr/include/i386-linux-gnu/bits/wordsize.h \
  /usr/include/i386-linux-gnu/gnu/stubs.h \
  /usr/include/i386-linux-gnu/gnu/stubs-32.h \
- /usr/lib/gcc/i686-linux-gnu/4.7/include/stddef.h \
+ /usr/lib/gcc/i686-linux-gnu/4.6/include/stddef.h \
  /usr/include/i386-linux-gnu/bits/types.h \
  /usr/include/i386-linux-gnu/bits/typesizes.h /usr/include/libio.h \
  /usr/include/_G_config.h /usr/include/wchar.h \
- /usr/lib/gcc/i686-linux-gnu/4.7/include/stdarg.h \
+ /usr/lib/gcc/i686-linux-gnu/4.6/include/stdarg.h \
  /usr/include/i386-linux-gnu/bits/stdio_lim.h \
  /usr/include/i386-linux-gnu/bits/sys_errlist.h /usr/include/string.h \
  /usr/include/xlocale.h /usr/include/signal.h \
@@ -313,7 +313,6 @@ sysdep.o: ../machine/sysdep.cc ../threads/copyright.h \
  /usr/include/linux/stddef.h \
  /usr/include/i386-linux-gnu/asm/posix_types.h \
  /usr/include/i386-linux-gnu/asm/posix_types_32.h \
- /usr/include/asm-generic/posix_types.h \
  /usr/include/i386-linux-gnu/bits/sigstack.h \
  /usr/include/i386-linux-gnu/sys/ucontext.h \
  /usr/include/i386-linux-gnu/bits/pthreadtypes.h \
@@ -366,7 +365,7 @@ stats.o: ../machine/stats.cc ../threads/copyright.h ../threads/utility.h \
  /usr/include/i386-linux-gnu/bits/wordsize.h \
  /usr/include/i386-linux-gnu/gnu/stubs.h \
  /usr/include/i386-linux-gnu/gnu/stubs-32.h \
- /usr/lib/gcc/i686-linux-gnu/4.7/include/stddef.h \
+ /usr/lib/gcc/i686-linux-gnu/4.6/include/stddef.h \
  /usr/include/i386-linux-gnu/bits/waitflags.h \
  /usr/include/i386-linux-gnu/bits/waitstatus.h /usr/include/endian.h \
  /usr/include/i386-linux-gnu/bits/endian.h \
@@ -381,7 +380,7 @@ stats.o: ../machine/stats.cc ../threads/copyright.h ../threads/utility.h \
  /usr/include/i386-linux-gnu/sys/sysmacros.h \
  /usr/include/i386-linux-gnu/bits/pthreadtypes.h /usr/include/alloca.h \
  /usr/include/stdio.h /usr/include/libio.h /usr/include/_G_config.h \
- /usr/include/wchar.h /usr/lib/gcc/i686-linux-gnu/4.7/include/stdarg.h \
+ /usr/include/wchar.h /usr/lib/gcc/i686-linux-gnu/4.6/include/stdarg.h \
  /usr/include/i386-linux-gnu/bits/stdio_lim.h \
  /usr/include/i386-linux-gnu/bits/sys_errlist.h /usr/include/string.h \
  ../machine/stats.h
@@ -393,7 +392,7 @@ timer.o: ../machine/timer.cc ../threads/copyright.h ../machine/timer.h \
  /usr/include/i386-linux-gnu/bits/wordsize.h \
  /usr/include/i386-linux-gnu/gnu/stubs.h \
  /usr/include/i386-linux-gnu/gnu/stubs-32.h \
- /usr/lib/gcc/i686-linux-gnu/4.7/include/stddef.h \
+ /usr/lib/gcc/i686-linux-gnu/4.6/include/stddef.h \
  /usr/include/i386-linux-gnu/bits/waitflags.h \
  /usr/include/i386-linux-gnu/bits/waitstatus.h /usr/include/endian.h \
  /usr/include/i386-linux-gnu/bits/endian.h \
@@ -408,7 +407,7 @@ timer.o: ../machine/timer.cc ../threads/copyright.h ../machine/timer.h \
  /usr/include/i386-linux-gnu/sys/sysmacros.h \
  /usr/include/i386-linux-gnu/bits/pthreadtypes.h /usr/include/alloca.h \
  /usr/include/stdio.h /usr/include/libio.h /usr/include/_G_config.h \
- /usr/include/wchar.h /usr/lib/gcc/i686-linux-gnu/4.7/include/stdarg.h \
+ /usr/include/wchar.h /usr/lib/gcc/i686-linux-gnu/4.6/include/stdarg.h \
  /usr/include/i386-linux-gnu/bits/stdio_lim.h \
  /usr/include/i386-linux-gnu/bits/sys_errlist.h /usr/include/string.h \
  ../threads/system.h ../threads/utility.h ../threads/thread.h \
@@ -427,7 +426,7 @@ preemptive.o: ../threads/preemptive.cc ../threads/preemptive.h \
  /usr/include/i386-linux-gnu/bits/wordsize.h \
  /usr/include/i386-linux-gnu/gnu/stubs.h \
  /usr/include/i386-linux-gnu/gnu/stubs-32.h \
- /usr/lib/gcc/i686-linux-gnu/4.7/include/stddef.h \
+ /usr/lib/gcc/i686-linux-gnu/4.6/include/stddef.h \
  /usr/include/i386-linux-gnu/bits/waitflags.h \
  /usr/include/i386-linux-gnu/bits/waitstatus.h /usr/include/endian.h \
  /usr/include/i386-linux-gnu/bits/endian.h \
@@ -442,7 +441,7 @@ preemptive.o: ../threads/preemptive.cc ../threads/preemptive.h \
  /usr/include/i386-linux-gnu/sys/sysmacros.h \
  /usr/include/i386-linux-gnu/bits/pthreadtypes.h /usr/include/alloca.h \
  /usr/include/stdio.h /usr/include/libio.h /usr/include/_G_config.h \
- /usr/include/wchar.h /usr/lib/gcc/i686-linux-gnu/4.7/include/stdarg.h \
+ /usr/include/wchar.h /usr/lib/gcc/i686-linux-gnu/4.6/include/stdarg.h \
  /usr/include/i386-linux-gnu/bits/stdio_lim.h \
  /usr/include/i386-linux-gnu/bits/sys_errlist.h /usr/include/string.h \
  ../threads/thread.h ../threads/synch.h ../threads/list.h \
@@ -469,7 +468,6 @@ preemptive.o: ../threads/preemptive.cc ../threads/preemptive.h \
  /usr/include/linux/stddef.h \
  /usr/include/i386-linux-gnu/asm/posix_types.h \
  /usr/include/i386-linux-gnu/asm/posix_types_32.h \
- /usr/include/asm-generic/posix_types.h \
  /usr/include/i386-linux-gnu/bits/sigstack.h \
  /usr/include/i386-linux-gnu/sys/ucontext.h \
  /usr/include/i386-linux-gnu/bits/sigthread.h \
@@ -484,7 +482,7 @@ addrspace.o: ../userprog/addrspace.cc ../threads/copyright.h \
  /usr/include/i386-linux-gnu/bits/wordsize.h \
  /usr/include/i386-linux-gnu/gnu/stubs.h \
  /usr/include/i386-linux-gnu/gnu/stubs-32.h \
- /usr/lib/gcc/i686-linux-gnu/4.7/include/stddef.h \
+ /usr/lib/gcc/i686-linux-gnu/4.6/include/stddef.h \
  /usr/include/i386-linux-gnu/bits/waitflags.h \
  /usr/include/i386-linux-gnu/bits/waitstatus.h /usr/include/endian.h \
  /usr/include/i386-linux-gnu/bits/endian.h \
@@ -499,7 +497,7 @@ addrspace.o: ../userprog/addrspace.cc ../threads/copyright.h \
  /usr/include/i386-linux-gnu/sys/sysmacros.h \
  /usr/include/i386-linux-gnu/bits/pthreadtypes.h /usr/include/alloca.h \
  /usr/include/stdio.h /usr/include/libio.h /usr/include/_G_config.h \
- /usr/include/wchar.h /usr/lib/gcc/i686-linux-gnu/4.7/include/stdarg.h \
+ /usr/include/wchar.h /usr/lib/gcc/i686-linux-gnu/4.6/include/stdarg.h \
  /usr/include/i386-linux-gnu/bits/stdio_lim.h \
  /usr/include/i386-linux-gnu/bits/sys_errlist.h /usr/include/string.h \
  ../threads/thread.h ../threads/synch.h ../threads/list.h \
@@ -518,7 +516,7 @@ bitmap.o: ../userprog/bitmap.cc ../threads/copyright.h \
  /usr/include/i386-linux-gnu/bits/wordsize.h \
  /usr/include/i386-linux-gnu/gnu/stubs.h \
  /usr/include/i386-linux-gnu/gnu/stubs-32.h \
- /usr/lib/gcc/i686-linux-gnu/4.7/include/stddef.h \
+ /usr/lib/gcc/i686-linux-gnu/4.6/include/stddef.h \
  /usr/include/i386-linux-gnu/bits/waitflags.h \
  /usr/include/i386-linux-gnu/bits/waitstatus.h /usr/include/endian.h \
  /usr/include/i386-linux-gnu/bits/endian.h \
@@ -533,7 +531,7 @@ bitmap.o: ../userprog/bitmap.cc ../threads/copyright.h \
  /usr/include/i386-linux-gnu/sys/sysmacros.h \
  /usr/include/i386-linux-gnu/bits/pthreadtypes.h /usr/include/alloca.h \
  /usr/include/stdio.h /usr/include/libio.h /usr/include/_G_config.h \
- /usr/include/wchar.h /usr/lib/gcc/i686-linux-gnu/4.7/include/stdarg.h \
+ /usr/include/wchar.h /usr/lib/gcc/i686-linux-gnu/4.6/include/stdarg.h \
  /usr/include/i386-linux-gnu/bits/stdio_lim.h \
  /usr/include/i386-linux-gnu/bits/sys_errlist.h /usr/include/string.h \
  ../filesys/openfile.h
@@ -545,7 +543,7 @@ exception.o: ../userprog/exception.cc ../threads/copyright.h \
  /usr/include/i386-linux-gnu/bits/wordsize.h \
  /usr/include/i386-linux-gnu/gnu/stubs.h \
  /usr/include/i386-linux-gnu/gnu/stubs-32.h \
- /usr/lib/gcc/i686-linux-gnu/4.7/include/stddef.h \
+ /usr/lib/gcc/i686-linux-gnu/4.6/include/stddef.h \
  /usr/include/i386-linux-gnu/bits/waitflags.h \
  /usr/include/i386-linux-gnu/bits/waitstatus.h /usr/include/endian.h \
  /usr/include/i386-linux-gnu/bits/endian.h \
@@ -560,7 +558,7 @@ exception.o: ../userprog/exception.cc ../threads/copyright.h \
  /usr/include/i386-linux-gnu/sys/sysmacros.h \
  /usr/include/i386-linux-gnu/bits/pthreadtypes.h /usr/include/alloca.h \
  /usr/include/stdio.h /usr/include/libio.h /usr/include/_G_config.h \
- /usr/include/wchar.h /usr/lib/gcc/i686-linux-gnu/4.7/include/stdarg.h \
+ /usr/include/wchar.h /usr/lib/gcc/i686-linux-gnu/4.6/include/stdarg.h \
  /usr/include/i386-linux-gnu/bits/stdio_lim.h \
  /usr/include/i386-linux-gnu/bits/sys_errlist.h /usr/include/string.h \
  ../threads/thread.h ../threads/synch.h ../threads/list.h \
@@ -570,16 +568,42 @@ exception.o: ../userprog/exception.cc ../threads/copyright.h \
  ../threads/list.h ../machine/stats.h ../machine/timer.h \
  ../filesys/synchdisk.h ../machine/disk.h ../threads/synch.h \
  ../network/post.h ../machine/network.h ../threads/synchlist.h \
- ../userprog/syscall.h ../userprog/syscall_utils.h
-progtest.o: ../userprog/progtest.cc ../threads/copyright.h \
- ../threads/system.h ../threads/copyright.h ../threads/utility.h \
- ../machine/sysdep.h /usr/include/stdlib.h /usr/include/features.h \
+ ../userprog/syscall.h ../userprog/syscall_utils.h \
+ ../userprog/addrspace.h ../userprog/exception_imp.h \
+ ../machine/synchconsole.h ../machine/console.h /usr/include/c++/4.6/map \
+ /usr/include/c++/4.6/bits/stl_tree.h \
+ /usr/include/c++/4.6/bits/stl_algobase.h \
+ /usr/include/c++/4.6/i686-linux-gnu/./bits/c++config.h \
+ /usr/include/c++/4.6/i686-linux-gnu/./bits/os_defines.h \
+ /usr/include/c++/4.6/i686-linux-gnu/./bits/cpu_defines.h \
+ /usr/include/c++/4.6/bits/functexcept.h \
+ /usr/include/c++/4.6/bits/exception_defines.h \
+ /usr/include/c++/4.6/bits/cpp_type_traits.h \
+ /usr/include/c++/4.6/ext/type_traits.h \
+ /usr/include/c++/4.6/ext/numeric_traits.h \
+ /usr/include/c++/4.6/bits/stl_pair.h /usr/include/c++/4.6/bits/move.h \
+ /usr/include/c++/4.6/bits/concept_check.h \
+ /usr/include/c++/4.6/bits/stl_iterator_base_types.h \
+ /usr/include/c++/4.6/bits/stl_iterator_base_funcs.h \
+ /usr/include/c++/4.6/bits/stl_iterator.h \
+ /usr/include/c++/4.6/debug/debug.h /usr/include/c++/4.6/bits/allocator.h \
+ /usr/include/c++/4.6/i686-linux-gnu/./bits/c++allocator.h \
+ /usr/include/c++/4.6/ext/new_allocator.h /usr/include/c++/4.6/new \
+ /usr/include/c++/4.6/exception /usr/include/c++/4.6/bits/stl_function.h \
+ /usr/include/c++/4.6/backward/binders.h \
+ /usr/include/c++/4.6/bits/stl_map.h \
+ /usr/include/c++/4.6/initializer_list \
+ /usr/include/c++/4.6/bits/stl_multimap.h \
+ /usr/include/c++/4.6/bits/range_access.h
+exception_imp.o: ../userprog/exception_imp.cc ../threads/system.h \
+ ../threads/copyright.h ../threads/utility.h ../machine/sysdep.h \
+ ../threads/copyright.h /usr/include/stdlib.h /usr/include/features.h \
  /usr/include/i386-linux-gnu/bits/predefs.h \
  /usr/include/i386-linux-gnu/sys/cdefs.h \
  /usr/include/i386-linux-gnu/bits/wordsize.h \
  /usr/include/i386-linux-gnu/gnu/stubs.h \
  /usr/include/i386-linux-gnu/gnu/stubs-32.h \
- /usr/lib/gcc/i686-linux-gnu/4.7/include/stddef.h \
+ /usr/lib/gcc/i686-linux-gnu/4.6/include/stddef.h \
  /usr/include/i386-linux-gnu/bits/waitflags.h \
  /usr/include/i386-linux-gnu/bits/waitstatus.h /usr/include/endian.h \
  /usr/include/i386-linux-gnu/bits/endian.h \
@@ -594,7 +618,66 @@ progtest.o: ../userprog/progtest.cc ../threads/copyright.h \
  /usr/include/i386-linux-gnu/sys/sysmacros.h \
  /usr/include/i386-linux-gnu/bits/pthreadtypes.h /usr/include/alloca.h \
  /usr/include/stdio.h /usr/include/libio.h /usr/include/_G_config.h \
- /usr/include/wchar.h /usr/lib/gcc/i686-linux-gnu/4.7/include/stdarg.h \
+ /usr/include/wchar.h /usr/lib/gcc/i686-linux-gnu/4.6/include/stdarg.h \
+ /usr/include/i386-linux-gnu/bits/stdio_lim.h \
+ /usr/include/i386-linux-gnu/bits/sys_errlist.h /usr/include/string.h \
+ ../threads/thread.h ../threads/synch.h ../threads/list.h \
+ ../machine/machine.h ../threads/utility.h ../machine/translate.h \
+ ../machine/disk.h ../userprog/addrspace.h ../filesys/filesys.h \
+ ../filesys/openfile.h ../threads/scheduler.h ../machine/interrupt.h \
+ ../threads/list.h ../machine/stats.h ../machine/timer.h \
+ ../filesys/synchdisk.h ../machine/disk.h ../threads/synch.h \
+ ../network/post.h ../machine/network.h ../threads/synchlist.h \
+ ../machine/synchconsole.h ../machine/console.h ../userprog/syscall.h \
+ ../userprog/syscall_utils.h ../userprog/addrspace.h \
+ /usr/include/c++/4.6/map /usr/include/c++/4.6/bits/stl_tree.h \
+ /usr/include/c++/4.6/bits/stl_algobase.h \
+ /usr/include/c++/4.6/i686-linux-gnu/./bits/c++config.h \
+ /usr/include/c++/4.6/i686-linux-gnu/./bits/os_defines.h \
+ /usr/include/c++/4.6/i686-linux-gnu/./bits/cpu_defines.h \
+ /usr/include/c++/4.6/bits/functexcept.h \
+ /usr/include/c++/4.6/bits/exception_defines.h \
+ /usr/include/c++/4.6/bits/cpp_type_traits.h \
+ /usr/include/c++/4.6/ext/type_traits.h \
+ /usr/include/c++/4.6/ext/numeric_traits.h \
+ /usr/include/c++/4.6/bits/stl_pair.h /usr/include/c++/4.6/bits/move.h \
+ /usr/include/c++/4.6/bits/concept_check.h \
+ /usr/include/c++/4.6/bits/stl_iterator_base_types.h \
+ /usr/include/c++/4.6/bits/stl_iterator_base_funcs.h \
+ /usr/include/c++/4.6/bits/stl_iterator.h \
+ /usr/include/c++/4.6/debug/debug.h /usr/include/c++/4.6/bits/allocator.h \
+ /usr/include/c++/4.6/i686-linux-gnu/./bits/c++allocator.h \
+ /usr/include/c++/4.6/ext/new_allocator.h /usr/include/c++/4.6/new \
+ /usr/include/c++/4.6/exception /usr/include/c++/4.6/bits/stl_function.h \
+ /usr/include/c++/4.6/backward/binders.h \
+ /usr/include/c++/4.6/bits/stl_map.h \
+ /usr/include/c++/4.6/initializer_list \
+ /usr/include/c++/4.6/bits/stl_multimap.h \
+ /usr/include/c++/4.6/bits/range_access.h
+progtest.o: ../userprog/progtest.cc ../threads/copyright.h \
+ ../threads/system.h ../threads/copyright.h ../threads/utility.h \
+ ../machine/sysdep.h /usr/include/stdlib.h /usr/include/features.h \
+ /usr/include/i386-linux-gnu/bits/predefs.h \
+ /usr/include/i386-linux-gnu/sys/cdefs.h \
+ /usr/include/i386-linux-gnu/bits/wordsize.h \
+ /usr/include/i386-linux-gnu/gnu/stubs.h \
+ /usr/include/i386-linux-gnu/gnu/stubs-32.h \
+ /usr/lib/gcc/i686-linux-gnu/4.6/include/stddef.h \
+ /usr/include/i386-linux-gnu/bits/waitflags.h \
+ /usr/include/i386-linux-gnu/bits/waitstatus.h /usr/include/endian.h \
+ /usr/include/i386-linux-gnu/bits/endian.h \
+ /usr/include/i386-linux-gnu/bits/byteswap.h /usr/include/xlocale.h \
+ /usr/include/i386-linux-gnu/sys/types.h \
+ /usr/include/i386-linux-gnu/bits/types.h \
+ /usr/include/i386-linux-gnu/bits/typesizes.h /usr/include/time.h \
+ /usr/include/i386-linux-gnu/sys/select.h \
+ /usr/include/i386-linux-gnu/bits/select.h \
+ /usr/include/i386-linux-gnu/bits/sigset.h \
+ /usr/include/i386-linux-gnu/bits/time.h \
+ /usr/include/i386-linux-gnu/sys/sysmacros.h \
+ /usr/include/i386-linux-gnu/bits/pthreadtypes.h /usr/include/alloca.h \
+ /usr/include/stdio.h /usr/include/libio.h /usr/include/_G_config.h \
+ /usr/include/wchar.h /usr/lib/gcc/i686-linux-gnu/4.6/include/stdarg.h \
  /usr/include/i386-linux-gnu/bits/stdio_lim.h \
  /usr/include/i386-linux-gnu/bits/sys_errlist.h /usr/include/string.h \
  ../threads/thread.h ../threads/synch.h ../threads/list.h \
@@ -613,7 +696,7 @@ console.o: ../machine/console.cc ../threads/copyright.h \
  /usr/include/i386-linux-gnu/bits/wordsize.h \
  /usr/include/i386-linux-gnu/gnu/stubs.h \
  /usr/include/i386-linux-gnu/gnu/stubs-32.h \
- /usr/lib/gcc/i686-linux-gnu/4.7/include/stddef.h \
+ /usr/lib/gcc/i686-linux-gnu/4.6/include/stddef.h \
  /usr/include/i386-linux-gnu/bits/waitflags.h \
  /usr/include/i386-linux-gnu/bits/waitstatus.h /usr/include/endian.h \
  /usr/include/i386-linux-gnu/bits/endian.h \
@@ -628,7 +711,7 @@ console.o: ../machine/console.cc ../threads/copyright.h \
  /usr/include/i386-linux-gnu/sys/sysmacros.h \
  /usr/include/i386-linux-gnu/bits/pthreadtypes.h /usr/include/alloca.h \
  /usr/include/stdio.h /usr/include/libio.h /usr/include/_G_config.h \
- /usr/include/wchar.h /usr/lib/gcc/i686-linux-gnu/4.7/include/stdarg.h \
+ /usr/include/wchar.h /usr/lib/gcc/i686-linux-gnu/4.6/include/stdarg.h \
  /usr/include/i386-linux-gnu/bits/stdio_lim.h \
  /usr/include/i386-linux-gnu/bits/sys_errlist.h /usr/include/string.h \
  ../threads/system.h ../threads/utility.h ../threads/thread.h \
@@ -647,7 +730,7 @@ machine.o: ../machine/machine.cc ../threads/copyright.h \
  /usr/include/i386-linux-gnu/bits/wordsize.h \
  /usr/include/i386-linux-gnu/gnu/stubs.h \
  /usr/include/i386-linux-gnu/gnu/stubs-32.h \
- /usr/lib/gcc/i686-linux-gnu/4.7/include/stddef.h \
+ /usr/lib/gcc/i686-linux-gnu/4.6/include/stddef.h \
  /usr/include/i386-linux-gnu/bits/waitflags.h \
  /usr/include/i386-linux-gnu/bits/waitstatus.h /usr/include/endian.h \
  /usr/include/i386-linux-gnu/bits/endian.h \
@@ -662,7 +745,7 @@ machine.o: ../machine/machine.cc ../threads/copyright.h \
  /usr/include/i386-linux-gnu/sys/sysmacros.h \
  /usr/include/i386-linux-gnu/bits/pthreadtypes.h /usr/include/alloca.h \
  /usr/include/stdio.h /usr/include/libio.h /usr/include/_G_config.h \
- /usr/include/wchar.h /usr/lib/gcc/i686-linux-gnu/4.7/include/stdarg.h \
+ /usr/include/wchar.h /usr/lib/gcc/i686-linux-gnu/4.6/include/stdarg.h \
  /usr/include/i386-linux-gnu/bits/stdio_lim.h \
  /usr/include/i386-linux-gnu/bits/sys_errlist.h /usr/include/string.h \
  ../machine/translate.h ../machine/disk.h ../threads/system.h \
@@ -681,7 +764,7 @@ mipssim.o: ../machine/mipssim.cc ../threads/copyright.h \
  /usr/include/i386-linux-gnu/bits/wordsize.h \
  /usr/include/i386-linux-gnu/gnu/stubs.h \
  /usr/include/i386-linux-gnu/gnu/stubs-32.h \
- /usr/lib/gcc/i686-linux-gnu/4.7/include/stddef.h \
+ /usr/lib/gcc/i686-linux-gnu/4.6/include/stddef.h \
  /usr/include/i386-linux-gnu/bits/waitflags.h \
  /usr/include/i386-linux-gnu/bits/waitstatus.h /usr/include/endian.h \
  /usr/include/i386-linux-gnu/bits/endian.h \
@@ -696,7 +779,7 @@ mipssim.o: ../machine/mipssim.cc ../threads/copyright.h \
  /usr/include/i386-linux-gnu/sys/sysmacros.h \
  /usr/include/i386-linux-gnu/bits/pthreadtypes.h /usr/include/alloca.h \
  /usr/include/stdio.h /usr/include/libio.h /usr/include/_G_config.h \
- /usr/include/wchar.h /usr/lib/gcc/i686-linux-gnu/4.7/include/stdarg.h \
+ /usr/include/wchar.h /usr/lib/gcc/i686-linux-gnu/4.6/include/stdarg.h \
  /usr/include/i386-linux-gnu/bits/stdio_lim.h \
  /usr/include/i386-linux-gnu/bits/sys_errlist.h /usr/include/string.h \
  ../machine/translate.h ../machine/disk.h ../machine/mipssim.h \
@@ -715,7 +798,7 @@ translate.o: ../machine/translate.cc ../threads/copyright.h \
  /usr/include/i386-linux-gnu/bits/wordsize.h \
  /usr/include/i386-linux-gnu/gnu/stubs.h \
  /usr/include/i386-linux-gnu/gnu/stubs-32.h \
- /usr/lib/gcc/i686-linux-gnu/4.7/include/stddef.h \
+ /usr/lib/gcc/i686-linux-gnu/4.6/include/stddef.h \
  /usr/include/i386-linux-gnu/bits/waitflags.h \
  /usr/include/i386-linux-gnu/bits/waitstatus.h /usr/include/endian.h \
  /usr/include/i386-linux-gnu/bits/endian.h \
@@ -730,7 +813,7 @@ translate.o: ../machine/translate.cc ../threads/copyright.h \
  /usr/include/i386-linux-gnu/sys/sysmacros.h \
  /usr/include/i386-linux-gnu/bits/pthreadtypes.h /usr/include/alloca.h \
  /usr/include/stdio.h /usr/include/libio.h /usr/include/_G_config.h \
- /usr/include/wchar.h /usr/lib/gcc/i686-linux-gnu/4.7/include/stdarg.h \
+ /usr/include/wchar.h /usr/lib/gcc/i686-linux-gnu/4.6/include/stdarg.h \
  /usr/include/i386-linux-gnu/bits/stdio_lim.h \
  /usr/include/i386-linux-gnu/bits/sys_errlist.h /usr/include/string.h \
  ../machine/translate.h ../machine/disk.h ../userprog/addrspace.h \
@@ -741,15 +824,15 @@ translate.o: ../machine/translate.cc ../threads/copyright.h \
  ../machine/timer.h ../filesys/synchdisk.h ../machine/disk.h \
  ../threads/synch.h ../network/post.h ../machine/network.h \
  ../threads/synchlist.h
-directory.o: ../filesys/directory.cc ../threads/copyright.h \
- ../threads/utility.h ../threads/copyright.h ../machine/sysdep.h \
- /usr/include/stdlib.h /usr/include/features.h \
+syscall_utils.o: ../userprog/syscall_utils.cc ../threads/system.h \
+ ../threads/copyright.h ../threads/utility.h ../machine/sysdep.h \
+ ../threads/copyright.h /usr/include/stdlib.h /usr/include/features.h \
  /usr/include/i386-linux-gnu/bits/predefs.h \
  /usr/include/i386-linux-gnu/sys/cdefs.h \
  /usr/include/i386-linux-gnu/bits/wordsize.h \
  /usr/include/i386-linux-gnu/gnu/stubs.h \
  /usr/include/i386-linux-gnu/gnu/stubs-32.h \
- /usr/lib/gcc/i686-linux-gnu/4.7/include/stddef.h \
+ /usr/lib/gcc/i686-linux-gnu/4.6/include/stddef.h \
  /usr/include/i386-linux-gnu/bits/waitflags.h \
  /usr/include/i386-linux-gnu/bits/waitstatus.h /usr/include/endian.h \
  /usr/include/i386-linux-gnu/bits/endian.h \
@@ -764,7 +847,96 @@ directory.o: ../filesys/directory.cc ../threads/copyright.h \
  /usr/include/i386-linux-gnu/sys/sysmacros.h \
  /usr/include/i386-linux-gnu/bits/pthreadtypes.h /usr/include/alloca.h \
  /usr/include/stdio.h /usr/include/libio.h /usr/include/_G_config.h \
- /usr/include/wchar.h /usr/lib/gcc/i686-linux-gnu/4.7/include/stdarg.h \
+ /usr/include/wchar.h /usr/lib/gcc/i686-linux-gnu/4.6/include/stdarg.h \
+ /usr/include/i386-linux-gnu/bits/stdio_lim.h \
+ /usr/include/i386-linux-gnu/bits/sys_errlist.h /usr/include/string.h \
+ ../threads/thread.h ../threads/synch.h ../threads/list.h \
+ ../machine/machine.h ../threads/utility.h ../machine/translate.h \
+ ../machine/disk.h ../userprog/addrspace.h ../filesys/filesys.h \
+ ../filesys/openfile.h ../threads/scheduler.h ../machine/interrupt.h \
+ ../threads/list.h ../machine/stats.h ../machine/timer.h \
+ ../filesys/synchdisk.h ../machine/disk.h ../threads/synch.h \
+ ../network/post.h ../machine/network.h ../threads/synchlist.h \
+ ../userprog/syscall_utils.h ../userprog/addrspace.h \
+ /usr/include/c++/4.6/map /usr/include/c++/4.6/bits/stl_tree.h \
+ /usr/include/c++/4.6/bits/stl_algobase.h \
+ /usr/include/c++/4.6/i686-linux-gnu/./bits/c++config.h \
+ /usr/include/c++/4.6/i686-linux-gnu/./bits/os_defines.h \
+ /usr/include/c++/4.6/i686-linux-gnu/./bits/cpu_defines.h \
+ /usr/include/c++/4.6/bits/functexcept.h \
+ /usr/include/c++/4.6/bits/exception_defines.h \
+ /usr/include/c++/4.6/bits/cpp_type_traits.h \
+ /usr/include/c++/4.6/ext/type_traits.h \
+ /usr/include/c++/4.6/ext/numeric_traits.h \
+ /usr/include/c++/4.6/bits/stl_pair.h /usr/include/c++/4.6/bits/move.h \
+ /usr/include/c++/4.6/bits/concept_check.h \
+ /usr/include/c++/4.6/bits/stl_iterator_base_types.h \
+ /usr/include/c++/4.6/bits/stl_iterator_base_funcs.h \
+ /usr/include/c++/4.6/bits/stl_iterator.h \
+ /usr/include/c++/4.6/debug/debug.h /usr/include/c++/4.6/bits/allocator.h \
+ /usr/include/c++/4.6/i686-linux-gnu/./bits/c++allocator.h \
+ /usr/include/c++/4.6/ext/new_allocator.h /usr/include/c++/4.6/new \
+ /usr/include/c++/4.6/exception /usr/include/c++/4.6/bits/stl_function.h \
+ /usr/include/c++/4.6/backward/binders.h \
+ /usr/include/c++/4.6/bits/stl_map.h \
+ /usr/include/c++/4.6/initializer_list \
+ /usr/include/c++/4.6/bits/stl_multimap.h \
+ /usr/include/c++/4.6/bits/range_access.h
+synchconsole.o: ../machine/synchconsole.cc ../machine/synchconsole.h \
+ ../threads/synch.h ../threads/copyright.h ../threads/thread.h \
+ ../threads/utility.h ../machine/sysdep.h ../threads/copyright.h \
+ /usr/include/stdlib.h /usr/include/features.h \
+ /usr/include/i386-linux-gnu/bits/predefs.h \
+ /usr/include/i386-linux-gnu/sys/cdefs.h \
+ /usr/include/i386-linux-gnu/bits/wordsize.h \
+ /usr/include/i386-linux-gnu/gnu/stubs.h \
+ /usr/include/i386-linux-gnu/gnu/stubs-32.h \
+ /usr/lib/gcc/i686-linux-gnu/4.6/include/stddef.h \
+ /usr/include/i386-linux-gnu/bits/waitflags.h \
+ /usr/include/i386-linux-gnu/bits/waitstatus.h /usr/include/endian.h \
+ /usr/include/i386-linux-gnu/bits/endian.h \
+ /usr/include/i386-linux-gnu/bits/byteswap.h /usr/include/xlocale.h \
+ /usr/include/i386-linux-gnu/sys/types.h \
+ /usr/include/i386-linux-gnu/bits/types.h \
+ /usr/include/i386-linux-gnu/bits/typesizes.h /usr/include/time.h \
+ /usr/include/i386-linux-gnu/sys/select.h \
+ /usr/include/i386-linux-gnu/bits/select.h \
+ /usr/include/i386-linux-gnu/bits/sigset.h \
+ /usr/include/i386-linux-gnu/bits/time.h \
+ /usr/include/i386-linux-gnu/sys/sysmacros.h \
+ /usr/include/i386-linux-gnu/bits/pthreadtypes.h /usr/include/alloca.h \
+ /usr/include/stdio.h /usr/include/libio.h /usr/include/_G_config.h \
+ /usr/include/wchar.h /usr/lib/gcc/i686-linux-gnu/4.6/include/stdarg.h \
+ /usr/include/i386-linux-gnu/bits/stdio_lim.h \
+ /usr/include/i386-linux-gnu/bits/sys_errlist.h /usr/include/string.h \
+ ../threads/synch.h ../machine/machine.h ../threads/utility.h \
+ ../machine/translate.h ../machine/disk.h ../userprog/addrspace.h \
+ ../filesys/filesys.h ../filesys/openfile.h ../threads/list.h \
+ ../machine/console.h
+directory.o: ../filesys/directory.cc ../threads/copyright.h \
+ ../threads/utility.h ../threads/copyright.h ../machine/sysdep.h \
+ /usr/include/stdlib.h /usr/include/features.h \
+ /usr/include/i386-linux-gnu/bits/predefs.h \
+ /usr/include/i386-linux-gnu/sys/cdefs.h \
+ /usr/include/i386-linux-gnu/bits/wordsize.h \
+ /usr/include/i386-linux-gnu/gnu/stubs.h \
+ /usr/include/i386-linux-gnu/gnu/stubs-32.h \
+ /usr/lib/gcc/i686-linux-gnu/4.6/include/stddef.h \
+ /usr/include/i386-linux-gnu/bits/waitflags.h \
+ /usr/include/i386-linux-gnu/bits/waitstatus.h /usr/include/endian.h \
+ /usr/include/i386-linux-gnu/bits/endian.h \
+ /usr/include/i386-linux-gnu/bits/byteswap.h /usr/include/xlocale.h \
+ /usr/include/i386-linux-gnu/sys/types.h \
+ /usr/include/i386-linux-gnu/bits/types.h \
+ /usr/include/i386-linux-gnu/bits/typesizes.h /usr/include/time.h \
+ /usr/include/i386-linux-gnu/sys/select.h \
+ /usr/include/i386-linux-gnu/bits/select.h \
+ /usr/include/i386-linux-gnu/bits/sigset.h \
+ /usr/include/i386-linux-gnu/bits/time.h \
+ /usr/include/i386-linux-gnu/sys/sysmacros.h \
+ /usr/include/i386-linux-gnu/bits/pthreadtypes.h /usr/include/alloca.h \
+ /usr/include/stdio.h /usr/include/libio.h /usr/include/_G_config.h \
+ /usr/include/wchar.h /usr/lib/gcc/i686-linux-gnu/4.6/include/stdarg.h \
  /usr/include/i386-linux-gnu/bits/stdio_lim.h \
  /usr/include/i386-linux-gnu/bits/sys_errlist.h /usr/include/string.h \
  ../filesys/filehdr.h ../machine/disk.h ../userprog/bitmap.h \
@@ -777,7 +949,7 @@ filehdr.o: ../filesys/filehdr.cc ../threads/copyright.h \
  /usr/include/i386-linux-gnu/bits/wordsize.h \
  /usr/include/i386-linux-gnu/gnu/stubs.h \
  /usr/include/i386-linux-gnu/gnu/stubs-32.h \
- /usr/lib/gcc/i686-linux-gnu/4.7/include/stddef.h \
+ /usr/lib/gcc/i686-linux-gnu/4.6/include/stddef.h \
  /usr/include/i386-linux-gnu/bits/waitflags.h \
  /usr/include/i386-linux-gnu/bits/waitstatus.h /usr/include/endian.h \
  /usr/include/i386-linux-gnu/bits/endian.h \
@@ -792,7 +964,7 @@ filehdr.o: ../filesys/filehdr.cc ../threads/copyright.h \
  /usr/include/i386-linux-gnu/sys/sysmacros.h \
  /usr/include/i386-linux-gnu/bits/pthreadtypes.h /usr/include/alloca.h \
  /usr/include/stdio.h /usr/include/libio.h /usr/include/_G_config.h \
- /usr/include/wchar.h /usr/lib/gcc/i686-linux-gnu/4.7/include/stdarg.h \
+ /usr/include/wchar.h /usr/lib/gcc/i686-linux-gnu/4.6/include/stdarg.h \
  /usr/include/i386-linux-gnu/bits/stdio_lim.h \
  /usr/include/i386-linux-gnu/bits/sys_errlist.h /usr/include/string.h \
  ../threads/thread.h ../threads/synch.h ../threads/list.h \
@@ -811,7 +983,7 @@ filesys.o: ../filesys/filesys.cc ../threads/copyright.h ../machine/disk.h \
  /usr/include/i386-linux-gnu/bits/wordsize.h \
  /usr/include/i386-linux-gnu/gnu/stubs.h \
  /usr/include/i386-linux-gnu/gnu/stubs-32.h \
- /usr/lib/gcc/i686-linux-gnu/4.7/include/stddef.h \
+ /usr/lib/gcc/i686-linux-gnu/4.6/include/stddef.h \
  /usr/include/i386-linux-gnu/bits/waitflags.h \
  /usr/include/i386-linux-gnu/bits/waitstatus.h /usr/include/endian.h \
  /usr/include/i386-linux-gnu/bits/endian.h \
@@ -826,7 +998,7 @@ filesys.o: ../filesys/filesys.cc ../threads/copyright.h ../machine/disk.h \
  /usr/include/i386-linux-gnu/sys/sysmacros.h \
  /usr/include/i386-linux-gnu/bits/pthreadtypes.h /usr/include/alloca.h \
  /usr/include/stdio.h /usr/include/libio.h /usr/include/_G_config.h \
- /usr/include/wchar.h /usr/lib/gcc/i686-linux-gnu/4.7/include/stdarg.h \
+ /usr/include/wchar.h /usr/lib/gcc/i686-linux-gnu/4.6/include/stdarg.h \
  /usr/include/i386-linux-gnu/bits/stdio_lim.h \
  /usr/include/i386-linux-gnu/bits/sys_errlist.h /usr/include/string.h \
  ../userprog/bitmap.h ../filesys/openfile.h ../filesys/directory.h \
@@ -839,7 +1011,7 @@ fstest.o: ../filesys/fstest.cc ../threads/copyright.h \
  /usr/include/i386-linux-gnu/bits/wordsize.h \
  /usr/include/i386-linux-gnu/gnu/stubs.h \
  /usr/include/i386-linux-gnu/gnu/stubs-32.h \
- /usr/lib/gcc/i686-linux-gnu/4.7/include/stddef.h \
+ /usr/lib/gcc/i686-linux-gnu/4.6/include/stddef.h \
  /usr/include/i386-linux-gnu/bits/waitflags.h \
  /usr/include/i386-linux-gnu/bits/waitstatus.h /usr/include/endian.h \
  /usr/include/i386-linux-gnu/bits/endian.h \
@@ -854,7 +1026,7 @@ fstest.o: ../filesys/fstest.cc ../threads/copyright.h \
  /usr/include/i386-linux-gnu/sys/sysmacros.h \
  /usr/include/i386-linux-gnu/bits/pthreadtypes.h /usr/include/alloca.h \
  /usr/include/stdio.h /usr/include/libio.h /usr/include/_G_config.h \
- /usr/include/wchar.h /usr/lib/gcc/i686-linux-gnu/4.7/include/stdarg.h \
+ /usr/include/wchar.h /usr/lib/gcc/i686-linux-gnu/4.6/include/stdarg.h \
  /usr/include/i386-linux-gnu/bits/stdio_lim.h \
  /usr/include/i386-linux-gnu/bits/sys_errlist.h /usr/include/string.h \
  ../filesys/filesys.h ../filesys/openfile.h ../threads/system.h \
@@ -873,7 +1045,7 @@ openfile.o: ../filesys/openfile.cc ../threads/copyright.h \
  /usr/include/i386-linux-gnu/bits/wordsize.h \
  /usr/include/i386-linux-gnu/gnu/stubs.h \
  /usr/include/i386-linux-gnu/gnu/stubs-32.h \
- /usr/lib/gcc/i686-linux-gnu/4.7/include/stddef.h \
+ /usr/lib/gcc/i686-linux-gnu/4.6/include/stddef.h \
  /usr/include/i386-linux-gnu/bits/waitflags.h \
  /usr/include/i386-linux-gnu/bits/waitstatus.h /usr/include/endian.h \
  /usr/include/i386-linux-gnu/bits/endian.h \
@@ -888,7 +1060,7 @@ openfile.o: ../filesys/openfile.cc ../threads/copyright.h \
  /usr/include/i386-linux-gnu/sys/sysmacros.h \
  /usr/include/i386-linux-gnu/bits/pthreadtypes.h /usr/include/alloca.h \
  /usr/include/stdio.h /usr/include/libio.h /usr/include/_G_config.h \
- /usr/include/wchar.h /usr/lib/gcc/i686-linux-gnu/4.7/include/stdarg.h \
+ /usr/include/wchar.h /usr/lib/gcc/i686-linux-gnu/4.6/include/stdarg.h \
  /usr/include/i386-linux-gnu/bits/stdio_lim.h \
  /usr/include/i386-linux-gnu/bits/sys_errlist.h /usr/include/string.h \
  ../userprog/bitmap.h ../filesys/openfile.h ../filesys/openfile.h \
@@ -907,7 +1079,7 @@ synchdisk.o: ../filesys/synchdisk.cc ../threads/copyright.h \
  /usr/include/i386-linux-gnu/bits/wordsize.h \
  /usr/include/i386-linux-gnu/gnu/stubs.h \
  /usr/include/i386-linux-gnu/gnu/stubs-32.h \
- /usr/lib/gcc/i686-linux-gnu/4.7/include/stddef.h \
+ /usr/lib/gcc/i686-linux-gnu/4.6/include/stddef.h \
  /usr/include/i386-linux-gnu/bits/waitflags.h \
  /usr/include/i386-linux-gnu/bits/waitstatus.h /usr/include/endian.h \
  /usr/include/i386-linux-gnu/bits/endian.h \
@@ -922,7 +1094,7 @@ synchdisk.o: ../filesys/synchdisk.cc ../threads/copyright.h \
  /usr/include/i386-linux-gnu/sys/sysmacros.h \
  /usr/include/i386-linux-gnu/bits/pthreadtypes.h /usr/include/alloca.h \
  /usr/include/stdio.h /usr/include/libio.h /usr/include/_G_config.h \
- /usr/include/wchar.h /usr/lib/gcc/i686-linux-gnu/4.7/include/stdarg.h \
+ /usr/include/wchar.h /usr/lib/gcc/i686-linux-gnu/4.6/include/stdarg.h \
  /usr/include/i386-linux-gnu/bits/stdio_lim.h \
  /usr/include/i386-linux-gnu/bits/sys_errlist.h /usr/include/string.h \
  ../threads/synch.h ../threads/thread.h ../threads/utility.h \
@@ -937,7 +1109,7 @@ disk.o: ../machine/disk.cc ../threads/copyright.h ../machine/disk.h \
  /usr/include/i386-linux-gnu/bits/wordsize.h \
  /usr/include/i386-linux-gnu/gnu/stubs.h \
  /usr/include/i386-linux-gnu/gnu/stubs-32.h \
- /usr/lib/gcc/i686-linux-gnu/4.7/include/stddef.h \
+ /usr/lib/gcc/i686-linux-gnu/4.6/include/stddef.h \
  /usr/include/i386-linux-gnu/bits/waitflags.h \
  /usr/include/i386-linux-gnu/bits/waitstatus.h /usr/include/endian.h \
  /usr/include/i386-linux-gnu/bits/endian.h \
@@ -952,7 +1124,7 @@ disk.o: ../machine/disk.cc ../threads/copyright.h ../machine/disk.h \
  /usr/include/i386-linux-gnu/sys/sysmacros.h \
  /usr/include/i386-linux-gnu/bits/pthreadtypes.h /usr/include/alloca.h \
  /usr/include/stdio.h /usr/include/libio.h /usr/include/_G_config.h \
- /usr/include/wchar.h /usr/lib/gcc/i686-linux-gnu/4.7/include/stdarg.h \
+ /usr/include/wchar.h /usr/lib/gcc/i686-linux-gnu/4.6/include/stdarg.h \
  /usr/include/i386-linux-gnu/bits/stdio_lim.h \
  /usr/include/i386-linux-gnu/bits/sys_errlist.h /usr/include/string.h \
  ../threads/system.h ../threads/utility.h ../threads/thread.h \
@@ -970,7 +1142,7 @@ nettest.o: ../network/nettest.cc ../threads/copyright.h \
  /usr/include/i386-linux-gnu/bits/wordsize.h \
  /usr/include/i386-linux-gnu/gnu/stubs.h \
  /usr/include/i386-linux-gnu/gnu/stubs-32.h \
- /usr/lib/gcc/i686-linux-gnu/4.7/include/stddef.h \
+ /usr/lib/gcc/i686-linux-gnu/4.6/include/stddef.h \
  /usr/include/i386-linux-gnu/bits/waitflags.h \
  /usr/include/i386-linux-gnu/bits/waitstatus.h /usr/include/endian.h \
  /usr/include/i386-linux-gnu/bits/endian.h \
@@ -985,7 +1157,7 @@ nettest.o: ../network/nettest.cc ../threads/copyright.h \
  /usr/include/i386-linux-gnu/sys/sysmacros.h \
  /usr/include/i386-linux-gnu/bits/pthreadtypes.h /usr/include/alloca.h \
  /usr/include/stdio.h /usr/include/libio.h /usr/include/_G_config.h \
- /usr/include/wchar.h /usr/lib/gcc/i686-linux-gnu/4.7/include/stdarg.h \
+ /usr/include/wchar.h /usr/lib/gcc/i686-linux-gnu/4.6/include/stdarg.h \
  /usr/include/i386-linux-gnu/bits/stdio_lim.h \
  /usr/include/i386-linux-gnu/bits/sys_errlist.h /usr/include/string.h \
  ../threads/thread.h ../threads/synch.h ../threads/list.h \
@@ -1004,7 +1176,7 @@ post.o: ../network/post.cc ../threads/copyright.h ../network/post.h \
  /usr/include/i386-linux-gnu/bits/wordsize.h \
  /usr/include/i386-linux-gnu/gnu/stubs.h \
  /usr/include/i386-linux-gnu/gnu/stubs-32.h \
- /usr/lib/gcc/i686-linux-gnu/4.7/include/stddef.h \
+ /usr/lib/gcc/i686-linux-gnu/4.6/include/stddef.h \
  /usr/include/i386-linux-gnu/bits/waitflags.h \
  /usr/include/i386-linux-gnu/bits/waitstatus.h /usr/include/endian.h \
  /usr/include/i386-linux-gnu/bits/endian.h \
@@ -1019,7 +1191,7 @@ post.o: ../network/post.cc ../threads/copyright.h ../network/post.h \
  /usr/include/i386-linux-gnu/sys/sysmacros.h \
  /usr/include/i386-linux-gnu/bits/pthreadtypes.h /usr/include/alloca.h \
  /usr/include/stdio.h /usr/include/libio.h /usr/include/_G_config.h \
- /usr/include/wchar.h /usr/lib/gcc/i686-linux-gnu/4.7/include/stdarg.h \
+ /usr/include/wchar.h /usr/lib/gcc/i686-linux-gnu/4.6/include/stdarg.h \
  /usr/include/i386-linux-gnu/bits/stdio_lim.h \
  /usr/include/i386-linux-gnu/bits/sys_errlist.h /usr/include/string.h \
  ../threads/synchlist.h ../threads/list.h ../threads/utility.h \
@@ -1034,7 +1206,7 @@ network.o: ../machine/network.cc ../threads/copyright.h \
  /usr/include/i386-linux-gnu/bits/wordsize.h \
  /usr/include/i386-linux-gnu/gnu/stubs.h \
  /usr/include/i386-linux-gnu/gnu/stubs-32.h \
- /usr/lib/gcc/i686-linux-gnu/4.7/include/stddef.h \
+ /usr/lib/gcc/i686-linux-gnu/4.6/include/stddef.h \
  /usr/include/i386-linux-gnu/bits/waitflags.h \
  /usr/include/i386-linux-gnu/bits/waitstatus.h /usr/include/endian.h \
  /usr/include/i386-linux-gnu/bits/endian.h \
@@ -1049,7 +1221,7 @@ network.o: ../machine/network.cc ../threads/copyright.h \
  /usr/include/i386-linux-gnu/sys/sysmacros.h \
  /usr/include/i386-linux-gnu/bits/pthreadtypes.h /usr/include/alloca.h \
  /usr/include/stdio.h /usr/include/libio.h /usr/include/_G_config.h \
- /usr/include/wchar.h /usr/lib/gcc/i686-linux-gnu/4.7/include/stdarg.h \
+ /usr/include/wchar.h /usr/lib/gcc/i686-linux-gnu/4.6/include/stdarg.h \
  /usr/include/i386-linux-gnu/bits/stdio_lim.h \
  /usr/include/i386-linux-gnu/bits/sys_errlist.h /usr/include/string.h \
  ../threads/thread.h ../threads/synch.h ../threads/list.h \

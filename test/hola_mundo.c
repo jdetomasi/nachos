@@ -1,15 +1,48 @@
 #include "syscall.h"
 
 int fid;
+int ret;
+int readed;
 char from_file[100];
 
+FilePosition MySeek(OpenFileId fd, FilePosition offset, int reference);
+
 int main(){
-    //Create("hola_mundo");
+    Create("hola_mundo");
     fid = Open("hola_mundo");
-    //Write("Hola Mundo!", 11,fid);
-    //Write("Chau", 4,fid);
-    Read(from_file,4,fid);
-    Write(from_file, 4,fid);
+    Write("Hola Mundo!", 11,fid);
+    ret = MySeek(fid, 0, 0);
+    if (ret >= 0)
+        readed = Read(from_file,4,fid);
+        ret = MySeek(fid, 7, 2);
+        if (ret >= 0){
+            Write(" - ",3,fid);
+            Write(from_file,readed,fid);
+            Write(" - ",3,fid);
+        }
+    Write(" Chau Mundo!", 12,fid);
+    ret = MySeek(fid, 11, 1);
+    if (ret >= 0)
+        readed = Read(from_file,4,fid);
+        ret = MySeek(fid, 7, 2);
+        if (ret >= 0){
+            Write(" - ",3,fid);
+            Write(from_file,readed,fid);
+            Write(" - ",3,fid);
+        }
+    Create("chau_mundo");
+    ret = Open("chau_mundo");
+    Write("Hola Mundo!", 11,ret);
+    Write("\nChau Mundo!", 12,ret);
+    Close(ret);
+    ret = 0;
+    ret = Read(from_file,4,fid);
+    if (ret > 0)
+        Write(from_file, ret, fid);
     Close(fid);
+    //Exec("../test/matmult");
+    //Exec("../test/matmult");
+    //Exec("../test/halt"); */
+    //Halt();
     Exit(0);
 }

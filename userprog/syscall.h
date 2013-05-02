@@ -29,6 +29,7 @@
 #define SC_Close	8
 #define SC_Fork		9
 #define SC_Yield	10
+#define SC_MySeek	11
 
 #ifndef IN_ASM
 
@@ -76,6 +77,8 @@ int Join(SpaceId id);
  
 /* A unique identifier for an open Nachos file. */
 typedef int OpenFileId;	
+/* Current position in a open Nachos file. */
+typedef int FilePosition;	
 
 /* when an address space starts up, it has two open files, representing 
  * keyboard input and display output (in UNIX terms, stdin and stdout).
@@ -108,7 +111,14 @@ int Read(char *buffer, int size, OpenFileId id);
 /* Close the file, we're done reading and writing to it. */
 void Close(OpenFileId id);
 
+/* Allows random access to a file by reposition the offset for next read or 
+ * write. The syntax of the system call is
+ * The reference indicate whether offset should be considered from the beginning
+ * of the file (with reference 0), from the current position of the read/write 
+ * offset (with reference 1), or from the end of the file (with reference 2)
+ */
 
+FilePosition MySeek(OpenFileId fd, FilePosition offset, int reference);
 
 /* User-level thread operations: Fork and Yield.  To allow multiple
  * threads to run within a user program. 
