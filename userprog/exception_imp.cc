@@ -10,6 +10,15 @@
 #include <map>
 
 std::map<int,OpenFile*> openedFiles;
+//std::map<int,AddrSpace*> currentSpaces;
+
+// This is used for storing a fresh AddrSpaceID
+// We can search for the a number not in the keys of the map
+// but decided for this for eficiency 
+// 0 - Standard Input
+// 1 - Standard Output
+// 2 - Standard Error (Not Implemented) 
+//static int fresh_id = 3;
 
 // This is used for storing a fresh OpenFileID
 // We can search for the a number not in the keys of the map
@@ -122,4 +131,22 @@ int mySeek(OpenFileId file_id, FilePosition newPos, int reference){
     }
     return ret;
 
+}
+
+void startNewProcess(void* x){
+    currentThread->space->InitRegisters();
+    currentThread->space->RestoreState();
+    machine->Run();
+    ASSERT(false);
+}
+
+int exec(OpenFile* executable){
+    AddrSpace *newAddrSpace;
+    newAddrSpace = new AddrSpace(executable);
+    delete executable;
+    Thread *newThread;
+    newThread = new Thread(NULL);
+    newThread->space = newAddrSpace;
+    newThread->Fork(startNewProcess, NULL);
+    return 0;
 }

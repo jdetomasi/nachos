@@ -21,17 +21,17 @@
 AddrSpace *currentSpaces[100];
 int last_space=0;
 
+//readStringFromUser
 void readString(int addr, char *buff){
   int tmp; tmp = 0;
   
   do{
-    machine->ReadMem(addr, 1, &tmp);
+    machine->ReadMem(addr++, 1, &tmp);
     *buff = (char) tmp;
-    buff++;
-    addr++;
-  } while(*(buff - 1) != '\0');
+  } while(*(buff++) != '\0');
 }
 
+// writeBuffToUsr
 void writeString(int addr, char *buff, int size){
   for (int i = 0; i <= size; i++) {
   	machine->WriteMem(addr, 1, (int) *buff);

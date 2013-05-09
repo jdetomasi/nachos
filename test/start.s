@@ -129,6 +129,13 @@ Yield:
 	syscall
 	j	$31
 	.end Yield
+	.globl MySeek 
+	.ent	MySeek
+MySeek:
+	addiu $2,$0,SC_MySeek
+	syscall
+	j	$31
+	.end MySeek
 
 /* dummy function to keep gcc happy */
         .globl  __main

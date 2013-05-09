@@ -86,22 +86,14 @@ ExceptionHandler(ExceptionType which){
                 // arg1 :: char * the name of the file that stores the executable .
                 arg1 = machine->ReadRegister(4);
                 readString(arg1, file_name);
-                openedFiles[last_open] = fileSystem->Open(file_name);
-                oldAddrSpace = currentThread->space;
-                newAddrSpace = new AddrSpace(openedFiles[last_open]);
-                newThread = new Thread(file_name);
-                last_open++;
-                newThread->space = newAddrSpace;
-                machine->WriteRegister(PrevPCReg, machine->ReadRegister(PCReg));
-                machine->WriteRegister(PCReg, machine->ReadRegister(NextPCReg));
-                machine->WriteRegister(NextPCReg, machine->ReadRegister(NextPCReg)+4);
-                currentSpaces[last_space] = newAddrSpace;
-                machine->WriteRegister(2,last_space);
-                last_space++;
-                oldAddrSpace->SaveState();
-                newAddrSpace->InitRegisters();
-                oldAddrSpace->RestoreState();
-                machine->Run();
+                new Thread(file_name);
+                printf("asdasd");
+                ret = exec(fileSystem->Open(file_name));
+                if(ret == -1){
+                    syscall_has_fail = 1;
+                    break;
+                }
+                machine->WriteRegister(2, ret);
                 break;
             case SC_Join:
                 DEBUG('a', "System Call: [pid] invoked Join.\n");
