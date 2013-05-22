@@ -30,19 +30,19 @@ int main(){
             Write(from_file,readed,fid);
             Write(" - ",3,fid);
         }
+    Close(fid);
     Create("chau_mundo");
-    ret = Open("chau_mundo");
-    Write("Hola Mundo!", 11,ret);
-    Write("\nChau Mundo!", 12,ret);
-    Close(ret);
-    ret = 0;
+    fid = Open("chau_mundo");
+    if(fid != -1){ 
+        Write("Hola Mundo!", 11,fid);
+        Write(" - Chau Mundo!", 14,fid);
+        Close(fid);
+    }
+    /*
     ret = Read(from_file,4,fid);
     if (ret > 0)
         Write(from_file, ret, fid);
     Close(fid);
-    //Exec("../test/matmult");
-    //Exec("../test/matmult");
-    //Exec("../test/halt"); */
-    //Halt();
-    Exit(0);
+    */
+    Exit(5);
 }

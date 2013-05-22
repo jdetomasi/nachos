@@ -1,5 +1,5 @@
 //----------------------------------------------------------------------
-// exception_imp.cc 
+// exception_imp.h 
 //      Implementation of functionality of the syscalls
 //----------------------------------------------------------------------
 #include "system.h"

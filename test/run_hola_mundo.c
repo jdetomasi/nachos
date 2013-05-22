@@ -4,7 +4,10 @@ int fid;
 char from_file[100];
 
 int main(){
-    Exec("../test/hola_mundo");
+    fid = Exec("../test/hola_mundo");
+    if(fid == 0){
+        Create("si_senior");
+    }
     Exit(0);
 }
 

@@ -68,26 +68,24 @@ ExceptionHandler(ExceptionType which){
     if (which == SyscallException) {
         switch(type){
             case SC_Halt:
-                DEBUG('a', "System Call: [pid] invoked Halt.\n");
+                DEBUG('s', "System Call: %s Invoking Halt.\n",currentThread->getName());
                 halt(); 
                 break;
             case SC_Exit:
-                DEBUG('a', "System Call: [pid] invoked Exit.\n");
+                DEBUG('s', "System Call: %s Invoking Exit.\n",currentThread->getName());
                 machine->WriteRegister(2, machine->ReadRegister(4));
-                printf("Exception Handler: Exit with value %d\n", machine->ReadRegister(4));
+                printf("Exception Handler: %s  Exit with value %d\n", currentThread->getName(),machine->ReadRegister(4));
                 currentThread->Finish();
                 //      deallocate physical memory. It is sufficient with next line?
                 //      Ver como pasar la info de return a un eventual thread que haga join sobre el que hace exit
                 delete currentThread;
                 break;
             case SC_Exec:
-                DEBUG('a', "System Call: [pid] invoked Exec.\n");
-                printf("Exception Handler: Exec\n");
+                DEBUG('s', "System Call: %s Invoking Exec.\n",currentThread->getName());
+                printf("Exception Handler: %s  Exec\n",currentThread->getName());
                 // arg1 :: char * the name of the file that stores the executable .
                 arg1 = machine->ReadRegister(4);
                 readString(arg1, file_name);
-                new Thread(file_name);
-                printf("asdasd");
                 ret = exec(fileSystem->Open(file_name));
                 if(ret == -1){
                     syscall_has_fail = 1;
@@ -96,8 +94,8 @@ ExceptionHandler(ExceptionType which){
                 machine->WriteRegister(2, ret);
                 break;
             case SC_Join:
-                DEBUG('a', "System Call: [pid] invoked Join.\n");
-                printf("Exception Handler: Join\n");
+                DEBUG('s', "System Call: %s Invoking Join.\n",currentThread->getName());
+                printf("Exception Handler: %s  Join\n",currentThread->getName());
                 // arg1 :: SpaceId of the user program to join to.
                 arg1 = machine->ReadRegister(4);
                 oldAddrSpace = currentThread->space;
@@ -110,15 +108,15 @@ ExceptionHandler(ExceptionType which){
                 oldAddrSpace->RestoreState();
                 break;
             case SC_Create:
-                DEBUG('a', "System Call: [pid] invoked Create.\n");
                 arg1 = machine->ReadRegister(4);
                 readString(arg1, file_name);
+                DEBUG('s', "System Call: %s Invoking Create to file %s.\n",currentThread->getName(),file_name);
                 if (!fileSystem->Create(file_name, 0)) {
                     syscall_has_fail = 1;
                 }
                 break;
             case SC_Open:
-                DEBUG('a', "System Call: [pid] invoked Open.\n");
+                DEBUG('s', "System Call: %s Invoking Open.\n",currentThread->getName());
                 arg1 = machine->ReadRegister(4);
                 readString(arg1, file_name);
                 ret = open(file_name);
@@ -129,7 +127,7 @@ ExceptionHandler(ExceptionType which){
                 machine->WriteRegister(2, ret);
                 break;
             case SC_Read:
-                DEBUG('a', "System Call: [pid] invoked Read.\n");
+                DEBUG('s', "System Call: %s Invoking Read.\n",currentThread->getName());
                 // char *buffer
                 arg1 = machine->ReadRegister(4);
                 // int size
@@ -145,7 +143,7 @@ ExceptionHandler(ExceptionType which){
                 machine->WriteRegister(2, ret);
                 break;
             case SC_Write:
-                DEBUG('a', "System Call: [pid] invoked Write.\n");
+                DEBUG('s', "System Call: %s Invoking Write.\n",currentThread->getName());
                 arg1 = machine->ReadRegister(4);
                 arg2 = machine->ReadRegister(5);
                 arg3 = machine->ReadRegister(6);
@@ -158,7 +156,7 @@ ExceptionHandler(ExceptionType which){
                 }
                 break;
             case SC_Close:
-                DEBUG('a', "System Call: [pid] invoked Close.\n");
+                DEBUG('s', "System Call: %s Invoking Close.\n",currentThread->getName());
                 arg1 = machine->ReadRegister(4);
                 ret = close(arg1);
                 if (ret == -1){
@@ -167,7 +165,7 @@ ExceptionHandler(ExceptionType which){
                 }
                 break;
             case SC_MySeek:
-                DEBUG('a', "System Call: [pid] invoked Lseek.\n");
+                DEBUG('s', "System Call: %s Invoking Lseek.\n",currentThread->getName());
                 arg1 = machine->ReadRegister(4);
                 arg2 = machine->ReadRegister(5);
                 arg3 = machine->ReadRegister(6);
@@ -178,13 +176,13 @@ ExceptionHandler(ExceptionType which){
                 }
                 break; 
             case SC_Fork:
-                DEBUG('a', "System Call: [pid] invoked Fork.\n");
-                printf("Exception Handler: Fork\n");
+                DEBUG('s', "System Call: %s Invoking Fork.\n",currentThread->getName());
+                printf("Exception Handler: %s  Fork\n",currentThread->getName());
                 // Not Necessary !
                 break;
             case SC_Yield:
-                DEBUG('a', "System Call: [pid] invoked Yield.\n");
-                printf("Exception Handler: Yield\n");
+                DEBUG('s', "System Call: %s Invoking Yield.\n",currentThread->getName());
+                printf("Exception Handler: %s  Yield\n",currentThread->getName());
                 // Not Necessary !
                 break;
             default:
