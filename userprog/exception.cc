@@ -74,7 +74,6 @@ ExceptionHandler(ExceptionType which){
             case SC_Exit:
                 DEBUG('s', "System Call: %s Invoking Exit.\n",currentThread->getName());
                 machine->WriteRegister(2, machine->ReadRegister(4));
-                printf("Exception Handler: %s  Exit with value %d\n", currentThread->getName(),machine->ReadRegister(4));
                 currentThread->Finish();
                 //      deallocate physical memory. It is sufficient with next line?
                 //      Ver como pasar la info de return a un eventual thread que haga join sobre el que hace exit
@@ -82,7 +81,6 @@ ExceptionHandler(ExceptionType which){
                 break;
             case SC_Exec:
                 DEBUG('s', "System Call: %s Invoking Exec.\n",currentThread->getName());
-                printf("Exception Handler: %s  Exec\n",currentThread->getName());
                 // arg1 :: char * the name of the file that stores the executable .
                 arg1 = machine->ReadRegister(4);
                 readString(arg1, file_name);
@@ -99,8 +97,10 @@ ExceptionHandler(ExceptionType which){
                 // arg1 :: SpaceId of the user program to join to.
                 arg1 = machine->ReadRegister(4);
                 oldAddrSpace = currentThread->space;
+                // TODO No hay que crearlo con el constructor de threads 'joineables'? 
+                // O se supone que el currentThread es el que se creo "joineable" ?
                 newThread = new Thread("JoinThread");
-                newThread->space = currentSpaces[last_space];
+                newThread->space = currentSpaces[arg1]->addrSpace;
                 oldAddrSpace->SaveState();
                 newAddrSpace->InitRegisters();
                 machine->Run();

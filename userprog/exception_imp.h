@@ -7,15 +7,32 @@
 #include "synchconsole.h"
 #include <map>
 
-extern std::map<int,OpenFile*> openedFiles;
+// Modos de acceso a un archivo
+// Modes that you can choose from when opening a file
+enum Modes{
+    O_RDONLY,
+    O_WONLY,
+    O_RDWR,
+    O_TRUNC
+};
+// Structure to manage files
+typedef struct filesStruct {
+    OpenFile* file;
+    Thread* owner;
+    Modes mode;
+} FileStruct;
 
-// This is used for storing a fresh OpenFileID
-// We can search for the a number not in the keys of the map
-// but decided for this for eficiency 
-// 0 - Standard Input
-// 1 - Standard Output
-// 2 - Standard Error (Not Implemented) 
-static int fresh_id = 3;
+// Structure to Addres Spaces 
+typedef struct addrSpaceStruct {
+    AddrSpace* addrSpace;
+    Thread* owner;
+} SpaceStruct;
+
+// Mapping to store opened Files 
+extern std::map<OpenFileId,FileStruct*> openedFiles;
+
+// Mapping to store created Addresses
+extern std::map<int,SpaceStruct*> currentSpaces;
 
 void halt();
 

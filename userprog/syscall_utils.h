@@ -14,9 +14,6 @@
  */
 #include "addrspace.h"
 
-extern int last_space;
-extern AddrSpace *currentSpaces[100];
-
 void readString(int addr, char *buff);
 
 void writeString(int addr, char *buff, int size);

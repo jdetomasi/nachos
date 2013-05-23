@@ -3,8 +3,6 @@
  *
  *   Utility functions to read arguments from records upon a syscall 
  */
- 
-  
 
 /**
  * Read a string from memory
@@ -17,9 +15,6 @@
 #include "addrspace.h"
 #include "machine.h"
 #include <map>
-
-AddrSpace *currentSpaces[100];
-int last_space=0;
 
 //readStringFromUser
 void readString(int addr, char *buff){
