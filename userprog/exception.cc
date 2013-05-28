@@ -84,7 +84,7 @@ ExceptionHandler(ExceptionType which){
                 // arg1 :: char * the name of the file that stores the executable .
                 arg1 = machine->ReadRegister(4);
                 readString(arg1, file_name);
-                ret = exec(fileSystem->Open(file_name));
+                ret = exec(fileSystem->Open(file_name), file_name);
                 if(ret == -1){
                     syscall_has_fail = 1;
                     break;

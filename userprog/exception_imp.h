@@ -46,5 +46,5 @@ int close(OpenFileId file_id);
 
 int mySeek(OpenFileId file_id, FilePosition newPos, int reference);
 
-int exec(OpenFile* executable);
+int exec(OpenFile* executable, char* file_name);
 

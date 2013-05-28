@@ -161,12 +161,12 @@ void startNewProcess(void* x){
     ASSERT(false);
 }
 
-int exec(OpenFile* executable){
+int exec(OpenFile* executable, char* file_name ){
     AddrSpace *newAddrSpace;
     newAddrSpace = new AddrSpace(executable);
     delete executable;
     Thread *newThread;
-    newThread = new Thread("Thread 2");
+    newThread = new Thread(file_name);
     newThread->space = newAddrSpace;
     newThread->Fork(startNewProcess, NULL);
     SpaceStruct *addrSpaceStruct;
@@ -175,6 +175,5 @@ int exec(OpenFile* executable){
     addrSpaceStruct->addrSpace = newAddrSpace;
     currentSpaces.insert(
         std::pair<int,SpaceStruct*>(freshAddrId, addrSpaceStruct));
-
     return freshAddrId++;
 }
