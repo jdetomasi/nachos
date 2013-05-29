@@ -26,13 +26,15 @@ typedef struct filesStruct {
 typedef struct addrSpaceStruct {
     AddrSpace* addrSpace;
     Thread* owner;
+    int ret;
+    int isJoineable;
 } SpaceStruct;
 
 // Mapping to store opened Files 
 extern std::map<OpenFileId,FileStruct*> openedFiles;
 
 // Mapping to store created Addresses
-extern std::map<int,SpaceStruct*> currentSpaces;
+extern std::map<SpaceId,SpaceStruct*> currentSpaces;
 
 void halt();
 
@@ -46,5 +48,8 @@ int close(OpenFileId file_id);
 
 int mySeek(OpenFileId file_id, FilePosition newPos, int reference);
 
-int exec(OpenFile* executable, char* file_name);
+int exec(OpenFile* executable, char* file_name, int isJoineable);
 
+int join(SpaceId pid);
+
+void exit(int ret);

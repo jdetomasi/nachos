@@ -119,8 +119,8 @@ class Thread {
     void StackAllocate(VoidFunctionPtr func, void* arg);
 								// Allocate a stack for thread.
 								// Used internally by Fork()
-	Semaphore *joinSemaphore;	// Used for joining the thread
-	int priorityLevel;			// Scheduling priority level. Default is zero.
+    Semaphore *joinSemaphore;	// Used for joining the thread
+    int priorityLevel;			// Scheduling priority level. Default is zero.
 	
 #ifdef USER_PROGRAM
 // A thread running a user program actually has *two* sets of CPU registers -- 

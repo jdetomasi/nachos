@@ -61,9 +61,6 @@ ExceptionHandler(ExceptionType which){
     int syscall_has_fail; syscall_has_fail = 0;
     char file_name[100];
     int ret;
-    Thread *newThread;
-    AddrSpace *newAddrSpace;
-    AddrSpace *oldAddrSpace;
 
     if (which == SyscallException) {
         switch(type){
@@ -73,18 +70,20 @@ ExceptionHandler(ExceptionType which){
                 break;
             case SC_Exit:
                 DEBUG('s', "System Call: %s Invoking Exit.\n",currentThread->getName());
-                machine->WriteRegister(2, machine->ReadRegister(4));
-                currentThread->Finish();
+                // arg1 :: int the value to return on exit .
+                arg1 = machine->ReadRegister(4);
+                update_registers();
+                exit(arg1);
                 //      deallocate physical memory. It is sufficient with next line?
-                //      Ver como pasar la info de return a un eventual thread que haga join sobre el que hace exit
-                delete currentThread;
                 break;
             case SC_Exec:
                 DEBUG('s', "System Call: %s Invoking Exec.\n",currentThread->getName());
                 // arg1 :: char * the name of the file that stores the executable .
                 arg1 = machine->ReadRegister(4);
+                // arg2 :: int Points out if the thread is going to be join or not
+                arg2 = machine->ReadRegister(5);
                 readString(arg1, file_name);
-                ret = exec(fileSystem->Open(file_name), file_name);
+                ret = exec(fileSystem->Open(file_name), file_name, arg2);
                 if(ret == -1){
                     syscall_has_fail = 1;
                     break;
@@ -96,16 +95,12 @@ ExceptionHandler(ExceptionType which){
                 printf("Exception Handler: %s  Join\n",currentThread->getName());
                 // arg1 :: SpaceId of the user program to join to.
                 arg1 = machine->ReadRegister(4);
-                oldAddrSpace = currentThread->space;
-                // TODO No hay que crearlo con el constructor de threads 'joineables'? 
-                // O se supone que el currentThread es el que se creo "joineable" ?
-                newThread = new Thread("JoinThread");
-                newThread->space = currentSpaces[arg1]->addrSpace;
-                oldAddrSpace->SaveState();
-                newAddrSpace->InitRegisters();
-                machine->Run();
-                newThread->Join();
-                oldAddrSpace->RestoreState();
+                ret = join(arg1);
+                if(ret == -1){
+                    syscall_has_fail = 1;
+                    break;
+                }
+                machine->WriteRegister(2, ret);
                 break;
             case SC_Create:
                 arg1 = machine->ReadRegister(4);

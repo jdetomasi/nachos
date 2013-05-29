@@ -161,19 +161,59 @@ void startNewProcess(void* x){
     ASSERT(false);
 }
 
-int exec(OpenFile* executable, char* file_name ){
+int exec(OpenFile* executable, char* file_name, int isJoineable){
     AddrSpace *newAddrSpace;
     newAddrSpace = new AddrSpace(executable);
     delete executable;
     Thread *newThread;
-    newThread = new Thread(file_name);
+    if (isJoineable > 0){
+        newThread = new Thread(file_name, isJoineable);
+    } else{
+        newThread = new Thread(file_name);
+    }
     newThread->space = newAddrSpace;
     newThread->Fork(startNewProcess, NULL);
-    SpaceStruct *addrSpaceStruct;
-    addrSpaceStruct = new SpaceStruct();
-    addrSpaceStruct->owner = currentThread;
-    addrSpaceStruct->addrSpace = newAddrSpace;
-    currentSpaces.insert(
-        std::pair<int,SpaceStruct*>(freshAddrId, addrSpaceStruct));
+    /*
+       If thread is not going to be joined, is unnecesary to create this
+       data structure.
+       Moreover, if the thread is created as joineable but it is never joined,
+       we will have memory leaks. 
+       Can we create a pointer to the caller in the structure and delete all structs
+       if the thread dies?
+    */
+    if (isJoineable > 0){
+        SpaceStruct *addrSpaceStruct;
+        addrSpaceStruct = new SpaceStruct();
+        addrSpaceStruct->owner = currentThread;
+        addrSpaceStruct->addrSpace = newAddrSpace;
+        currentSpaces.insert(
+            std::pair<SpaceId,SpaceStruct*>(freshAddrId, addrSpaceStruct));
+    }
     return freshAddrId++;
+}
+
+int join(SpaceId pid){
+    if (currentSpaces.find(pid) ==  currentSpaces.end()){
+        // SpaceId does not exist
+        return -1;
+    }
+    // Wait until the thread is done
+    currentSpaces[pid]->owner->Join();
+    int ret;
+    ret =  currentSpaces[pid]->ret; 
+    delete currentSpaces[pid];
+    return ret;
+}
+
+void exit(int ret){
+    // Search for currentSpaces to find the one belonging to us (if any)
+    std::map<SpaceId,SpaceStruct*>::iterator it;
+    for(it = currentSpaces.begin(); it != currentSpaces.end();++it){
+        if(it->second->owner == currentThread){
+            it->second->ret = ret;
+            break;
+        }
+    }
+    currentThread->Finish(); 
+    ASSERT(false);
 }

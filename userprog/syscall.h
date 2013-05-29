@@ -58,14 +58,13 @@ typedef int SpaceId;
 /* Run the executable, stored in the Nachos file "name", and return the 
  * address space identifier
  */
-SpaceId Exec(char *name);
+SpaceId Exec(char *name, int isJoineable);
  
 /* Only return once the the user program "id" has finished.  
  * Return the exit status.
  */
 int Join(SpaceId id); 	
  
-
 /* File system operations: Create, Open, Read, Write, Close
  * These functions are patterned after UNIX -- files represent
  * both files *and* hardware I/O devices.

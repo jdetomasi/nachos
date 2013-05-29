@@ -18,12 +18,13 @@
 #include "thread.h"
 #include "switch.h"
 #include "system.h"
+#include "scheduler.h"
 
 // this is put at the top of the execution stack,
 // for detecting stack overflows
 const unsigned STACK_FENCEPOST = 0xdeadbeef;
 
-Semaphore* joinSemaphore;
+//Semaphore* joinSemaphore;
 
 //---------------------------------------------------------------------
 // Thread::Thread
@@ -160,6 +161,7 @@ Thread::Finish ()
     
     Sleep();					// invokes SWITCH
     // not reached
+    ASSERT(false);
 }
 
 //----------------------------------------------------------------------
@@ -296,7 +298,7 @@ Thread::StackAllocate (VoidFunctionPtr func, void* arg)
 //	Thread::Fork. The created thread is to be join later.
 //
 //	"threadName" is an arbitrary string, useful for debugging.
-//  "" is a ??? that points that a join is to be called in this thread.
+//  "" is a sempahore that points that a join is to be called in this thread.
 //----------------------------------------------------------------------
 
 Thread::Thread(const char* threadName, int isJoinable)
@@ -325,7 +327,10 @@ Thread::Thread(const char* threadName, int isJoinable)
 
 void 
 Thread::Join(){
+        // Thread being joined must be joineable
 	ASSERT(joinSemaphore != NULL);
+        // No thread can call join on itself, otherwise, it will be deadlock
+	ASSERT(this != currentThread);
 	joinSemaphore->P();
 }
 
@@ -339,8 +344,7 @@ Thread::Join(){
 void 
 Thread::SetPriority(int level){
  
-    // TODO Hay que linkear con NUM_PRIORITY_LEVELS definido en scheduler.h
-    ASSERT(level >= 0 && level <= 10);
+    ASSERT(level >= 0 && level <= NUM_PRIORITY_LEVELS);
     
     int oldPriority = priorityLevel;
 	priorityLevel = level;
