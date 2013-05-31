@@ -8,8 +8,8 @@ char from_file[100];
 FilePosition MySeek(OpenFileId fd, FilePosition offset, int reference);
 
 int main(){
-    Create("hola_mundo");
-    fid = Open("hola_mundo");
+    Create("test_files/hola_mundo");
+    fid = Open("test_files/hola_mundo");
     Write("Hola Mundo!", 11,fid);
     ret = MySeek(fid, 0, 0);
     if (ret >= 0)
@@ -31,8 +31,8 @@ int main(){
             Write(" - ",3,fid);
         }
     Close(fid);
-    Create("chau_mundo");
-    fid = Open("chau_mundo");
+    Create("test_files/chau_mundo");
+    fid = Open("test_files/chau_mundo");
     if(fid != -1){ 
         Write("Hola Mundo!", 11,fid);
         Write(" - Chau Mundo!", 14,fid);

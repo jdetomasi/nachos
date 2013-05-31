@@ -48,8 +48,8 @@ int close(OpenFileId file_id);
 
 int mySeek(OpenFileId file_id, FilePosition newPos, int reference);
 
-int exec(OpenFile* executable, char* file_name, int isJoineable);
+int exec(OpenFile* executable, char* file_name, int argc, char* argv[], int isJoineable);
 
 int join(SpaceId pid);
 
-void exit(int ret);
+void sexit(int ret);

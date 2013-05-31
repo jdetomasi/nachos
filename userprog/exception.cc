@@ -57,7 +57,7 @@ ExceptionHandler(ExceptionType which){
     ASSERT(interrupt->getStatus() == SystemMode);
     int last_open; last_open = 0;
     int type = machine->ReadRegister(2);
-    int arg1,arg2,arg3;
+    int arg1,arg2,arg3,arg4;
     int syscall_has_fail; syscall_has_fail = 0;
     char file_name[100];
     int ret;
@@ -69,21 +69,26 @@ ExceptionHandler(ExceptionType which){
                 halt(); 
                 break;
             case SC_Exit:
-                DEBUG('s', "System Call: %s Invoking Exit.\n",currentThread->getName());
-                // arg1 :: int the value to return on exit .
+                // arg1 :: int the value to return on sexit .
                 arg1 = machine->ReadRegister(4);
+                DEBUG('s', "System Call: %s Invoking Exit with value %d.\n",currentThread->getName(), arg1);
                 update_registers();
-                exit(arg1);
+                printf("Thread %s exit with value %d\n", currentThread->getName(), arg1);
+                sexit(arg1);
                 //      deallocate physical memory. It is sufficient with next line?
                 break;
             case SC_Exec:
                 DEBUG('s', "System Call: %s Invoking Exec.\n",currentThread->getName());
                 // arg1 :: char * the name of the file that stores the executable .
                 arg1 = machine->ReadRegister(4);
-                // arg2 :: int Points out if the thread is going to be join or not
+                // arg2 :: argc to the new thread.
                 arg2 = machine->ReadRegister(5);
+                // arg3 :: argv to the new thread.
+                arg3 = machine->ReadRegister(6);
+                // arg4 :: int Points out if the thread is going to be join or not
+                arg4 = machine->ReadRegister(7);
                 readString(arg1, file_name);
-                ret = exec(fileSystem->Open(file_name), file_name, arg2);
+                ret = exec(fileSystem->Open(file_name), file_name, arg2, (char **) arg3, arg4);
                 if(ret == -1){
                     syscall_has_fail = 1;
                     break;
@@ -190,7 +195,10 @@ ExceptionHandler(ExceptionType which){
         }
         update_registers();
     } else {
-        printf("Unexpected user mode exception %d %d\n", which, type);
-        ASSERT(false);
+        printf("ERROR!! Ignoring Syscall. Unexpected user mode exception %d %d\n", which, type);
+        machine->WriteRegister(2, -1);
+        update_registers();
+        //ASSERT(false);
+        
     }
 }

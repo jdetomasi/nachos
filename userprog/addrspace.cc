@@ -108,15 +108,11 @@ AddrSpace::AddrSpace(OpenFile *executable)
     if (noffH.code.size > 0) {
         DEBUG('a', "Initializing code segment, at 0x%x, size %d\n", 
 			noffH.code.virtualAddr, noffH.code.size);
-        //executable->ReadAt(&(machine->mainMemory[noffH.code.virtualAddr + flag]),
-//			noffH.code.size, noffH.code.inFileAddr);
         CopyToMemory(executable, noffH.code);
     }
     if (noffH.initData.size > 0) {
         DEBUG('a', "Initializing data segment, at 0x%x, size %d\n", 
 			noffH.initData.virtualAddr, noffH.initData.size);
-        //executable->ReadAt(&(machine->mainMemory[noffH.initData.virtualAddr + flag]),
-			//noffH.initData.size, noffH.initData.inFileAddr);
         CopyToMemory(executable, noffH.initData);
     }
 
@@ -200,13 +196,13 @@ void AddrSpace::RestoreState()
 
 void AddrSpace::CopyToMemory(OpenFile *executable, Segment segment){
 
-    
     int virtualAddr;
     int inFileAddr;
     int size;
     virtualAddr = segment.virtualAddr;
     inFileAddr = segment.inFileAddr;
     size = segment.size;
+    ASSERT(size >= 0);
 
     int numPages;
     numPages = divRoundUp(size,PageSize);
@@ -215,8 +211,5 @@ void AddrSpace::CopyToMemory(OpenFile *executable, Segment segment){
     for(i=0; i < numPages; i++){
         executable->ReadAt(&(machine->mainMemory[pageTable[i].physicalPage * PageSize]) + virtualAddr, PageSize, inFileAddr + i * PageSize); 
     }
-
-    
-
 }
 

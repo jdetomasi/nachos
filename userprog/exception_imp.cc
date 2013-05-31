@@ -55,7 +55,6 @@ int read(int* addr,int size, OpenFileId file_id){
     char chars_read[100];
     if (file_id == ConsoleInput){
         SynchConsole *console = new SynchConsole();
-        char ch;
         while (size >= 1){
             //chars_read = console->ReadChar();
             writeString(*addr, chars_read, 1); 
@@ -161,15 +160,21 @@ void startNewProcess(void* x){
     ASSERT(false);
 }
 
-int exec(OpenFile* executable, char* file_name, int isJoineable){
+int exec(OpenFile* executable, char* file_name, int argc, char* argv[], int isJoineable){
     AddrSpace *newAddrSpace;
     newAddrSpace = new AddrSpace(executable);
     delete executable;
+    // TODO cambiar esta crotada
+    static char thread_name[100];
+    int i;
+    for(i=0; *file_name != '\0' && i < 100;i++){
+        thread_name[i] = *file_name++;
+    }
     Thread *newThread;
     if (isJoineable > 0){
-        newThread = new Thread(file_name, isJoineable);
+        newThread = new Thread(thread_name, isJoineable);
     } else{
-        newThread = new Thread(file_name);
+        newThread = new Thread(thread_name);
     }
     newThread->space = newAddrSpace;
     newThread->Fork(startNewProcess, NULL);
@@ -205,7 +210,7 @@ int join(SpaceId pid){
     return ret;
 }
 
-void exit(int ret){
+void sexit(int ret){
     // Search for currentSpaces to find the one belonging to us (if any)
     std::map<SpaceId,SpaceStruct*>::iterator it;
     for(it = currentSpaces.begin(); it != currentSpaces.end();++it){

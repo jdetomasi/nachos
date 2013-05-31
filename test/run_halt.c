@@ -3,11 +3,7 @@
 int fid;
 char from_file[100];
 
-int main(){
-    fid = Exec("../test/halt");
-    if(fid == 0){
-        Create("si_senior");
-    }
+int main(int argc, char* argv[]){
+    fid = Exec("../test/halt",0);
     Exit(0);
 }
-
