@@ -16,7 +16,7 @@ main()
     {
 	Write(prompt, 2, output);
 
-	i = 0;
+	i = -1;
 	
 	do {
 	
@@ -26,8 +26,9 @@ main()
 
 	buffer[--i] = '\0';
 
+        Write("Bien", 4, output);
 	if( i > 0 ) {
-		newProc = Exec(buffer,0);
+		newProc = Exec(buffer,0,0,1);
 		Join(newProc);
 	}
     }

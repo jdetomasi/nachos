@@ -31,7 +31,7 @@ class SynchConsole {
 				 // available, return it.  Otherwise, return EOF.
         
     private:
-        // Data structures needed for the console test.  Threads making
+        // Data structures needed for the console test. Threads making
         // I/O requests wait on a Semaphore to delay until the I/O completes.
         Semaphore *readSemaphore;
         Semaphore *writeSemaphore;

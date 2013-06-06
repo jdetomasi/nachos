@@ -12,6 +12,8 @@
 //
 
 #include "synchconsole.h"
+// Just to be abble to use currentThread when debuging
+#include "system.h"
 
 static void readHandler(void* c) { 
     SynchConsole *console = (SynchConsole *) c;
@@ -28,6 +30,7 @@ SynchConsole::SynchConsole(){
     readSemaphore = new Semaphore("read avail", 0);
     writeSemaphore = new Semaphore("write done", 0);
     console = new Console(NULL, NULL, readHandler, writeHandler, this);
+    DEBUG('c',"SynchConsole Created by %s to read/write to screen\n", currentThread->getName());
 }
 SynchConsole::SynchConsole(const char *readFile, const char *writeFile){
     writeLock = new Lock("Synch Console Write Lock");
@@ -35,24 +38,25 @@ SynchConsole::SynchConsole(const char *readFile, const char *writeFile){
     readSemaphore = new Semaphore("read avail", 0);
     writeSemaphore = new Semaphore("write done", 0);
     console = new Console(readFile, writeFile, readHandler, writeHandler, this);
+    DEBUG('c',"SynchConsole Created by %s to read/write to %s/%s\n", currentThread->getName(),readFile, writeFile);
 
 }
 
 SynchConsole::~SynchConsole(){
-    /*delete writeLock;
+    delete writeLock;
     delete readLock;
     delete readSemaphore;
     delete writeSemaphore;
-    delete console;*/
+    delete console;
 }
 
 void SynchConsole::ReadLine(char* data){
     readLock->Acquire();
     char c;
     while((c = console->GetChar()) != EOF){
+        readSemaphore->P();
         *data++ = c;
     }
-    readSemaphore->P();
     readLock->Release();
 }
 
@@ -68,16 +72,18 @@ void SynchConsole::WriteLine(char* data){
 
 char SynchConsole::ReadChar(){
     readLock->Acquire();
-    char c;
+    char ch;
+    ch = console->GetChar();
+    DEBUG('c'," %s readed from SynchConsole -> %c \n", currentThread->getName(), ch);
     readSemaphore->P();
-    c = console->GetChar();
     readLock->Release();
-    return c;
+    return ch;
 }
 
 void SynchConsole::WriteChar(char ch){
     writeLock->Acquire();
     console->PutChar(ch);
+    DEBUG('c',"%s writted to SynchConsole ->  %c \n", currentThread->getName(), ch);
     writeSemaphore->P();
     writeLock->Release();
 }        

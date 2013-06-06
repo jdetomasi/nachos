@@ -23,6 +23,7 @@ Timer *timer;				// the hardware timer device,
 // 2007, Jose Miguel Santos Espino
 PreemptiveScheduler* preemptiveScheduler = NULL;
 const long long DEFAULT_TIME_SLICE = 50000;
+const long long MY_DEFAULT_TIME_SLICE = 100;
 
 #ifdef FILESYS_NEEDED
 FileSystem  *fileSystem;
@@ -157,6 +158,13 @@ Initialize(int argc, char **argv)
     scheduler = new Scheduler();		// initialize the ready queue
     if (randomYield)				// start the timer (if needed)
         timer = new Timer(TimerInterruptHandler, 0, randomYield);
+    else {
+        // If randomYield is not set, create interrupts every TimerTicks (100) ticks
+        // This is not exact, because it can be a little more if the interrupts where
+        // disabled at the moment that an interrupt is being called
+        //timer = new Timer(TimerInterruptHandler, 0, false);
+        printf("Nada por aqui!\n");
+    }
 
     threadToBeDestroyed = NULL;
 
@@ -169,6 +177,12 @@ Initialize(int argc, char **argv)
     interrupt->Enable();
     CallOnUserAbort(Cleanup);			// if user hits ctl-C
     
+
+    // By us
+    // No matter whay, allow preemption every MY_DEFAULT_TIME_SLICE
+    //preemptiveScheduling = true;
+    //timeSlice = MY_DEFAULT_TIME_SLICE;
+
     // Jose Miguel Santos Espino, 2007
     if ( preemptiveScheduling ) {
         preemptiveScheduler = new PreemptiveScheduler();

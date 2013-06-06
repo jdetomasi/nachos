@@ -40,7 +40,7 @@ int open(char *file_name){
         return -1;
     }
     file_str->owner = currentThread;
-    // TODO Implementamos esto? Si es asi..como?
+    // TODO Implementamos esto? Si lo hacemos..como?
     file_str->mode = O_RDWR;
 
     openedFiles.insert(
@@ -55,9 +55,9 @@ int read(int* addr,int size, OpenFileId file_id){
     char chars_read[100];
     if (file_id == ConsoleInput){
         SynchConsole *console = new SynchConsole();
-        while (size >= 1){
-            //chars_read = console->ReadChar();
-            writeString(*addr, chars_read, 1); 
+        while (size > 0){
+            chars_read[size--] = console->ReadChar();
+            writeString(*addr++, chars_read, 1); 
         }
         delete console;
         return 0;
@@ -81,8 +81,8 @@ int write(char *in_string, int size, OpenFileId file_id){
 
     if (file_id == ConsoleOutput){
         SynchConsole *console = new SynchConsole();
-        // TODO escribir solo size caracteres, no hasta \0
-        console->WriteLine(in_string);
+        while (in_string != '\0' and size-- >0)
+            console->WriteChar(*in_string++);
         delete console;
         return 0;
     }
@@ -160,7 +160,7 @@ void startNewProcess(void* x){
     ASSERT(false);
 }
 
-int exec(OpenFile* executable, char* file_name, int argc, char* argv[], int isJoineable){
+int exec(OpenFile* executable, char* file_name, int argc, char** argv, int isJoineable){
     AddrSpace *newAddrSpace;
     newAddrSpace = new AddrSpace(executable);
     delete executable;
@@ -189,7 +189,7 @@ int exec(OpenFile* executable, char* file_name, int argc, char* argv[], int isJo
     if (isJoineable > 0){
         SpaceStruct *addrSpaceStruct;
         addrSpaceStruct = new SpaceStruct();
-        addrSpaceStruct->owner = currentThread;
+        addrSpaceStruct->owner = newThread;
         addrSpaceStruct->addrSpace = newAddrSpace;
         currentSpaces.insert(
             std::pair<SpaceId,SpaceStruct*>(freshAddrId, addrSpaceStruct));
