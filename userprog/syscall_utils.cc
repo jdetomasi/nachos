@@ -28,7 +28,7 @@ void readString(int addr, char *buff){
 
 // writeBuffToUsr
 void writeString(int addr, char *buff, int size){
-  for (int i = 0; i <= size; i++) {
+  for (int i = 0; i < size; i++) {
   	machine->WriteMem(addr, 1, (int) *buff);
   	buff++;
   	addr++;

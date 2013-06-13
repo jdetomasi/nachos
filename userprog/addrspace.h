@@ -32,6 +32,8 @@ class AddrSpace {
 
     void SaveState();			// Save/restore address space-specific
     void RestoreState();		// info on a context switch 
+    void SetArguments(int argc, int argv);
+    void LoadArguments();
 
   private:
     TranslationEntry *pageTable;	// Assume linear page table translation
@@ -41,6 +43,9 @@ class AddrSpace {
     MemoryBitMap* memoryBitMap;
 
     void CopyToMemory(OpenFile *executable, Segment segment);
+    int argc;  
+    char **argv;
+    
 };
 
 #endif // ADDRSPACE_H

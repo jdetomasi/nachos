@@ -156,11 +156,12 @@ int mySeek(OpenFileId file_id, FilePosition newPos, int reference){
 void startNewProcess(void* x){
     currentThread->space->RestoreState();
     currentThread->space->InitRegisters();
+    currentThread->space->LoadArguments();
     machine->Run();
     ASSERT(false);
 }
 
-int exec(OpenFile* executable, char* file_name, int argc, char** argv, int isJoineable){
+int exec(OpenFile* executable, char* file_name, int argc, int argv, int isJoineable){
     AddrSpace *newAddrSpace;
     newAddrSpace = new AddrSpace(executable);
     delete executable;
@@ -175,6 +176,9 @@ int exec(OpenFile* executable, char* file_name, int argc, char** argv, int isJoi
         newThread = new Thread(thread_name, isJoineable);
     } else{
         newThread = new Thread(thread_name);
+    }
+    if (argc > 0){
+        newAddrSpace->SetArguments(argc, argv);
     }
     newThread->space = newAddrSpace;
     newThread->Fork(startNewProcess, NULL);

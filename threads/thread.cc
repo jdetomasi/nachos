@@ -36,7 +36,11 @@ const unsigned STACK_FENCEPOST = 0xdeadbeef;
 
 Thread::Thread(const char* threadName)
 {
-    name = threadName;
+    // TODO!! 
+    char * tmp;
+    tmp = new char[128];
+    strcpy(tmp, (const char *) threadName);
+    name = tmp;
     stackTop = NULL;
     stack = NULL;
     status = JUST_CREATED;

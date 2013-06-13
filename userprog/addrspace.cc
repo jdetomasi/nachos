@@ -18,6 +18,7 @@
 #include "copyright.h"
 #include "system.h"
 #include "addrspace.h"
+#include "syscall_utils.h"
 
 //----------------------------------------------------------------------
 // SwapHeader
@@ -162,6 +163,7 @@ AddrSpace::InitRegisters()
     // allocated the stack; but subtract off a bit, to make sure we don't
     // accidentally reference off the end!
     machine->WriteRegister(StackReg, numPages * PageSize - 16);
+
     DEBUG('a', "Initializing stack register to %d\n", numPages * PageSize - 16);
 }
 
@@ -204,12 +206,51 @@ void AddrSpace::CopyToMemory(OpenFile *executable, Segment segment){
     size = segment.size;
     ASSERT(size >= 0);
 
-    int numPages;
-    numPages = divRoundUp(size,PageSize);
-
     int i;
     for(i=0; i < numPages; i++){
         executable->ReadAt(&(machine->mainMemory[pageTable[i].physicalPage * PageSize]) + virtualAddr, PageSize, inFileAddr + i * PageSize); 
     }
+}
+
+void AddrSpace::LoadArguments(){
+   int args[argc];
+   int strLen;
+
+   int sp = numPages * PageSize;
+   // Leo todos los argumentos de argv
+   for (int i = 0; i < argc; i++) {
+       strLen = strlen(argv[i]) + 1;
+       sp = sp - strLen;
+       writeString(sp, argv[i], strLen);
+       args[i] = sp;
+   }
+
+   sp = sp - argc * 4;
+   
+   machine->WriteRegister(StackReg, sp - 16);
+   machine->WriteRegister(4,argc);
+   machine->WriteRegister(5,sp);
+
+   for (int i = 0; i < argc; i++) {
+       machine->WriteMem(sp, 1, args[i]);
+       sp = sp + 4;
+   };
+
+}
+
+void AddrSpace::SetArguments(int argc, int argv){
+   int first_arg_ptr;
+   machine->ReadMem(argv, 4, &first_arg_ptr);
+   char tempStr[128];
+
+   this->argc = argc;
+   this->argv = (char **) new int[argc];
+
+   // Leo todos los argumentos de argv
+   for (int i = 0; i < argc; i++) {
+       readString(first_arg_ptr + (i * 8), tempStr);
+       this->argv[i] = new char[strlen(tempStr)];
+       strcpy(this->argv[i], tempStr);
+   }
 }
 
