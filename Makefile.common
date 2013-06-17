@@ -79,7 +79,7 @@ USERPROG_H = ../userprog/addrspace.h\
 	../machine/mipssim.h\
 	../machine/translate.h\
         ../userprog/syscall_utils.h\
-        ../machine/synchconsole.h\
+        ../userprog/synchconsole.h\
         ../userprog/memorybitmap.h\
         ../userprog/exception_imp.h
 
@@ -92,7 +92,7 @@ USERPROG_C = ../userprog/addrspace.cc\
 	../machine/mipssim.cc\
 	../machine/translate.cc\
         ../userprog/syscall_utils.cc\
-        ../machine/synchconsole.cc\
+        ../userprog/synchconsole.cc\
         ../userprog/memorybitmap.cc\
         ../userprog/exception_imp.cc
 

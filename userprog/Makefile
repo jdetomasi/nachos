@@ -500,7 +500,7 @@ addrspace.o: ../userprog/addrspace.cc ../threads/copyright.h \
  ../filesys/openfile.h ../userprog/memorybitmap.h ../userprog/bitmap.h \
  ../filesys/openfile.h ../bin/noff.h ../threads/scheduler.h \
  ../machine/interrupt.h ../threads/list.h ../machine/stats.h \
- ../machine/timer.h ../userprog/addrspace.h
+ ../machine/timer.h ../userprog/addrspace.h ../userprog/syscall_utils.h
 bitmap.o: ../userprog/bitmap.cc ../threads/copyright.h \
  ../userprog/bitmap.h ../threads/utility.h ../threads/copyright.h \
  ../machine/sysdep.h /usr/include/stdlib.h /usr/include/features.h \
@@ -562,7 +562,7 @@ exception.o: ../userprog/exception.cc ../threads/copyright.h \
  ../machine/interrupt.h ../threads/list.h ../machine/stats.h \
  ../machine/timer.h ../userprog/syscall.h ../userprog/syscall_utils.h \
  ../userprog/addrspace.h ../userprog/exception_imp.h \
- ../machine/synchconsole.h ../threads/synch.h ../machine/console.h \
+ ../userprog/synchconsole.h ../threads/synch.h ../machine/console.h \
  /usr/include/c++/4.6/map /usr/include/c++/4.6/bits/stl_tree.h \
  /usr/include/c++/4.6/bits/stl_algobase.h \
  /usr/include/c++/4.6/i686-linux-gnu/./bits/c++config.h \
@@ -810,7 +810,7 @@ syscall_utils.o: ../userprog/syscall_utils.cc ../threads/system.h \
  /usr/include/c++/4.6/initializer_list \
  /usr/include/c++/4.6/bits/stl_multimap.h \
  /usr/include/c++/4.6/bits/range_access.h
-synchconsole.o: ../machine/synchconsole.cc ../machine/synchconsole.h \
+synchconsole.o: ../userprog/synchconsole.cc ../userprog/synchconsole.h \
  ../threads/synch.h ../threads/copyright.h ../threads/thread.h \
  ../threads/utility.h ../machine/sysdep.h ../threads/copyright.h \
  /usr/include/stdlib.h /usr/include/features.h \
@@ -841,7 +841,9 @@ synchconsole.o: ../machine/synchconsole.cc ../machine/synchconsole.h \
  ../machine/translate.h ../machine/disk.h ../userprog/addrspace.h \
  ../filesys/filesys.h ../filesys/openfile.h ../userprog/memorybitmap.h \
  ../userprog/bitmap.h ../filesys/openfile.h ../bin/noff.h \
- ../threads/list.h ../machine/console.h
+ ../threads/list.h ../machine/console.h ../threads/system.h \
+ ../threads/scheduler.h ../machine/interrupt.h ../threads/list.h \
+ ../machine/stats.h ../machine/timer.h
 memorybitmap.o: ../userprog/memorybitmap.cc ../userprog/memorybitmap.h \
  ../userprog/bitmap.h ../threads/copyright.h ../threads/utility.h \
  ../threads/copyright.h ../machine/sysdep.h /usr/include/stdlib.h \
@@ -902,7 +904,7 @@ exception_imp.o: ../userprog/exception_imp.cc ../threads/system.h \
  ../filesys/openfile.h ../userprog/memorybitmap.h ../userprog/bitmap.h \
  ../filesys/openfile.h ../bin/noff.h ../threads/scheduler.h \
  ../machine/interrupt.h ../threads/list.h ../machine/stats.h \
- ../machine/timer.h ../machine/synchconsole.h ../threads/synch.h \
+ ../machine/timer.h ../userprog/synchconsole.h ../threads/synch.h \
  ../machine/console.h ../userprog/syscall.h ../userprog/syscall_utils.h \
  ../userprog/addrspace.h ../userprog/exception_imp.h \
  /usr/include/c++/4.6/map /usr/include/c++/4.6/bits/stl_tree.h \

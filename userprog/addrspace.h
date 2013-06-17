@@ -32,7 +32,7 @@ class AddrSpace {
 
     void SaveState();			// Save/restore address space-specific
     void RestoreState();		// info on a context switch 
-    void SetArguments(int argc, int argv);
+    void SetArguments(int argc, int argv, char* file_name);
     void LoadArguments();
 
   private:

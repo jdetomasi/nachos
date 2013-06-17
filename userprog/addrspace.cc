@@ -226,31 +226,38 @@ void AddrSpace::LoadArguments(){
    }
 
    sp = sp - argc * 4;
-   
+   sp = sp - sp % 4;
    machine->WriteRegister(StackReg, sp - 16);
    machine->WriteRegister(4,argc);
    machine->WriteRegister(5,sp);
 
    for (int i = 0; i < argc; i++) {
-       machine->WriteMem(sp, 1, args[i]);
+       machine->WriteMem(sp, 4, args[i]);
        sp = sp + 4;
    };
 
 }
 
-void AddrSpace::SetArguments(int argc, int argv){
-   int first_arg_ptr;
-   machine->ReadMem(argv, 4, &first_arg_ptr);
-   char tempStr[128];
+void AddrSpace::SetArguments(int argc, int argv, char* file_name){
+    int first_arg_ptr;
+    machine->ReadMem(argv, 4, &first_arg_ptr);
+    char tempStr[128];
 
-   this->argc = argc;
-   this->argv = (char **) new int[argc];
+    printf("%s\n", file_name);
+    argc = argc + 1;
+    this->argc = argc;
+    // TODO ver como podemos hacer mas lindo esto
+    this->argv = (char **) new int[argc];
 
-   // Leo todos los argumentos de argv
-   for (int i = 0; i < argc; i++) {
-       readString(first_arg_ptr + (i * 8), tempStr);
-       this->argv[i] = new char[strlen(tempStr)];
-       strcpy(this->argv[i], tempStr);
-   }
+    // Load file_name in argv[0]
+    this->argv[0] = new char[strlen(file_name)];
+    strcpy(this->argv[0], file_name);
+    
+    // Leo todos los argumentos de argv
+    for (int i = 1; i < argc; i++) {
+        readString(first_arg_ptr + ((i-1) * 8), tempStr);
+        this->argv[i] = new char[strlen(tempStr)];
+        strcpy(this->argv[i], tempStr);
+    }
 }
 

@@ -177,9 +177,7 @@ int exec(OpenFile* executable, char* file_name, int argc, int argv, int isJoinea
     } else{
         newThread = new Thread(thread_name);
     }
-    if (argc > 0){
-        newAddrSpace->SetArguments(argc, argv);
-    }
+    newAddrSpace->SetArguments(argc, argv, thread_name);
     newThread->space = newAddrSpace;
     newThread->Fork(startNewProcess, NULL);
     /*

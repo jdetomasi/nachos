@@ -4,7 +4,7 @@
 int fid;
 
 int main(){
-   char *argv[] = {"hola", "mundo", "!!!", NULL};   
-   fid = Exec("../test/print_args", 3, argv, 0);
+   char *argv[] = {"holaa", "mundo", "!!!!!", "asddd", "qweee", NULL};   
+   fid = Exec("../test/print_args", 5, argv, 0);
    Exit(0);
 }
