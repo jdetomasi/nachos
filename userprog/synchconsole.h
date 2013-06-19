@@ -27,7 +27,7 @@ class SynchConsole {
         void WriteChar(char ch); // Write "ch" to the console display, 
 				 // and return immediately 
 
-        char ReadChar();	 // Poll the console input.  If a char is 
+        const char ReadChar();	 // Poll the console input.  If a char is 
 				 // available, return it.  Otherwise, return EOF.
         
     private:

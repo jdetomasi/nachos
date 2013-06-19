@@ -51,16 +51,18 @@ int open(char *file_name){
 
 int read(int* addr,int size, OpenFileId file_id){
      
-    int num_read;
-    char chars_read[100];
+    int num_read = 0;
+    char* chars_read = new char[size];
     if (file_id == ConsoleInput){
         SynchConsole *console = new SynchConsole();
         while (size > 0){
-            chars_read[size--] = console->ReadChar();
-            writeString(*addr++, chars_read, 1); 
+            chars_read[num_read++] = console->ReadChar();
+            size = size - 1;
         }
+        chars_read[num_read] = '\0';
+        writeString(*addr, chars_read, num_read); 
         delete console;
-        return 0;
+        return size;
     }
     if (openedFiles.find(file_id) ==  openedFiles.end() || file_id == ConsoleOutput){
         // The file does not exist or is not opened yet
@@ -73,7 +75,6 @@ int read(int* addr,int size, OpenFileId file_id){
     }
     num_read = openedFiles[file_id]->file->Read(chars_read,size);
     writeString(*addr, chars_read, num_read);
-    chars_read[num_read] = '\0';
     return num_read;
 }
 
@@ -166,11 +167,8 @@ int exec(OpenFile* executable, char* file_name, int argc, int argv, int isJoinea
     newAddrSpace = new AddrSpace(executable);
     delete executable;
     // TODO cambiar esta crotada
-    static char thread_name[100];
-    int i;
-    for(i=0; *file_name != '\0' && i < 100;i++){
-        thread_name[i] = *file_name++;
-    }
+    static char thread_name[128];
+    strcpy(thread_name, (const char *) file_name);
     Thread *newThread;
     if (isJoineable > 0){
         newThread = new Thread(thread_name, isJoineable);

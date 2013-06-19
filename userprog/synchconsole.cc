@@ -16,12 +16,10 @@
 #include "system.h"
 
 static void readHandler(void* c) { 
-    SynchConsole *console = (SynchConsole *) c;
-    console->ReadAvailable();
+    ((SynchConsole *) c)->ReadAvailable();
 }
 static void writeHandler(void* c) {  
-    SynchConsole *console = (SynchConsole *) c;
-    console->WriteDone();
+    ((SynchConsole *) c)->WriteDone();
 }
 
 SynchConsole::SynchConsole(){
@@ -70,12 +68,12 @@ void SynchConsole::WriteLine(char* data){
     writeLock->Release();
 }
 
-char SynchConsole::ReadChar(){
+const char SynchConsole::ReadChar(){
     readLock->Acquire();
     char ch;
+    readSemaphore->P();
     ch = console->GetChar();
     DEBUG('c'," %s readed from SynchConsole -> %c \n", currentThread->getName(), ch);
-    readSemaphore->P();
     readLock->Release();
     return ch;
 }

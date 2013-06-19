@@ -148,7 +148,10 @@ ExceptionHandler(ExceptionType which){
                 arg2 = machine->ReadRegister(5);
                 arg3 = machine->ReadRegister(6);
                 char in_string[100];
-                readString(arg1, in_string);
+                if(arg2 > 1)
+                    readString(arg1, in_string);
+                else
+                    readBuffFromUsr(arg1, in_string, arg2);
                 ret = write(in_string, arg2, arg3);
                 if (ret == -1){
                     syscall_has_fail = 1;

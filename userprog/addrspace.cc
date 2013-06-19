@@ -62,7 +62,6 @@ AddrSpace::AddrSpace(OpenFile *executable)
     memoryBitMap = MemoryBitMap::getInstance();
     NoffHeader noffH;
     unsigned int i, size;
-    int flag = 0;
 
     executable->ReadAt((char *)&noffH, sizeof(noffH), 0);
     if ((noffH.noffMagic != NOFFMAGIC) && 
@@ -243,7 +242,6 @@ void AddrSpace::SetArguments(int argc, int argv, char* file_name){
     machine->ReadMem(argv, 4, &first_arg_ptr);
     char tempStr[128];
 
-    printf("%s\n", file_name);
     argc = argc + 1;
     this->argc = argc;
     // TODO ver como podemos hacer mas lindo esto
