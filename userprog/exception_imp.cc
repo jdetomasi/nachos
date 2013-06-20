@@ -54,14 +54,16 @@ int read(int* addr,int size, OpenFileId file_id){
     int num_read = 0;
     char* chars_read = new char[size];
     if (file_id == ConsoleInput){
-        SynchConsole *console = new SynchConsole();
+        SynchConsole *console = SynchConsole::GetInstance();
         while (size > 0){
-            chars_read[num_read++] = console->ReadChar();
+            if ((chars_read[num_read++] = 
+                        console->ReadChar()) == EOF){
+                break;
+            }
             size = size - 1;
         }
         chars_read[num_read] = '\0';
         writeString(*addr, chars_read, num_read); 
-        delete console;
         return size;
     }
     if (openedFiles.find(file_id) ==  openedFiles.end() || file_id == ConsoleOutput){
@@ -81,10 +83,9 @@ int read(int* addr,int size, OpenFileId file_id){
 int write(char *in_string, int size, OpenFileId file_id){
 
     if (file_id == ConsoleOutput){
-        SynchConsole *console = new SynchConsole();
+        SynchConsole *console = SynchConsole::GetInstance();
         while (in_string != '\0' and size-- >0)
             console->WriteChar(*in_string++);
-        delete console;
         return 0;
     }
 

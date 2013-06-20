@@ -1,6 +1,6 @@
 //----------------------------------------------------------------------
 // memory_bitmap.cc 
-//      Implementation of a singleton getInstance method
+//      Implementation of a singleton GetInstance method
 //      If no instance, create one, else return instance
 //----------------------------------------------------------------------
 
@@ -8,7 +8,7 @@
 #include "machine.h"
 MemoryBitMap* MemoryBitMap::single = NULL;
 
-MemoryBitMap* MemoryBitMap::getInstance(){
+MemoryBitMap* MemoryBitMap::GetInstance(){
     if(single == NULL){
         single = new MemoryBitMap(NumPhysPages);
         return single;

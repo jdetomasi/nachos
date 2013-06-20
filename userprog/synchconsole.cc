@@ -15,6 +15,9 @@
 // Just to be abble to use currentThread when debuging
 #include "system.h"
 
+// Pointer to the unique instance of the synchconsole
+SynchConsole* SynchConsole::single = NULL;
+
 static void readHandler(void* c) { 
     ((SynchConsole *) c)->ReadAvailable();
 }
@@ -28,16 +31,15 @@ SynchConsole::SynchConsole(){
     readSemaphore = new Semaphore("read avail", 0);
     writeSemaphore = new Semaphore("write done", 0);
     console = new Console(NULL, NULL, readHandler, writeHandler, this);
-    DEBUG('c',"SynchConsole Created by %s to read/write to screen\n", currentThread->getName());
+    DEBUG('c',"SynchConsole Created by %s to read/write\n", currentThread->getName());
 }
-SynchConsole::SynchConsole(const char *readFile, const char *writeFile){
-    writeLock = new Lock("Synch Console Write Lock");
-    readLock = new Lock("Synch Console Read Lock");
-    readSemaphore = new Semaphore("read avail", 0);
-    writeSemaphore = new Semaphore("write done", 0);
-    console = new Console(readFile, writeFile, readHandler, writeHandler, this);
-    DEBUG('c',"SynchConsole Created by %s to read/write to %s/%s\n", currentThread->getName(),readFile, writeFile);
 
+SynchConsole* SynchConsole::GetInstance(){
+    if(single == NULL){
+        single = new SynchConsole();
+        return single;
+    } else
+        return single;
 }
 
 SynchConsole::~SynchConsole(){

@@ -73,7 +73,6 @@ ExceptionHandler(ExceptionType which){
                 arg1 = machine->ReadRegister(4);
                 DEBUG('s', "System Call: %s Invoking Exit with value %d.\n",currentThread->getName(), arg1);
                 update_registers();
-                printf("Thread %s exit with value %d\n", currentThread->getName(), arg1);
                 sexit(arg1);
                 //      deallocate physical memory. It is sufficient with next line?
                 break;

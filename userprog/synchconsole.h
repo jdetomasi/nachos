@@ -2,21 +2,16 @@
 // 	Data structures to a synchronous console 
 //
 
-#ifndef SYNCHCONSOLE_H
-#define SYNCHCONSOLE_H
-
 #include "synch.h"
 #include "console.h"
 
-
+#ifndef SYNCHCONSOLE_H
+#define SYNCHCONSOLE_H
 
 class SynchConsole {
     public:
-        SynchConsole();                                              // Initialize a synchronous console that reads
-                                                                     // and writes from/to the stdin/stdout
-        SynchConsole(const char *readFile, const char *writeFile);   // Initialize a synchronous console that reads
-                                                                     // from file readFile and writes to file writeFile
-        ~SynchConsole();                                             // De-allocate console
+        static SynchConsole* GetInstance();
+
 
         // Method that will be called when there is something to read
         void ReadAvailable();
@@ -31,6 +26,12 @@ class SynchConsole {
 				 // available, return it.  Otherwise, return EOF.
         
     private:
+
+        static SynchConsole *single;
+        SynchConsole();                                              // Initialize a synchronous console that reads
+                                                                     // and writes from/to the stdin/stdout
+        ~SynchConsole();                                             // De-allocate console
+
         // Data structures needed for the console test. Threads making
         // I/O requests wait on a Semaphore to delay until the I/O completes.
         Semaphore *readSemaphore;

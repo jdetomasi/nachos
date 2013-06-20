@@ -59,7 +59,7 @@ SwapHeader (NoffHeader *noffH)
 
 AddrSpace::AddrSpace(OpenFile *executable)
 {
-    memoryBitMap = MemoryBitMap::getInstance();
+    memoryBitMap = MemoryBitMap::GetInstance();
     NoffHeader noffH;
     unsigned int i, size;
 

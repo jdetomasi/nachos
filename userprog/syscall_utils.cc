@@ -20,13 +20,16 @@ void readBuffFromUsr(int addr, char *buff, int size){
   int tmp; tmp = 0;
   
   do{
-    machine->ReadMem(addr++, 1, &tmp);
+    if (machine->ReadMem(addr++, 1, &tmp) != true){
+        printf("Arrgh!");
+        return;
+    }
     *buff = (char) tmp;
   } while(*(++buff) != '\0' && --size > 0);
   *buff = '\0'; 
 }
 
-//readStringFromUser
+//readStrFromUsr
 void readString(int addr, char *buff){
   int tmp; tmp = 0;
   

@@ -1,35 +1,64 @@
 #include "syscall.h"
 #define NULL        ((void*)0)
-char ch;
-char buff[128];
-int i;
-int argc;
-int argv[10];
-int fid;
 
 int main(){
-    fid = Open("test_files/c_out");
-    Write("COMENZANDO:\n", 12, fid);
-    Write("root@nachos:~# ",15, fid);
-    Write("root@nachos:~# ",15,ConsoleOutput);
+    int bg = 1;
+    int i;
+    int pid;
+    char ch;
+    char buff[128];
+    int argc;
+    int argv[8];
+    char cmd[64];
+    char * prompt = "root@nachos:~# ";
+
     while (1) {
+        Write(prompt, 15, ConsoleOutput);
         ch = '\0';
         i = 0;
-        argc = 0;
-        argv[0] = &buff[0];
-        while (ch != '\n') {
+        /*
+        // Iddle wait, ignore blank spaces
+        while (ch = ' '){ 
             Read(&ch, 1, ConsoleInput);
-            //Write(&ch, 1, fid);
-            if (ch = ' ') {
-                buff[i] = '\0';
-                argc = argc + 1;
-                argv[argc] = &buff[i + 1];
+            if(ch == '\n'){
+                Write(prompt, 15, ConsoleOutput);
             }
+            else{
+                break;
+            }
+        }
+        */
+
+        while( ch != '\n' && ch != ' '){
+            Read(&ch, 1, ConsoleInput);
+            cmd[i++] = ch;
+        }
+        cmd[i - 1] = '\0'; 
+
+        i = argc = 0;
+        while (ch != '\n'){
+            if (ch == ' '){
+                buff[i] = '\0';
+                argv[argc] = &buff[i + 1];
+                argc = argc + 1;
+            } else if (ch == '\n'){
+                buff[i] = '\0';
+                break;
+            } else if (ch == '&'){
+                bg = 0;
+                break;
+            }
+            Read(&ch, 1, ConsoleInput);
             buff[i] = ch;
             i = i + 1;
         }
-        argv[argc + 1] = NULL;
-        //Exec(argv[0], argc, argv, 0);
+        argv[argc] = NULL;
+        argc = argc - 1;
+
+        pid = Exec(cmd, argc, argv, bg);
+        if (bg == 1){
+            Join(pid);
+        }
+        
     }
 }
-

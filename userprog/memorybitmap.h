@@ -17,6 +17,6 @@ private:
     ~MemoryBitMap();
 
 public:
-    static MemoryBitMap* getInstance();
+    static MemoryBitMap* GetInstance();
 };
-#endif // MEMORYBITMAP_H
+#endif //MEMORYBITMAP_H
