@@ -61,6 +61,7 @@ ExceptionHandler(ExceptionType which){
     int syscall_has_fail; syscall_has_fail = 0;
     char file_name[100];
     int ret;
+    OpenFile* file;
 
     if (which == SyscallException) {
         switch(type){
@@ -87,7 +88,15 @@ ExceptionHandler(ExceptionType which){
                 // arg4 :: int Points out if the thread is going to be join or not
                 arg4 = machine->ReadRegister(7);
                 readString(arg1, file_name);
-                ret = exec(fileSystem->Open(file_name), file_name, arg2, arg3, arg4);
+
+                // check if executable exists
+                file = fileSystem->Open(file_name);
+                if (file != NULL) {
+                    ret = exec(file, file_name, arg2, arg3, arg4);
+                } else {
+                    ret = -1;
+                }
+                
                 if(ret == -1){
                     syscall_has_fail = 1;
                     break;
