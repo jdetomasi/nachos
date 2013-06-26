@@ -76,7 +76,10 @@ int read(int* addr,int size, OpenFileId file_id){
         return -1;
     }
     num_read = openedFiles[file_id]->file->Read(chars_read,size);
-    writeString(*addr, chars_read, num_read);
+    printf("Leidos %d\n", num_read);
+    if (num_read > 0){
+        writeString(*addr, chars_read, num_read);
+    }
     return num_read;
 }
 

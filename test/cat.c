@@ -9,7 +9,8 @@ int main(int argc, char* argv[]) {
         while(1) {
             Read(&ch, 1, ConsoleInput);
             Write(&ch, 1, ConsoleOutput);
-            Write("\n", 1, ConsoleOutput);
+            if (ch != '\n')
+                Write("\n", 1, ConsoleOutput);
         }
     } else {
         for (i = 1; i <= argc; i++) {

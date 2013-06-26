@@ -25,8 +25,7 @@ void readBuffFromUsr(int addr, char *buff, int size){
         return;
     }
     *buff = (char) tmp;
-  } while(*(++buff) != '\0' && --size > 0);
-  *buff = '\0'; 
+  } while(*(buff++) != '\0' && --size > 0);
 }
 
 //readStrFromUsr

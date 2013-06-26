@@ -9,13 +9,22 @@ int main(){
     int chars_read;
     int pid;
     char ch;
-    char buff[128];
+    static char buff[128];
     int argc;
     char* argv[8];
     char cmd[64];
     char *prompt = "root@nachos:~# ";
+    char *argv_aux[] = {"holaa", "mundo", "!!!!!", "asddd", "qweee", NULL};   
 
     while (1) {
+
+        // Emptying variables...
+        //
+        *cmd = NULL;
+        ch = '\0';
+        argc = 0;
+        chars_read = 0;
+        buff[0] = '\0';
 
         // root@nachos:~# _
         Write(prompt, 15, ConsoleOutput);
@@ -69,7 +78,6 @@ int main(){
                     break;
                 case '\n':
                     buff[i] = '\0';
-                    Read(&ch, 1, ConsoleInput);
                     break;
                 default:
                     buff[i] = ch;
@@ -84,22 +92,28 @@ int main(){
         if( cmd[0] == 'e' && cmd[1] == 'x' &&
             cmd[2] == 'i' && cmd[3] == 't' &&
             cmd[4] == '\0') Exit(0);
+        
+        // halt !
+        if( cmd[0] == 'h' && cmd[1] == 'a' &&
+            cmd[2] == 'l' && cmd[3] == 't' &&
+            cmd[4] == '\0') Halt();
+
 
         // just for debug
-        //Write(argv[0], 1, ConsoleOutput);
-        //Write(argv[1], 1, ConsoleOutput);
-        //Write(argv[2], 1, ConsoleOutput);
+        Write(argv[0], 1, ConsoleOutput);
+        Write(argv[1], 1, ConsoleOutput);
+        Write(argv[2], 1, ConsoleOutput);
 
+        //pid = Exec(cmd, 5, argv_aux, bg);
         pid = Exec(cmd, argc, argv, bg);
 
         if (pid == -1) {
-            Write("No command \'", 12, ConsoleOutput);
             j = 0;
             while ((ch = cmd[j]) != '\0') {
                 Write(&cmd[j], 1, ConsoleOutput);
                 j = j + 1;
             }
-            Write("\' found\n", 8, ConsoleOutput);
+            Write(": Command not found\n'", 20, ConsoleOutput);
             continue;
         }
 

@@ -238,24 +238,24 @@ void AddrSpace::LoadArguments(){
 }
 
 void AddrSpace::SetArguments(int argc, int argv, char* file_name){
-    int first_arg_ptr;
-    machine->ReadMem(argv, 4, &first_arg_ptr);
+    int arg_ptr;
     char tempStr[128];
 
-    argc = argc + 1;
-    this->argc = argc;
+    this->argc = argc + 1;
     // TODO ver como podemos hacer mas lindo esto
-    this->argv = (char **) new int[argc];
+    this->argv = (char **) new int[argc + 1];
 
     // Load file_name in argv[0]
     this->argv[0] = new char[strlen(file_name)];
     strcpy(this->argv[0], file_name);
     
     // Leo todos los argumentos de argv
-    for (int i = 1; i < argc; i++) {
-        readString(first_arg_ptr + ((i-1) * 8), tempStr);
-        this->argv[i] = new char[strlen(tempStr)];
-        strcpy(this->argv[i], tempStr);
+    for (int i = 0; i < argc; i++) {
+        memset(tempStr, 0, sizeof(tempStr));
+        machine->ReadMem(argv + 4*i, 4, &arg_ptr);    
+        readString(arg_ptr, tempStr);
+        this->argv[i+1] = new char[strlen(tempStr)];
+        strcpy(this->argv[i+1], tempStr);
     }
 }
 

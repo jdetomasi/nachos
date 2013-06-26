@@ -144,7 +144,7 @@ ExceptionHandler(ExceptionType which){
                 arg3 = machine->ReadRegister(6);
 
                 ret = read(&arg1,arg2,arg3);
-                if (ret == -1){
+                if (ret < 0){
                     syscall_has_fail = 1;
                     break;
                 }
