@@ -130,7 +130,7 @@ AddrSpace::~AddrSpace()
     for(i = 0; i < (unsigned int) numPages ; i++){  
         memoryBitMap->Clear(pageTable[i].physicalPage);
     }
-    delete pageTable;
+    delete [] pageTable;
 }
 
 //----------------------------------------------------------------------
@@ -188,10 +188,16 @@ void AddrSpace::SaveState()
 //      For now, tell the machine where to find the page table.
 //----------------------------------------------------------------------
 
-void AddrSpace::RestoreState() 
-{
+void AddrSpace::RestoreState() {
+#ifdef USE_TLB
+    int i;
+    for(i=0; i < TLBSize; i++){
+        machine->tlb[i].valid = false;
+    }
+#else
     machine->pageTable = pageTable;
     machine->pageTableSize = numPages;
+#endif
 }
 
 
@@ -231,6 +237,8 @@ void AddrSpace::LoadArguments(){
    machine->WriteRegister(5,sp);
 
    for (int i = 0; i < argc; i++) {
+       //while(machine->WriteMem(sp, 4, args[i]);
+       //writeString(sp, args[i] , 4);
        machine->WriteMem(sp, 4, args[i]);
        sp = sp + 4;
    };
@@ -252,10 +260,21 @@ void AddrSpace::SetArguments(int argc, int argv, char* file_name){
     // Leo todos los argumentos de argv
     for (int i = 0; i < argc; i++) {
         memset(tempStr, 0, sizeof(tempStr));
-        machine->ReadMem(argv + 4*i, 4, &arg_ptr);    
+        !machine->ReadMem(argv + 4*i, 4, &arg_ptr);    
+        //while(!machine->ReadMem(argv + 4*i, 4, &arg_ptr)){};    
+        //readBuffFromUsr(argv + 4 * i, &arg_ptr, 4);
         readString(arg_ptr, tempStr);
         this->argv[i+1] = new char[strlen(tempStr)];
         strcpy(this->argv[i+1], tempStr);
     }
 }
 
+void AddrSpace::UpdateTLB(){
+    unsigned int virtPage;
+    int badAddr;
+    badAddr = machine->ReadRegister(BadVAddrReg);
+    virtPage = (unsigned) badAddr / PageSize;
+    last_modify = last_modify % TLBSize;
+    machine->tlb[last_modify] = pageTable[virtPage];
+    last_modify = last_modify + 1;
+}

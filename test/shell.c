@@ -1,5 +1,6 @@
 #include "syscall.h"
 #define NULL        ((void*)0)
+#define SBIN        "../test/"
 
 char read_ignore_whitespaces();
 
@@ -14,7 +15,7 @@ int main(){
     char* argv[8];
     char cmd[64];
     char *prompt = "root@nachos:~# ";
-    char *argv_aux[] = {"holaa", "mundo", "!!!!!", "asddd", "qweee", NULL};   
+    char *argv_aux[] = {"test_files/hola_mundo", "test_files/si_senior", NULL};   
 
     while (1) {
 
@@ -63,7 +64,7 @@ int main(){
                     buff[i] = '\0';
                     ch = read_ignore_whitespaces();
                     // whitespaces before \n ?
-                    if (ch != '\n') {
+                    if (ch != '\n' && ch != '&') {
                         argv[argc] = &buff[i + 1];
                         argc = argc + 1;
                     }
@@ -75,6 +76,7 @@ int main(){
                 case '&':
                     bg = 0;
                     buff[i] = '\0';
+                    ch = '\n';
                     break;
                 case '\n':
                     buff[i] = '\0';
@@ -93,20 +95,21 @@ int main(){
             cmd[2] == 'i' && cmd[3] == 't' &&
             cmd[4] == '\0') Exit(0);
         
-        // halt !
-        if( cmd[0] == 'h' && cmd[1] == 'a' &&
-            cmd[2] == 'l' && cmd[3] == 't' &&
-            cmd[4] == '\0') Halt();
-
-
-        // just for debug
-        Write(argv[0], 1, ConsoleOutput);
-        Write(argv[1], 1, ConsoleOutput);
-        Write(argv[2], 1, ConsoleOutput);
-
-        //pid = Exec(cmd, 5, argv_aux, bg);
+        //pid = Exec("../test/cat", 2, argv_aux, 1);
         pid = Exec(cmd, argc, argv, bg);
 
+        // search cmd in test/ just in case path was not full
+        if (pid == -1) {
+            if (chars_read < 55){
+                for (j = chars_read;  j >= 0; j--){
+                    cmd[j + 8] = cmd[j];
+                }
+                for (j = 0; j < 8; j++){
+                    cmd[j] = SBIN[j];
+                }
+            }
+            pid = Exec(cmd, argc, argv, bg);
+        }
         if (pid == -1) {
             j = 0;
             while ((ch = cmd[j]) != '\0') {
@@ -119,8 +122,10 @@ int main(){
 
         if (bg == 1){
             Join(pid);
+        } else{
+            bg = 1;
+            ch = '\0';
         }
-        
     }
 }
 

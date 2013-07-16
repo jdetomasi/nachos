@@ -13,7 +13,7 @@ int main(int argc, char* argv[]) {
                 Write("\n", 1, ConsoleOutput);
         }
     } else {
-        for (i = 1; i <= argc; i++) {
+        for (i = 1; i < argc; i++) {
             Write("\n", 1, ConsoleOutput);
             fileId = Open(argv[i]);
             while (Read(&ch, 1, fileId) == 1) {
@@ -21,5 +21,8 @@ int main(int argc, char* argv[]) {
             }
             Close(fileId);
         }
+        Write("\n", 1, ConsoleOutput);
+        Exit(0);
     }
+    return 0;
 }

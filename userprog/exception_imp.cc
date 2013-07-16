@@ -76,7 +76,6 @@ int read(int* addr,int size, OpenFileId file_id){
         return -1;
     }
     num_read = openedFiles[file_id]->file->Read(chars_read,size);
-    printf("Leidos %d\n", num_read);
     if (num_read > 0){
         writeString(*addr, chars_read, num_read);
     }
@@ -198,6 +197,8 @@ int exec(OpenFile* executable, char* file_name, int argc, int argv, int isJoinea
         currentSpaces.insert(
             std::pair<SpaceId,SpaceStruct*>(freshAddrId, addrSpaceStruct));
     }
+    // TODO Refactorizar SpaceId por ProcessId
+    // y addrSpaceStruct por processStruct (o algo asi)
     return freshAddrId++;
 }
 
@@ -216,6 +217,8 @@ int join(SpaceId pid){
 
 void sexit(int ret){
     // Search for currentSpaces to find the one belonging to us (if any)
+    // TODO cambiar esta crotada, crear una variable pid en AddrSpace
+    // y buscar el currensSpace con ese pid
     std::map<SpaceId,SpaceStruct*>::iterator it;
     for(it = currentSpaces.begin(); it != currentSpaces.end();++it){
         if(it->second->owner == currentThread){

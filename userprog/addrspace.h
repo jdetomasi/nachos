@@ -35,6 +35,9 @@ class AddrSpace {
     void SetArguments(int argc, int argv, char* file_name);
     void LoadArguments();
 
+    void UpdateTLB();                   // On tlb miss, update the TLB to hold the
+                                        // needed TranslationEntry
+
   private:
     TranslationEntry *pageTable;	// Assume linear page table translation
 					// for now!
@@ -45,6 +48,7 @@ class AddrSpace {
     void CopyToMemory(OpenFile *executable, Segment segment);
     int argc;  
     char **argv;
+    int last_modify;
     
 };
 

@@ -55,7 +55,6 @@ void
 ExceptionHandler(ExceptionType which){
 
     ASSERT(interrupt->getStatus() == SystemMode);
-    int last_open; last_open = 0;
     int type = machine->ReadRegister(2);
     int arg1,arg2,arg3,arg4;
     int syscall_has_fail; syscall_has_fail = 0;
@@ -105,7 +104,6 @@ ExceptionHandler(ExceptionType which){
                 break;
             case SC_Join:
                 DEBUG('s', "System Call: %s Invoking Join.\n",currentThread->getName());
-                printf("Exception Handler: %s  Join\n",currentThread->getName());
                 // arg1 :: SpaceId of the user program to join to.
                 arg1 = machine->ReadRegister(4);
                 ret = join(arg1);
@@ -197,19 +195,26 @@ ExceptionHandler(ExceptionType which){
                 // Not Necessary !
                 break;
             default:
+                DEBUG('s', "System Call: %s Unknown syscall.\n",currentThread->getName());
                 machine->WriteRegister(2, -1);
-                printf("Unknown syscall: %d\n", type);
+                //printf("Unknown syscall: %d\n", type);
                 break;
         }
         if(syscall_has_fail){ 
             machine->WriteRegister(2, -1);
         }
         update_registers();
+    } else if(which == PageFaultException) {
+        // This is a TLB fault,
+        // the page may be in memory,
+        // but not in the TLB
+        currentThread->space->UpdateTLB();
+         
     } else {
-        printf("ERROR!! Ignoring Syscall. Unexpected user mode exception %d %d\n", which, type);
+        DEBUG('s', "Ignoring System Call: %s Unexpecter user mode exception.\n",currentThread->getName());
+        //printf("ERROR!! Ignoring Syscall. Unexpected user mode exception %d %d\n", which, type);
         machine->WriteRegister(2, -1);
         update_registers();
-        //ASSERT(false);
-        
+    
     }
 }

@@ -48,7 +48,7 @@ Semaphore::Semaphore(const char* debugName, int initialValue)
 
 Semaphore::~Semaphore()
 {
-    delete queue;
+    delete [] queue;
 }
 
 //----------------------------------------------------------------------
@@ -187,7 +187,7 @@ Condition::Condition(const char* debugName, Lock* condLock) {
 //----------------------------------------------------------------------
 Condition::~Condition() {
     delete conditionLock;
-    delete waitingList;
+    delete [] waitingList;
  }
 
 //----------------------------------------------------------------------
