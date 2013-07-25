@@ -45,11 +45,12 @@ class AddrSpace {
 					// address space
     MemoryBitMap* memoryBitMap;
 
-    void CopyToMemory(OpenFile *executable, Segment segment);
-    void LazyCopy(OpenFile *executable, int virPage);
+    void CopyToMemory(Segment segment);
+    void LoadPage(int virPage);
     int argc;  
     char **argv;
     int last_modify;
+    OpenFile *executable;
     
 };
 

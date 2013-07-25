@@ -63,6 +63,7 @@ AddrSpace::AddrSpace(OpenFile *executable)
     NoffHeader noffH;
     unsigned int i, size;
 
+    this->executable = executable;
     executable->ReadAt((char *)&noffH, sizeof(noffH), 0);
     if ((noffH.noffMagic != NOFFMAGIC) && 
 		(WordToHost(noffH.noffMagic) == NOFFMAGIC))
@@ -119,12 +120,12 @@ AddrSpace::AddrSpace(OpenFile *executable)
     if (noffH.code.size > 0) {
         DEBUG('a', "Initializing code segment, at 0x%x, size %d\n", 
 			noffH.code.virtualAddr, noffH.code.size);
-        CopyToMemory(executable, noffH.code);
+        CopyToMemory(noffH.code);
     }
     if (noffH.initData.size > 0) {
         DEBUG('a', "Initializing data segment, at 0x%x, size %d\n", 
 			noffH.initData.virtualAddr, noffH.initData.size);
-        CopyToMemory(executable, noffH.initData);
+        CopyToMemory(noffH.initData);
     }
 #endif
 
@@ -213,7 +214,7 @@ void AddrSpace::RestoreState() {
 }
 
 
-void AddrSpace::CopyToMemory(OpenFile *executable, Segment segment){
+void AddrSpace::CopyToMemory(Segment segment){
 
     int virtualAddr;
     int inFileAddr;
@@ -232,7 +233,7 @@ void AddrSpace::CopyToMemory(OpenFile *executable, Segment segment){
     }
 }
 
-void AddrSpace::LazyCopy(OpenFile *executable, int virtPage){
+void AddrSpace::LoadPage(int virtPage){
     
     if(pageTable[virtPage].physicalPage != -1){
         // La pagina ya fue cargada
@@ -311,7 +312,7 @@ void AddrSpace::UpdateTLB(){
     int badAddr;
     badAddr = machine->ReadRegister(BadVAddrReg);
     virtPage = (unsigned) badAddr / PageSize;
-    LazyCopy(virtPage);
+    LoadPage(virtPage);
     last_modify = last_modify % TLBSize;
     machine->tlb[last_modify] = pageTable[virtPage];
     last_modify = last_modify + 1;

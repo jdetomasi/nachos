@@ -92,7 +92,6 @@ ExceptionHandler(ExceptionType which){
                 file = fileSystem->Open(file_name);
                 if (file != NULL) {
                     ret = exec(file, file_name, arg2, arg3, arg4);
-                    delete file;
                 } else {
                     ret = -1;
                 }
