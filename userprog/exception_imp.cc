@@ -168,7 +168,6 @@ void startNewProcess(void* x){
 int exec(OpenFile* executable, char* file_name, int argc, int argv, int isJoineable){
     AddrSpace *newAddrSpace;
     newAddrSpace = new AddrSpace(executable);
-    delete executable;
     // TODO cambiar esta crotada
     static char thread_name[128];
     strcpy(thread_name, (const char *) file_name);

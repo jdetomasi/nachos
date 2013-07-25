@@ -82,12 +82,23 @@ AddrSpace::AddrSpace(OpenFile *executable)
 						// at least until we have
 						// virtual memory
 
+    pageTable = new TranslationEntry[numPages];
+#ifdef USE_TLB
+    DEBUG('a', "Creating pageTable, not loading anything\n");
+    for (i = 0; i < numPages; i++) {
+	pageTable[i].virtualPage = i;	// The translation is not valid
+	pageTable[i].physicalPage = -1;  // assign 0 to show that
+	pageTable[i].valid = true;
+	pageTable[i].use = false;
+	pageTable[i].dirty = false;
+	pageTable[i].readOnly = false; 
+    }
+#else
     DEBUG('a', "Initializing address space, num pages %d, size %d\n", 
 					numPages, size);
     // first, set up the translation 
-    pageTable = new TranslationEntry[numPages];
     for (i = 0; i < numPages; i++) {
-	pageTable[i].virtualPage = i;	// for now, virtual page # = phys page #
+	pageTable[i].virtualPage = i;	
 	pageTable[i].physicalPage = memoryBitMap->Find();
 	pageTable[i].valid = true;
 	pageTable[i].use = false;
@@ -115,6 +126,7 @@ AddrSpace::AddrSpace(OpenFile *executable)
 			noffH.initData.virtualAddr, noffH.initData.size);
         CopyToMemory(executable, noffH.initData);
     }
+#endif
 
 }
 
@@ -213,36 +225,61 @@ void AddrSpace::CopyToMemory(OpenFile *executable, Segment segment){
 
     int i;
     for(i=0; i < numPages; i++){
-        executable->ReadAt(&(machine->mainMemory[pageTable[i].physicalPage * PageSize]) + virtualAddr, PageSize, inFileAddr + i * PageSize); 
+        executable->ReadAt(
+                &(machine->mainMemory[pageTable[i].physicalPage * PageSize]) + virtualAddr, 
+                PageSize, 
+                inFileAddr + i * PageSize); 
     }
 }
 
+void AddrSpace::LazyCopy(OpenFile *executable, int virtPage){
+    
+    if(pageTable[virtPage].physicalPage != -1){
+        // La pagina ya fue cargada
+        return;
+    }
+    NoffHeader noffH;
+    executable->ReadAt((char *)&noffH, sizeof(noffH), 0);
+
+}
+
 void AddrSpace::LoadArguments(){
-   int args[argc];
-   int strLen;
+    int args[argc];
+    int strLen;
 
-   int sp = numPages * PageSize;
-   // Leo todos los argumentos de argv
-   for (int i = 0; i < argc; i++) {
-       strLen = strlen(argv[i]) + 1;
-       sp = sp - strLen;
-       writeString(sp, argv[i], strLen);
-       args[i] = sp;
-   }
+    int sp = numPages * PageSize;
+    // Leo todos los argumentos de argv
+    int cantPag = 0;
+    // TODO es esto o es solo sizeof(int) ????
+    int tmpSize = sizeof(int) * argc;
+    
+    for (int i = 0; i < argc; i++) {
+        strLen = strlen(argv[i]) + 1;
+        tmpSize += strLen;  
+        // Pedimos las paginas antes de escribir en memoria, para evitarnos
+        // tener que llamar a LazyCall que "saca" las cosas del executable
+        if (tmpSize > PageSize * cantPag ){
+                pageTable[numPages - cantPag++].physicalPage = 
+                    memoryBitMap->Find();
+        }
+        sp = sp - strLen;
+        writeString(sp, argv[i], strLen);
+        args[i] = sp;
+    }
 
-   sp = sp - argc * 4;
-   sp = sp - sp % 4;
-   machine->WriteRegister(StackReg, sp - 16);
-   machine->WriteRegister(4,argc);
-   machine->WriteRegister(5,sp);
-
-   for (int i = 0; i < argc; i++) {
-       //while(machine->WriteMem(sp, 4, args[i]);
-       //writeString(sp, args[i] , 4);
-       machine->WriteMem(sp, 4, args[i]);
-       sp = sp + 4;
-   };
-
+    sp = sp - argc * sizeof(int);
+    sp = sp - sp % sizeof(int);
+    machine->WriteRegister(StackReg, sp - sizeof(int)*4);
+    machine->WriteRegister(4,argc);
+    machine->WriteRegister(5,sp);
+ 
+    for (int i = 0; i < argc; i++) {
+        //while(machine->WriteMem(sp, 4, args[i]);
+        //writeString(sp, args[i] , 4);
+        machine->WriteMem(sp, sizeof(int), args[i]);
+        sp = sp + sizeof(int);
+    };
+ 
 }
 
 void AddrSpace::SetArguments(int argc, int argv, char* file_name){
@@ -260,7 +297,7 @@ void AddrSpace::SetArguments(int argc, int argv, char* file_name){
     // Leo todos los argumentos de argv
     for (int i = 0; i < argc; i++) {
         memset(tempStr, 0, sizeof(tempStr));
-        !machine->ReadMem(argv + 4*i, 4, &arg_ptr);    
+        !machine->ReadMem(argv + sizeof(int)*i, sizeof(int), &arg_ptr);    
         //while(!machine->ReadMem(argv + 4*i, 4, &arg_ptr)){};    
         //readBuffFromUsr(argv + 4 * i, &arg_ptr, 4);
         readString(arg_ptr, tempStr);
@@ -274,6 +311,7 @@ void AddrSpace::UpdateTLB(){
     int badAddr;
     badAddr = machine->ReadRegister(BadVAddrReg);
     virtPage = (unsigned) badAddr / PageSize;
+    LazyCopy(virtPage);
     last_modify = last_modify % TLBSize;
     machine->tlb[last_modify] = pageTable[virtPage];
     last_modify = last_modify + 1;

@@ -63,6 +63,9 @@ class OpenFile {
                 return offSet;
             }
         };    
+
+    char* GetName(){return file};
+
   private:
     int file;
     int currentOffset;

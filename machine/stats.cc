@@ -21,7 +21,7 @@ Statistics::Statistics()
     totalTicks = idleTicks = systemTicks = userTicks = 0;
     numDiskReads = numDiskWrites = 0;
     numConsoleCharsRead = numConsoleCharsWritten = 0;
-    numPageFaults = numPacketsSent = numPacketsRecvd = 0;
+    numPageFaults = numPageHits = numPacketsSent = numPacketsRecvd = 0;
 }
 
 //----------------------------------------------------------------------
@@ -41,4 +41,7 @@ Statistics::Print()
     printf("Paging: faults %d\n", numPageFaults);
     printf("Network I/O: packets received %d, sent %d\n", numPacketsRecvd, 
 	numPacketsSent);
+#ifdef USE_TLB
+    printf("TLB Hits: %d (For a ratio of %d/%d)\n", numPageHits, numPageHits, (numPageHits+numPageFaults));
+#endif
 }
