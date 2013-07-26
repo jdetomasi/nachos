@@ -89,7 +89,7 @@ AddrSpace::AddrSpace(OpenFile *executable)
     for (i = 0; i < numPages; i++) {
 	pageTable[i].virtualPage = i;	// The translation is not valid
 	pageTable[i].physicalPage = -1;  // assign 0 to show that
-	pageTable[i].valid = true;
+	pageTable[i].valid = false;
 	pageTable[i].use = false;
 	pageTable[i].dirty = false;
 	pageTable[i].readOnly = false; 
@@ -120,12 +120,16 @@ AddrSpace::AddrSpace(OpenFile *executable)
     if (noffH.code.size > 0) {
         DEBUG('a', "Initializing code segment, at 0x%x, size %d\n", 
 			noffH.code.virtualAddr, noffH.code.size);
-        CopyToMemory(noffH.code);
+        CopyToMemory(noffH.code.virtualAddr,
+                     noffH.code.inFileAddr,
+                     noffH.code.size);
     }
     if (noffH.initData.size > 0) {
         DEBUG('a', "Initializing data segment, at 0x%x, size %d\n", 
 			noffH.initData.virtualAddr, noffH.initData.size);
-        CopyToMemory(noffH.initData);
+        CopyToMemory(noffH.initData.virtualAddr,
+                     noffH.initData.inFileAddr,
+                     noffH.initData.size);
     }
 #endif
 
@@ -214,23 +218,26 @@ void AddrSpace::RestoreState() {
 }
 
 
-void AddrSpace::CopyToMemory(Segment segment){
-
-    int virtualAddr;
-    int inFileAddr;
-    int size;
-    virtualAddr = segment.virtualAddr;
-    inFileAddr = segment.inFileAddr;
-    size = segment.size;
+//void AddrSpace::CopyToMemory(Segment segment){
+void AddrSpace::CopyToMemory(int virtualAddr, int inFileAddr, int size){
+    int pageNbr;
     ASSERT(size >= 0);
 
     int i;
-    for(i=0; i < numPages; i++){
+    int offset;
+    for (i=0; i < size ; i++){
+        // virtualAddr + i -> la posicion en memoria que quiero copiar
+        // pageNbr * PageSize -> La direccion donde comienza la pagina a
+        //                      la que pertenece lo anterior
+        pageNbr = divRoundUp(virtualAddr + i, PageSize);
+        offset = (virtualAddr + i) - (pageNbr * PageSize);
         executable->ReadAt(
-                &(machine->mainMemory[pageTable[i].physicalPage * PageSize]) + virtualAddr, 
-                PageSize, 
-                inFileAddr + i * PageSize); 
+                &(machine->mainMemory[pageTable[pageNbr].physicalPage * PageSize]) + offset, 
+                1, 
+                inFileAddr + i); 
     }
+
+    DEBUG('a',"virtualAddr %d, Size %d, infileAddr %d\n", virtualAddr, size, inFileAddr);
 }
 
 void AddrSpace::LoadPage(int virtPage){
@@ -239,8 +246,26 @@ void AddrSpace::LoadPage(int virtPage){
         // La pagina ya fue cargada
         return;
     }
+    pageTable[virtPage].physicalPage = memoryBitMap->Find();
+    pageTable[virtPage].valid = true;
     NoffHeader noffH;
-    executable->ReadAt((char *)&noffH, sizeof(noffH), 0);
+    executable->ReadAt((char *)&noffH, sizeof(noffH), -1);
+    //int size;
+    //size = noffH.code.size + noffH.initData.size + noffH.uninitData.size; 
+    //int pageCant;
+    //pageCant = divRoundUp(size, PageSize);
+    int codeSegment_0, iDataSegment_0, uDataSegment_0, virtAddr, inFileAddr, i;
+    codeSegment_0 = noffH.code.inFileAddr;
+    iDataSegment_0 = noffH.initData.inFileAddr;
+    uDataSegment_0 = noffH.uninitData.inFileAddr;
+    virtAddr = virtPage * PageSize;
+    inFileAddr = codeSegment_0 + virtAddr;
+    i = 0;
+    while ( virtAddr < uDataSegment_0){
+        CopyToMemory(virtAddr, inFileAddr + i , 1); 
+        i++;
+        virtAddr++;
+    }
 
 }
 

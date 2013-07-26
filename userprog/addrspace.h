@@ -45,7 +45,7 @@ class AddrSpace {
 					// address space
     MemoryBitMap* memoryBitMap;
 
-    void CopyToMemory(Segment segment);
+    void CopyToMemory(int, int, int);
     void LoadPage(int virPage);
     int argc;  
     char **argv;
