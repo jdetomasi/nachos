@@ -220,12 +220,13 @@ Machine::Translate(int virtAddr, int* physAddr, int size, bool writing)
 	}
 	entry = &pageTable[vpn];
     } else {
-        for (entry = NULL, i = 0; i < TLBSize; i++)
+        for (entry = NULL, i = 0; i < TLBSize; i++){
     	    if (tlb[i].valid && (tlb[i].virtualPage == (int)vpn)) {
                 stats->numPageHits++;
 		entry = &tlb[i];			// FOUND!
 		break;
 	    }
+        }
 	if (entry == NULL) {				// not found
     	    DEBUG('a', "*** no valid TLB entry found for this virtual page!\n");
             stats->numPageFaults++;

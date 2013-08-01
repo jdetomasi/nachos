@@ -47,10 +47,13 @@ class AddrSpace {
 
     void CopyToMemory(int, int, int);
     void LoadPage(int virPage);
+    bool isCode (int addr);     // Check if addr belongs to code segment
+    bool isData (int addr);     // Check if addr belongs to initData segment
     int argc;  
     char **argv;
     int last_modify;
     OpenFile *executable;
+    NoffHeader noffH;
     
 };
 

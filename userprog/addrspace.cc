@@ -60,7 +60,6 @@ SwapHeader (NoffHeader *noffH)
 AddrSpace::AddrSpace(OpenFile *executable)
 {
     memoryBitMap = MemoryBitMap::GetInstance();
-    NoffHeader noffH;
     unsigned int i, size;
 
     this->executable = executable;
@@ -218,7 +217,6 @@ void AddrSpace::RestoreState() {
 }
 
 
-//void AddrSpace::CopyToMemory(Segment segment){
 void AddrSpace::CopyToMemory(int virtualAddr, int inFileAddr, int size){
     int pageNbr;
     ASSERT(size >= 0);
@@ -229,44 +227,50 @@ void AddrSpace::CopyToMemory(int virtualAddr, int inFileAddr, int size){
         // virtualAddr + i -> la posicion en memoria que quiero copiar
         // pageNbr * PageSize -> La direccion donde comienza la pagina a
         //                      la que pertenece lo anterior
-        pageNbr = divRoundUp(virtualAddr + i, PageSize);
+        pageNbr = (virtualAddr + i) /  PageSize;
         offset = (virtualAddr + i) - (pageNbr * PageSize);
         executable->ReadAt(
                 &(machine->mainMemory[pageTable[pageNbr].physicalPage * PageSize]) + offset, 
                 1, 
                 inFileAddr + i); 
+        DEBUG('a',"Loaded virtualAddr %d into physPage %d from position in file=%d\n", 
+                virtualAddr + i,
+                pageTable[pageNbr].physicalPage,
+                inFileAddr + i);
     }
 
-    DEBUG('a',"virtualAddr %d, Size %d, infileAddr %d\n", virtualAddr, size, inFileAddr);
 }
 
-void AddrSpace::LoadPage(int virtPage){
-    
-    if(pageTable[virtPage].physicalPage != -1){
-        // La pagina ya fue cargada
-        return;
-    }
-    pageTable[virtPage].physicalPage = memoryBitMap->Find();
-    pageTable[virtPage].valid = true;
-    NoffHeader noffH;
-    executable->ReadAt((char *)&noffH, sizeof(noffH), -1);
-    //int size;
-    //size = noffH.code.size + noffH.initData.size + noffH.uninitData.size; 
-    //int pageCant;
-    //pageCant = divRoundUp(size, PageSize);
-    int codeSegment_0, iDataSegment_0, uDataSegment_0, virtAddr, inFileAddr, i;
-    codeSegment_0 = noffH.code.inFileAddr;
-    iDataSegment_0 = noffH.initData.inFileAddr;
-    uDataSegment_0 = noffH.uninitData.inFileAddr;
-    virtAddr = virtPage * PageSize;
-    inFileAddr = codeSegment_0 + virtAddr;
-    i = 0;
-    while ( virtAddr < uDataSegment_0){
-        CopyToMemory(virtAddr, inFileAddr + i , 1); 
-        i++;
-        virtAddr++;
-    }
+bool AddrSpace::isCode (int addr) {
+    return (addr>= noffH.code.virtualAddr && addr< noffH.code.virtualAddr + noffH.code.size);
+}
 
+bool AddrSpace::isData (int addr) {
+    return (addr>= noffH.initData.virtualAddr && addr< noffH.initData.virtualAddr + noffH.initData.size);
+}
+
+void AddrSpace::LoadPage(int badAddr){
+
+    unsigned int virtPage;
+    virtPage = badAddr / PageSize;
+
+    int virtAddr = virtPage * PageSize;
+    
+    if(pageTable[virtPage].physicalPage == -1){
+        pageTable[virtPage].physicalPage = memoryBitMap->Find();
+        pageTable[virtPage].valid = true;
+        DEBUG('a',"Copying virtual page %d into physical page %d\n",virtPage, pageTable[virtPage].physicalPage );
+        for(int i=0; i < PageSize; i++){
+            if (isCode(virtAddr)){
+                CopyToMemory(virtAddr + i, noffH.code.inFileAddr + virtAddr + i , 1); 
+            }
+            if (isData(virtAddr)){
+                CopyToMemory(virtAddr + i, noffH.initData.inFileAddr + virtAddr + i , 1); 
+            }
+        }
+    }else{
+        DEBUG('a',"Page %d was already loaded\n", virtPage);
+    }
 }
 
 void AddrSpace::LoadArguments(){
@@ -276,7 +280,6 @@ void AddrSpace::LoadArguments(){
     int sp = numPages * PageSize;
     // Leo todos los argumentos de argv
     int cantPag = 0;
-    // TODO es esto o es solo sizeof(int) ????
     int tmpSize = sizeof(int) * argc;
     
     for (int i = 0; i < argc; i++) {
@@ -285,8 +288,8 @@ void AddrSpace::LoadArguments(){
         // Pedimos las paginas antes de escribir en memoria, para evitarnos
         // tener que llamar a LazyCall que "saca" las cosas del executable
         if (tmpSize > PageSize * cantPag ){
-                pageTable[numPages - cantPag++].physicalPage = 
-                    memoryBitMap->Find();
+            pageTable[numPages - cantPag++].physicalPage = 
+                memoryBitMap->Find();
         }
         sp = sp - strLen;
         writeString(sp, argv[i], strLen);
@@ -300,8 +303,6 @@ void AddrSpace::LoadArguments(){
     machine->WriteRegister(5,sp);
  
     for (int i = 0; i < argc; i++) {
-        //while(machine->WriteMem(sp, 4, args[i]);
-        //writeString(sp, args[i] , 4);
         machine->WriteMem(sp, sizeof(int), args[i]);
         sp = sp + sizeof(int);
     };
@@ -323,9 +324,8 @@ void AddrSpace::SetArguments(int argc, int argv, char* file_name){
     // Leo todos los argumentos de argv
     for (int i = 0; i < argc; i++) {
         memset(tempStr, 0, sizeof(tempStr));
-        !machine->ReadMem(argv + sizeof(int)*i, sizeof(int), &arg_ptr);    
-        //while(!machine->ReadMem(argv + 4*i, 4, &arg_ptr)){};    
-        //readBuffFromUsr(argv + 4 * i, &arg_ptr, 4);
+        if (!machine->ReadMem(argv + sizeof(int)*i, sizeof(int), &arg_ptr))
+            ASSERT(machine->ReadMem(argv + sizeof(int)*i, sizeof(int), &arg_ptr));
         readString(arg_ptr, tempStr);
         this->argv[i+1] = new char[strlen(tempStr)];
         strcpy(this->argv[i+1], tempStr);
@@ -333,12 +333,15 @@ void AddrSpace::SetArguments(int argc, int argv, char* file_name){
 }
 
 void AddrSpace::UpdateTLB(){
-    unsigned int virtPage;
     int badAddr;
     badAddr = machine->ReadRegister(BadVAddrReg);
-    virtPage = (unsigned) badAddr / PageSize;
-    LoadPage(virtPage);
+    unsigned int virtPage;
+    virtPage = badAddr / PageSize;
+    LoadPage(badAddr);
     last_modify = last_modify % TLBSize;
     machine->tlb[last_modify] = pageTable[virtPage];
+    DEBUG('a',
+      "Inserting into TLB in position %d\n\tpageTable.VirtPage=%d\n\tpageTable.physicalPage = %d\n",
+      last_modify, virtPage, pageTable[virtPage].physicalPage);
     last_modify = last_modify + 1;
 }

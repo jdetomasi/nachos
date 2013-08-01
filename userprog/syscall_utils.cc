@@ -20,7 +20,8 @@ void readBuffFromUsr(int addr, char *buff, int size){
   int tmp; tmp = 0;
   
   do{
-    while (! machine->ReadMem(addr, 1, &tmp)){
+    if(!machine->ReadMem(addr, 1, &tmp)){
+        ASSERT(machine->ReadMem(addr, 1, &tmp));
     }
     addr++;
     *buff = (char) tmp;
@@ -32,7 +33,8 @@ void readString(int addr, char *buff){
   int tmp; tmp = 0;
   do{
 
-    while(!machine->ReadMem(addr, 1, &tmp)){
+    if(!machine->ReadMem(addr, 1, &tmp)){
+        ASSERT(machine->ReadMem(addr, 1, &tmp));
     }
     addr++;
     *buff = (char) tmp;
@@ -42,7 +44,8 @@ void readString(int addr, char *buff){
 // writeBuffToUsr
 void writeString(int addr, char *buff, int size){
   for (int i = 0; i < size; i++) {
-  	while(! machine->WriteMem(addr, 1, (int) *buff)){
+  	if(!machine->WriteMem(addr, 1, (int) *buff)){
+            ASSERT(machine->WriteMem(addr, 1, (int) *buff));
         }
   	buff++;
   	addr++;

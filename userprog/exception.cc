@@ -92,6 +92,10 @@ ExceptionHandler(ExceptionType which){
                 file = fileSystem->Open(file_name);
                 if (file != NULL) {
                     ret = exec(file, file_name, arg2, arg3, arg4);
+                    // Do not delete file, it is used in case of TLB use
+                    #ifndef USE_TLB
+                    delete file;
+                    #endif
                 } else {
                     ret = -1;
                 }
