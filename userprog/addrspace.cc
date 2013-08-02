@@ -303,7 +303,7 @@ void AddrSpace::LoadArguments(){
     machine->WriteRegister(5,sp);
  
     for (int i = 0; i < argc; i++) {
-        machine->WriteMem(sp, sizeof(int), args[i]);
+        WRITEMEM(sp, sizeof(int), args[i]);
         sp = sp + sizeof(int);
     };
  
@@ -324,8 +324,7 @@ void AddrSpace::SetArguments(int argc, int argv, char* file_name){
     // Leo todos los argumentos de argv
     for (int i = 0; i < argc; i++) {
         memset(tempStr, 0, sizeof(tempStr));
-        if (!machine->ReadMem(argv + sizeof(int)*i, sizeof(int), &arg_ptr))
-            ASSERT(machine->ReadMem(argv + sizeof(int)*i, sizeof(int), &arg_ptr));
+        READMEM(argv + sizeof(int)*i, sizeof(int), &arg_ptr);
         readString(arg_ptr, tempStr);
         this->argv[i+1] = new char[strlen(tempStr)];
         strcpy(this->argv[i+1], tempStr);
