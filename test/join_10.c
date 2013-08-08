@@ -1,9 +1,9 @@
 #include "syscall.h"
 
-int pid;
-int ret;
 
 int main(){
+    int pid;
+    int ret;
     pid = Exec("../test/run_hola_mundo",0,0,1);
     ret = Join(pid);
 

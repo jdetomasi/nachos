@@ -1,13 +1,13 @@
 #include "syscall.h"
 
-int fid;
-int ret;
-int readed;
-char from_file[100];
-
 FilePosition MySeek(OpenFileId fd, FilePosition offset, int reference);
 
 int main(){
+    int fid;
+    int ret;
+    int readed;
+    char from_file[100];
+
     Create("test_files/hola_mundo");
     fid = Open("test_files/hola_mundo");
     Write("Hola Mundo!", 11,fid);

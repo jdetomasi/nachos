@@ -52,7 +52,7 @@ int open(char *file_name){
 int read(int* addr,int size, OpenFileId file_id){
      
     int num_read = 0;
-    char* chars_read = new char[size];
+    char* chars_read = new char[size + 1];
     if (file_id == ConsoleInput){
         SynchConsole *console = SynchConsole::GetInstance();
         while (size > 0){

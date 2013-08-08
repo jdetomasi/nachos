@@ -1,9 +1,9 @@
 #include "syscall.h"
 
-char ch;
 
 int main(){
 
+    char ch;
     for (;;) {
         Read(&ch, 1, ConsoleInput);
         Write(&ch, 1, ConsoleOutput);

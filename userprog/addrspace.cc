@@ -230,7 +230,7 @@ void AddrSpace::CopyToMemory(int virtualAddr, int inFileAddr, int size){
         pageNbr = (virtualAddr + i) /  PageSize;
         offset = (virtualAddr + i) - (pageNbr * PageSize);
         executable->ReadAt(
-                &(machine->mainMemory[pageTable[pageNbr].physicalPage * PageSize]) + offset, 
+                &(machine->mainMemory[pageTable[pageNbr].physicalPage * PageSize + offset]), 
                 1, 
                 inFileAddr + i); 
         DEBUG('a',"Loaded virtualAddr %d into physPage %d from position in file=%d\n", 
@@ -258,14 +258,16 @@ void AddrSpace::LoadPage(int badAddr){
     
     if(pageTable[virtPage].physicalPage == -1){
         pageTable[virtPage].physicalPage = memoryBitMap->Find();
+        // Just in case...
+        bzero((machine->mainMemory) + (pageTable[virtPage].physicalPage * PageSize), PageSize);
         pageTable[virtPage].valid = true;
         DEBUG('a',"Copying virtual page %d into physical page %d\n",virtPage, pageTable[virtPage].physicalPage );
         for(int i=0; i < PageSize; i++){
-            if (isCode(virtAddr)){
-                CopyToMemory(virtAddr + i, noffH.code.inFileAddr + virtAddr + i , 1); 
+            if (isCode(virtAddr + i)){
+                CopyToMemory(virtAddr + i, noffH.code.inFileAddr + (virtAddr - noffH.code.virtualAddr + i) , 1); 
             }
-            if (isData(virtAddr)){
-                CopyToMemory(virtAddr + i, noffH.initData.inFileAddr + virtAddr + i , 1); 
+            if (isData(virtAddr + i)){
+                CopyToMemory(virtAddr + i, noffH.initData.inFileAddr + (virtAddr - noffH.initData.virtualAddr + i) , 1); 
             }
         }
     }else{
@@ -290,6 +292,8 @@ void AddrSpace::LoadArguments(){
         if (tmpSize > PageSize * cantPag ){
             pageTable[numPages - cantPag++].physicalPage = 
                 memoryBitMap->Find();
+            // Just in case...
+            bzero((machine->mainMemory) + (pageTable[numPages - cantPag].physicalPage * PageSize), PageSize);
         }
         sp = sp - strLen;
         writeString(sp, argv[i], strLen);
