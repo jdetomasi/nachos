@@ -164,7 +164,7 @@ Scheduler::Run (Thread *nextThread)
     // point, we were still running on the old thread's stack!
     if (threadToBeDestroyed != NULL) {
         DEBUG('d',"Vas a moriiiir Moe! Wiiiii\n");
-        //delete threadToBeDestroyed;
+        delete threadToBeDestroyed;
         DEBUG('d', "Borrado!!  (ponele)\n");
 	threadToBeDestroyed = NULL;
     }
