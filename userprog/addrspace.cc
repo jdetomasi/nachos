@@ -291,9 +291,10 @@ void AddrSpace::LoadArguments(){
         // Pedimos las paginas antes de escribir en memoria, para evitarnos
         // tener que llamar a LazyCall que "saca" las cosas del executable
         if (tmpSize > PageSize * cantPag ){
-        cantPag = cantPag + 1;
+            cantPag = cantPag + 1;
             pageTable[numPages - cantPag].physicalPage =  memoryBitMap->Find();
             // Just in case...
+            pageTable[numPages - cantPag].valid =  true;
             bzero((machine->mainMemory) + (pageTable[numPages - cantPag].physicalPage * PageSize), PageSize);
         }
         sp = sp - strLen;
@@ -344,9 +345,9 @@ void AddrSpace::UpdateTLB(){
     virtPage = badAddr / PageSize;
     LoadPage(badAddr);
     last_modify = last_modify % TLBSize;
-    machine->tlb[last_modify] = pageTable[virtPage];
     DEBUG('a',
       "Inserting into TLB in position %d\n\tpageTable.VirtPage=%d\n\tpageTable.physicalPage = %d\n",
       last_modify, virtPage, pageTable[virtPage].physicalPage);
+    machine->tlb[last_modify] = pageTable[virtPage];
     last_modify = last_modify + 1;
 }
