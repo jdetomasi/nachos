@@ -13,7 +13,7 @@
 # if you are cross-compiling, you need to point to the right executables
 # and change the flags to ld and the build procedure for as
 #GCCDIR = ~/gnu/local/decstation-ultrix/bin/
-GCCDIR = /usr/local/decstation-ultrix/bin/
+GCCDIR = /usr/local/nachos/decstation-ultrix/bin/
 LDFLAGS = -T script -N
 ASFLAGS = -mips1
 CPPFLAGS = $(INCDIR)
@@ -34,7 +34,10 @@ CPP = /lib/cpp
 INCDIR =-I../userprog -I../threads
 CFLAGS = -G 0 -c $(INCDIR) -mips1
 
-all: halt shell matmult sort
+all: halt shell matmult sort hola_mundo write_console run_hola_mundo run_halt run_2_threads\
+     run_5_threads \
+     print_a print_b print_ab print_args array join_10 join_endless debug_args shell_ori\
+     echo cat test_cat cp
 
 start.o: start.s ../userprog/syscall.h
 	$(CPP) $(CPPFLAGS) start.s > strt.s
@@ -76,5 +79,6 @@ matmult: matmult.o start.o
 	$(CC) $(CFLAGS) -c $<
 	$(LD) $(LDFLAGS) start.o $*.o -o $*.coff
 	../bin/coff2noff $*.coff $@
+	#bash "mv $@ ../userprog/bin/"
 	
 
