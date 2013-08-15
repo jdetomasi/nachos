@@ -41,6 +41,7 @@ Thread::Thread(const char* threadName)
     //tmp = new char[128];
     //strcpy(tmp, (const char *) threadName);
     //name = tmp;
+    joinSemaphore = NULL;
     name = threadName;
     stackTop = NULL;
     stack = NULL;
@@ -162,7 +163,7 @@ Thread::Finish ()
     threadToBeDestroyed = currentThread;
     
     if (joinSemaphore != NULL)
-		joinSemaphore -> V();
+        joinSemaphore -> V();
     
     Sleep();					// invokes SWITCH
     // not reached
@@ -317,9 +318,12 @@ Thread::Thread(const char* threadName, int isJoinable)
     space = NULL;
 #endif
 
-	// Se llamara a un Join sobre este thread.
-	if (isJoinable > 0)	
-		joinSemaphore = new Semaphore("Join Semaphore", 0);
+    // Se llamara a un Join sobre este thread.
+    if (isJoinable > 0) {	
+        joinSemaphore = new Semaphore("Join Semaphore", 0);
+    } else {
+        joinSemaphore = NULL;
+    }
 }
 
 //---------------------------------------------------------------------

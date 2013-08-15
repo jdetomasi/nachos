@@ -219,7 +219,7 @@ void sexit(int ret){
     // TODO cambiar esta crotada, crear una variable pid en AddrSpace
     // y buscar el currensSpace con ese pid
     std::map<SpaceId,SpaceStruct*>::iterator it;
-    for(it = currentSpaces.begin(); it != currentSpaces.end();++it){
+    for(it = currentSpaces.begin(); it != currentSpaces.end(); it++){
         if(it->second->owner == currentThread){
             it->second->ret = ret;
             break;

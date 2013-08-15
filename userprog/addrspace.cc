@@ -84,28 +84,28 @@ AddrSpace::AddrSpace(OpenFile *executable)
 
     pageTable = new TranslationEntry[numPages];
 #ifdef USE_TLB
-    DEBUG('a', "Creating pageTable, not loading anything\n");
+    DEBUG('a', "Creating pageTable, num pages %d,not loading anything\n", numPages);
     for (i = 0; i < numPages; i++) {
-    pageTable[i].virtualPage = i;    // The translation is not valid
-    pageTable[i].physicalPage = -1;  // assign 0 to show that
-    pageTable[i].valid = false;
-    pageTable[i].use = false;
-    pageTable[i].dirty = false;
-    pageTable[i].readOnly = false; 
+        pageTable[i].virtualPage = i;    // The translation is not valid
+        pageTable[i].physicalPage = -1;  // assign 0 to show that
+        pageTable[i].valid = false;
+        pageTable[i].use = false;
+        pageTable[i].dirty = false;
+        pageTable[i].readOnly = false; 
     }
 #else
     DEBUG('a', "Initializing address space, num pages %d, size %d\n", 
                     numPages, size);
     // first, set up the translation 
     for (i = 0; i < numPages; i++) {
-    pageTable[i].virtualPage = i;    
-    pageTable[i].physicalPage = memoryBitMap->Find();
-    pageTable[i].valid = true;
-    pageTable[i].use = false;
-    pageTable[i].dirty = false;
-    pageTable[i].readOnly = false;  // if the code segment was entirely on 
-                                    // a separate page, we could set its 
-                                    // pages to be read-only
+        pageTable[i].virtualPage = i;    
+        pageTable[i].physicalPage = memoryBitMap->Find();
+        pageTable[i].valid = true;
+        pageTable[i].use = false;
+        pageTable[i].dirty = false;
+        pageTable[i].readOnly = false;  // if the code segment was entirely on 
+                                        // a separate page, we could set its 
+                                        // pages to be read-only
     }
     
     // zero out the entire address space, to zero the unitialized data segment 
@@ -260,7 +260,7 @@ void AddrSpace::LoadPage(int badAddr){
     if(pageTable[virtPage].physicalPage == -1){
         pageTable[virtPage].physicalPage = memoryBitMap->Find();
         // Just in case...
-        bzero((machine->mainMemory) + (pageTable[virtPage].physicalPage * PageSize), PageSize);
+        bzero(machine->(mainMemory + pageTable[virtPage].physicalPage * PageSize), PageSize);
         pageTable[virtPage].valid = true;
         DEBUG('a',"Copying virtual page %d into physical page %d\n",virtPage, pageTable[virtPage].physicalPage );
         for(int i=0; i < PageSize; i++){
@@ -348,6 +348,9 @@ void AddrSpace::UpdateTLB(){
     DEBUG('a',
       "Inserting into TLB in position %d\n\tpageTable.VirtPage=%d\n\tpageTable.physicalPage = %d\n",
       last_modify, virtPage, pageTable[virtPage].physicalPage);
+    //memcpy(&machine->tlb[last_modify], &pageTable[virtPage], sizeof(TranslationEntry));
+    //TranslationEntry *asd = pageTable[virtPage];
+    //machine->tlb[last_modify] = asd;
     machine->tlb[last_modify] = pageTable[virtPage];
     last_modify = last_modify + 1;
 }
