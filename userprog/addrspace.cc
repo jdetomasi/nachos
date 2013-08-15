@@ -84,6 +84,7 @@ AddrSpace::AddrSpace(OpenFile *executable)
 
     pageTable = new TranslationEntry[numPages];
 #ifdef USE_TLB
+    last_modify = 0;
     DEBUG('a', "Creating pageTable, num pages %d,not loading anything\n", numPages);
     for (i = 0; i < numPages; i++) {
         pageTable[i].virtualPage = i;    // The translation is not valid
@@ -260,7 +261,7 @@ void AddrSpace::LoadPage(int badAddr){
     if(pageTable[virtPage].physicalPage == -1){
         pageTable[virtPage].physicalPage = memoryBitMap->Find();
         // Just in case...
-        bzero(machine->(mainMemory + pageTable[virtPage].physicalPage * PageSize), PageSize);
+        bzero((machine->mainMemory + pageTable[virtPage].physicalPage * PageSize), PageSize);
         pageTable[virtPage].valid = true;
         DEBUG('a',"Copying virtual page %d into physical page %d\n",virtPage, pageTable[virtPage].physicalPage );
         for(int i=0; i < PageSize; i++){
