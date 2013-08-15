@@ -79,6 +79,7 @@ int read(int* addr,int size, OpenFileId file_id){
     if (num_read > 0){
         writeString(*addr, chars_read, num_read);
     }
+    delete [] chars_read;
     return num_read;
 }
 
