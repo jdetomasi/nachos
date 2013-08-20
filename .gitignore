@@ -6,3 +6,4 @@
 !*.c
 !*.s
 !.gitignore
+!test/script
