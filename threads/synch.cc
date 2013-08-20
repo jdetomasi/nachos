@@ -69,6 +69,7 @@ Semaphore::P()
     while (value == 0) { 			// semaphore not available
 	queue->Append(currentThread);		// so go to sleep
 	currentThread->Sleep();
+        DEBUG('d', "Sleeping thread \"%s\"\n", currentThread->getName());
     } 
     value--; 					// semaphore available, 
 						// consume its value

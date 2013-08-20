@@ -1,6 +1,7 @@
 #include "syscall.h"
 #define NULL        ((void*)0)
-#define SBIN        "../test/"
+#define SBIN        "bin/"
+#define SBINLEN     4
 
 char read_ignore_whitespaces();
 
@@ -95,16 +96,16 @@ int main(){
             cmd[2] == 'i' && cmd[3] == 't' &&
             cmd[4] == '\0') Exit(0);
         
-        //pid = Exec("../test/cat", 2, argv_aux, 1);
+        //pid = Exec("bin/cat", 2, argv_aux, 1);
         pid = Exec(cmd, argc, argv, bg);
 
         // search cmd in test/ just in case path was not full
         if (pid == -1) {
-            if (chars_read < 55){
+            if (chars_read < 59){
                 for (j = chars_read;  j >= 0; j--){
-                    cmd[j + 8] = cmd[j];
+                    cmd[j + SBINLEN] = cmd[j];
                 }
-                for (j = 0; j < 8; j++){
+                for (j = 0; j < SBINLEN; j++){
                     cmd[j] = SBIN[j];
                 }
             }

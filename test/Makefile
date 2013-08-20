@@ -29,6 +29,7 @@ CPPFLAGS = $(INCDIR)
 CC = $(GCCDIR)gcc
 AS = $(GCCDIR)as
 LD = $(GCCDIR)ld
+SH = bash
 
 CPP = /lib/cpp
 INCDIR =-I../userprog -I../threads
@@ -49,25 +50,32 @@ halt.o: halt.c
 halt: halt.o start.o
 	$(LD) $(LDFLAGS) start.o halt.o -o halt.coff
 	../bin/coff2noff halt.coff halt
+	$(SH) -c "cp halt ../userprog/bin"
+	$(SH) -c "cp halt ../vm/bin"
 
 shell.o: shell.c
 	$(CC) $(CFLAGS) -c shell.c
 shell: shell.o start.o
 	$(LD) $(LDFLAGS) start.o shell.o -o shell.coff
 	../bin/coff2noff shell.coff shell
+	$(SH) -c "cp shell ../userprog/bin"
+	$(SH) -c "cp shell ../vm/bin"
 
 sort.o: sort.c
 	$(CC) $(CFLAGS) -c sort.c
 sort: sort.o start.o
 	$(LD) $(LDFLAGS) start.o sort.o -o sort.coff
 	../bin/coff2noff sort.coff sort
+	$(SH) -c "cp sort ../userprog/bin"
+	$(SH) -c "cp sort ../vm/bin"
 
 matmult.o: matmult.c
 	$(CC) $(CFLAGS) -c matmult.c
 matmult: matmult.o start.o
 	$(LD) $(LDFLAGS) start.o matmult.o -o matmult.coff
 	../bin/coff2noff matmult.coff matmult
-
+	$(SH) -c "cp matmult ../userprog/bin"
+	$(SH) -c "cp matmult ../vm/bin"
 
 # Estas reglas sirven para compilar programas simples,
 # que consistan en un único fuente.
@@ -79,6 +87,8 @@ matmult: matmult.o start.o
 	$(CC) $(CFLAGS) -c $<
 	$(LD) $(LDFLAGS) start.o $*.o -o $*.coff
 	../bin/coff2noff $*.coff $@
-	#bash "mv $@ ../userprog/bin/"
-	
+	$(SH) -c "cp $@ ../userprog/bin/"
+	$(SH) -c "mv $@ ../vm/bin/"
 
+
+	

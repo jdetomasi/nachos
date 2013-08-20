@@ -4,7 +4,7 @@
 int main(){
     int pid;
     int ret;
-    pid = Exec("../test/print_a",0,0,1);
+    pid = Exec("bin/print_a",0,0,1);
     if (pid != -1){
         ret = Join(pid);
         // Should not happen
