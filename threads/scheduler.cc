@@ -66,7 +66,7 @@ Scheduler::ReadyToRun (Thread *thread)
     
     // If the new thread that is ready to run has more priority than the currentThread, switch to it.
     if (currentThread->GetPriority() < thread->GetPriority()){
-		readyList[currentThread->GetPriority()]->Append(currentThread);
+	readyList[currentThread->GetPriority()]->Append(currentThread);
         currentThread->setStatus(READY);
         Run(thread);
     } else 
@@ -86,8 +86,10 @@ Scheduler::FindNextToRun ()
 {
     // Search the thread with the max priority
     for (int i=NUM_PRIORITY_LEVELS - 1 ; i >= 0; i--){
-        if(!readyList[i]->IsEmpty())
+        if(!readyList[i]->IsEmpty()){
+            DEBUG('t', "Removing thread from ready list.\n");
             return readyList[i]->Remove();
+        }
     }
     
     // If all lists are empty, return NULL value
@@ -165,7 +167,6 @@ Scheduler::Run (Thread *nextThread)
     if (threadToBeDestroyed != NULL) {
         DEBUG('d',"Vas a moriiiir Moe! Wiiiii\n");
         delete threadToBeDestroyed;
-        DEBUG('d', "Borrado!!  (ponele)\n");
 	threadToBeDestroyed = NULL;
     }
     

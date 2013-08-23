@@ -45,7 +45,7 @@ SwapHeader (NoffHeader *noffH)
 //----------------------------------------------------------------------
 // AddrSpace::AddrSpace
 //    Create an address space to run a user program.
-//    Load the program from a file "executable", and set everything
+//    Load the program from a file "executable_file", and set everything
 //    up so that we can start executing user instructions.
 //
 //    Assumes that the object code file is in NOFF format.
@@ -54,16 +54,16 @@ SwapHeader (NoffHeader *noffH)
 //    memory.  For now, this is really simple (1:1), since we are
 //    only uniprogramming, and we have a single unsegmented page table
 //
-//    "executable" is the file containing the object code to load into memory
+//    "executable_file" is the file containing the object code to load into memory
 //----------------------------------------------------------------------
 
-AddrSpace::AddrSpace(OpenFile *executable)
+AddrSpace::AddrSpace(OpenFile *executable_file)
 {
     memoryBitMap = MemoryBitMap::GetInstance();
     unsigned int i, size;
 
-    this->executable = executable;
-    executable->ReadAt((char *)&noffH, sizeof(noffH), 0);
+    this->executable = executable_file;
+    (this->executable)->ReadAt((char *)&noffH, sizeof(noffH), 0);
     if ((noffH.noffMagic != NOFFMAGIC) && 
         (WordToHost(noffH.noffMagic) == NOFFMAGIC))
         SwapHeader(&noffH);
@@ -316,11 +316,11 @@ void AddrSpace::LoadArguments(){
  
 }
 
-void AddrSpace::SetArguments(int argc, int argv, char* file_name){
+void AddrSpace::SetArguments(int arg_count, int arg_vect, char* file_name){
     int arg_ptr;
     char tempStr[128];
 
-    this->argc = argc + 1;
+    this->argc = arg_count + 1;
     // TODO ver como podemos hacer mas lindo esto
     //this->argv = (char **) new int[argc + 1];
     this->argv = (char **) malloc(this->argc * sizeof(char *));
@@ -330,9 +330,9 @@ void AddrSpace::SetArguments(int argc, int argv, char* file_name){
     strcpy(this->argv[0], file_name);
     
     // Leo todos los argumentos de argv
-    for (int i = 0; i < argc; i++) {
+    for (int i = 0; i < arg_count; i++) {
         memset(tempStr, '\0', 128);
-        READMEM(argv + 4*i, 4, &arg_ptr);
+        READMEM(arg_vect + 4*i, 4, &arg_ptr);
         readString(arg_ptr, tempStr);
         this->argv[i+1] = new char[strlen(tempStr) + 1];
         strcpy(this->argv[i+1], tempStr);

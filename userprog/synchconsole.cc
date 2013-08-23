@@ -82,10 +82,11 @@ const char SynchConsole::ReadChar(){
 
 void SynchConsole::WriteChar(char ch){
     writeLock->Acquire();
+    DEBUG('c',"%s trying to write ->  %c \n", currentThread->getName(), ch);
     console->PutChar(ch);
-    DEBUG('c',"%s writted to SynchConsole ->  %c \n", currentThread->getName(), ch);
     writeSemaphore->P();
     writeLock->Release();
+    DEBUG('c',"%s writted to SynchConsole ->  %c \n", currentThread->getName(), ch);
 }        
 
 void SynchConsole::WriteDone(){

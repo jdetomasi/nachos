@@ -68,8 +68,9 @@ Semaphore::P()
     
     while (value == 0) { 			// semaphore not available
 	queue->Append(currentThread);		// so go to sleep
+        DEBUG('l', "Sleeping thread %s 'cause of semaphore %s\n", currentThread->getName(), this->getName());
 	currentThread->Sleep();
-        DEBUG('d', "Sleeping thread \"%s\"\n", currentThread->getName());
+        //DEBUG('l', "Sleeping thread \"%s\"\n", currentThread->getName());
     } 
     value--; 					// semaphore available, 
 						// consume its value
@@ -92,8 +93,9 @@ Semaphore::V()
     IntStatus oldLevel = interrupt->SetLevel(IntOff);
 
     thread = queue->Remove();
-    if (thread != NULL)	   // make thread ready, consuming the V immediately
+    if (thread != NULL){	   // make thread ready, consuming the V immediately
 	scheduler->ReadyToRun(thread);
+    }
     value++;
     interrupt->SetLevel(oldLevel);
 }
@@ -132,17 +134,19 @@ void Lock::Acquire() {
 
     // If the lock is already held by other thread with lower priority, sets 
     // the holderThread priority to be equal to the one trying to get the lock.
-    if (holderThread != NULL)
+    if (holderThread != NULL){
         if (holderThread->GetPriority() < currentThread->GetPriority()){
             oldPriority = holderThread->GetPriority();
             holderThread->SetPriority(currentThread->GetPriority());
         }
 
+    }
     // If the lock is free, takes the lock, else it waits for it to be freed.
     lockSem->P();				
     
     // Sets the holder to be the current thread and saves its priority.
-	holderThread = currentThread;
+    holderThread = currentThread;
+    DEBUG('l', "Thread %s acquired lock %s\n", holderThread->getName(), this->getName());
     oldPriority = currentThread->GetPriority();
 }
 
@@ -158,6 +162,7 @@ void Lock::Release() {
     // First we have to set the holder to NULL, otherwise if a change 
     // of context occurs before doing so and having realeased the lock, 
     // another thread gets it and it gets erased when this one resumes.
+    DEBUG('l', "Thread %s realeased lock %s\n", holderThread->getName(), this->getName());
     holderThread = NULL;
     
     // The lock is freed.

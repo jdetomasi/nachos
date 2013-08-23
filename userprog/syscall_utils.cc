@@ -30,7 +30,6 @@ void readBuffFromUsr(int addr, char *buff, int size){
 void readString(int addr, char *buff){
   int tmp; tmp = 0;
   do{
-
     READMEM(addr, 1, &tmp);
     addr++;
     *buff = (char) tmp;

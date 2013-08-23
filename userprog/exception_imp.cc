@@ -170,15 +170,15 @@ int exec(OpenFile* executable, char* file_name, int argc, int argv, int isJoinea
     AddrSpace *newAddrSpace;
     newAddrSpace = new AddrSpace(executable);
     // TODO cambiar esta crotada
-    static char thread_name[128];
-    strcpy(thread_name, (const char *) file_name);
+    //static char thread_name[128];
+    //strcpy(thread_name, (const char *) file_name);
     Thread *newThread;
     if (isJoineable > 0){
-        newThread = new Thread(thread_name, isJoineable);
+        newThread = new Thread(file_name, isJoineable);
     } else{
-        newThread = new Thread(thread_name);
+        newThread = new Thread(file_name);
     }
-    newAddrSpace->SetArguments(argc, argv, thread_name);
+    newAddrSpace->SetArguments(argc, argv, file_name);
     newThread->space = newAddrSpace;
     newThread->Fork(startNewProcess, NULL);
     /*

@@ -37,12 +37,8 @@ const unsigned STACK_FENCEPOST = 0xdeadbeef;
 Thread::Thread(const char* threadName)
 {
     // TODO!! 
-    //char * tmp;
-    //tmp = new char[128];
-    //strcpy(tmp, (const char *) threadName);
-    //name = tmp;
+    strcpy(name, (const char *) threadName);
     joinSemaphore = NULL;
-    name = threadName;
     stackTop = NULL;
     stack = NULL;
     status = JUST_CREATED;
@@ -309,7 +305,7 @@ Thread::StackAllocate (VoidFunctionPtr func, void* arg)
 
 Thread::Thread(const char* threadName, int isJoinable)
 {
-    name = threadName;
+    strcpy(name, (const char *) threadName);
     stackTop = NULL;
     stack = NULL;
     status = JUST_CREATED;

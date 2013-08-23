@@ -79,9 +79,6 @@ int main(){
                     buff[i] = '\0';
                     ch = '\n';
                     break;
-                case '\n':
-                    buff[i] = '\0';
-                    break;
                 default:
                     buff[i] = ch;
                     Read(&ch, 1, ConsoleInput);
@@ -89,6 +86,8 @@ int main(){
             }
             i = i + 1;
         }
+        // Arguments ended in the previous iteration
+        buff[i - 1] = '\0';
         argv[argc] = NULL;
 
         // exit !
