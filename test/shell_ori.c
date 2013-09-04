@@ -3,7 +3,7 @@
 int
 main()
 {
-    SpaceId newProc;
+    Pid newProc;
     OpenFileId input = ConsoleInput;
     OpenFileId output = ConsoleOutput;
     char prompt[2], ch, buffer[60];

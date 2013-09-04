@@ -22,19 +22,18 @@ typedef struct filesStruct {
     Modes mode;
 } FileStruct;
 
-// Structure to Addres Spaces 
-typedef struct addrSpaceStruct {
-    AddrSpace* addrSpace;
+// Structure to manage multiple processes 
+typedef struct ProcessStruct {
     Thread* owner;
     int ret;
     int isJoineable;
-} SpaceStruct;
+} ProcessStruct;
 
 // Mapping to store opened Files 
 extern std::map<OpenFileId,FileStruct*> openedFiles;
 
 // Mapping to store created Addresses
-extern std::map<SpaceId,SpaceStruct*> currentSpaces;
+extern std::map<Pid,ProcessStruct*> processTable;
 
 void halt();
 
@@ -50,6 +49,6 @@ int mySeek(OpenFileId file_id, FilePosition newPos, int reference);
 
 int exec(OpenFile* executable, char* file_name, int argc, int argv, int isJoineable);
 
-int join(SpaceId pid);
+int join(Pid pid);
 
 void sexit(int ret);

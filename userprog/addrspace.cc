@@ -76,25 +76,33 @@ AddrSpace::AddrSpace(OpenFile *executable_file)
     numPages = divRoundUp(size, PageSize);
     size = numPages * PageSize;
 
-    ASSERT(numPages <= (unsigned int)memoryBitMap->NumClear());    
-                                                // check we're not trying
-                                                // to run anything too big --
-                                                // at least until we have
-                                                // virtual memory
-
     pageTable = new TranslationEntry[numPages];
 #ifdef USE_TLB
+    
+    // TODO cambier esta crotada!!!
+    //std::string file_name("/tmp/swap." + std::to_string(this));
+    char* file_name; 
+    file_name = new char[200];
+    sprintf (file_name, "/tmp/swap.%d", (int)this);
+    ASSERT(fileSystem->Create(file_name, 0));
+    swap = fileSystem->Open(file_name);
+
+    coreMap = CoreMap::GetInstance();
     last_modify = 0;
     DEBUG('a', "Creating pageTable, num pages %d,not loading anything\n", numPages);
     for (i = 0; i < numPages; i++) {
         pageTable[i].virtualPage = i;    // The translation is not valid
-        pageTable[i].physicalPage = -1;  // assign 0 to show that
+        pageTable[i].physicalPage = -1;  // assign -1 to show that
         pageTable[i].valid = false;
         pageTable[i].use = false;
         pageTable[i].dirty = false;
         pageTable[i].readOnly = false; 
     }
 #else
+    ASSERT(numPages <= (unsigned int)memoryBitMap->NumClear());    
+                                                // check we're not trying
+                                                // to run anything too big --
+
     DEBUG('a', "Initializing address space, num pages %d, size %d\n", 
                     numPages, size);
     // first, set up the translation 
@@ -259,11 +267,13 @@ void AddrSpace::LoadPage(int badAddr){
     int virtAddr = virtPage * PageSize;
     
     if(pageTable[virtPage].physicalPage == -1){
-        pageTable[virtPage].physicalPage = memoryBitMap->Find();
+        // Page was never loaded into memory...
+        pageTable[virtPage].physicalPage = coreMap->Find(virtPage);
+        ASSERT(pageTable[virtPage].physicalPage >= 0);
         // Just in case...
         bzero((machine->mainMemory + pageTable[virtPage].physicalPage * PageSize), PageSize);
         pageTable[virtPage].valid = true;
-        DEBUG('a',"Copying virtual page %d into physical page %d\n",virtPage, pageTable[virtPage].physicalPage );
+        DEBUG('a',"Copying virtual page %d from executable into physical page %d\n",virtPage, pageTable[virtPage].physicalPage );
         for(int i=0; i < PageSize; i++){
             if (isCode(virtAddr + i)){
                 CopyToMemory(virtAddr + i, noffH.code.inFileAddr + (virtAddr - noffH.code.virtualAddr + i) , 1); 
@@ -272,9 +282,20 @@ void AddrSpace::LoadPage(int badAddr){
                 CopyToMemory(virtAddr + i, noffH.initData.inFileAddr + (virtAddr - noffH.initData.virtualAddr + i) , 1); 
             }
         }
-    }else{
-        DEBUG('a',"Page %d was already loaded\n", virtPage);
+    }else if (pageTable[virtPage].physicalPage == -2){
+        pageTable[virtPage].physicalPage = coreMap->Find(virtPage);
+        ASSERT(pageTable[virtPage].physicalPage >= 0);
+        // Just in case...
+        bzero((machine->mainMemory + pageTable[virtPage].physicalPage * PageSize), PageSize);
+        pageTable[virtPage].valid = true;
+        DEBUG('a',"Copying virtual page %d from swap into physical page %d\n",virtPage, pageTable[virtPage].physicalPage );
+        GetFromSwap(virtPage);
+        //pageTable[virtPage].physicalPage = CoreMap->Check(virtPage);
+        //pageTable[virtPage].physicalPage = memoryBitmap->Check(virtPage, pagaTable[virtPage].physicalPage);
+     }else { 
+        DEBUG('a',"Page %d was already loaded.\n", virtPage);
     }
+
 }
 
 void AddrSpace::LoadArguments(){
@@ -293,9 +314,13 @@ void AddrSpace::LoadArguments(){
         // tener que llamar a LazyCall que "saca" las cosas del executable
         if (tmpSize > PageSize * cantPag ){
             cantPag = cantPag + 1;
+            #ifndef USE_TLB
             pageTable[numPages - cantPag].physicalPage =  memoryBitMap->Find();
-            // Just in case...
+            #else
+            pageTable[numPages - cantPag].physicalPage =  coreMap->Find(numPages - cantPag);
+            #endif
             pageTable[numPages - cantPag].valid =  true;
+            // Just in case...
             bzero((machine->mainMemory) + (pageTable[numPages - cantPag].physicalPage * PageSize), PageSize);
         }
         sp = sp - strLen;
@@ -349,9 +374,33 @@ void AddrSpace::UpdateTLB(){
     DEBUG('a',
       "Inserting into TLB in position %d\n\tpageTable.VirtPage=%d\n\tpageTable.physicalPage = %d\n",
       last_modify, virtPage, pageTable[virtPage].physicalPage);
-    //memcpy(&machine->tlb[last_modify], &pageTable[virtPage], sizeof(TranslationEntry));
-    //TranslationEntry *asd = pageTable[virtPage];
-    //machine->tlb[last_modify] = asd;
     machine->tlb[last_modify] = pageTable[virtPage];
     last_modify = last_modify + 1;
+}
+
+void AddrSpace::SaveToSwap(int vpage){
+
+    //Asigno valores a la pageTable del thread saliente
+    char page[PageSize];
+    for (int i = 0; i < PageSize; i++)
+    {
+        page[i] = machine->mainMemory[pageTable[vpage].physicalPage * PageSize + i];
+        //printf("Value: %d\n", pageTable[vpage].physicalPage * PageSize + i);
+    }
+    swap->WriteAt(page, PageSize, vpage*PageSize);
+
+    pageTable[vpage].valid = false;
+    pageTable[vpage].physicalPage = -2;
+}
+
+void AddrSpace::GetFromSwap(int vpage){
+
+    char page[PageSize];
+    swap->ReadAt(page, PageSize, vpage*PageSize);
+    for (int i = 0; i < PageSize; i++)
+    {
+        machine->mainMemory[pageTable[vpage].physicalPage * PageSize + i] = page[i];
+        //printf("Value: %d\n", pageTable[vpage].physicalPage * PageSize + i);
+    }
+    pageTable[vpage].valid = true;
 }

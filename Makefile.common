@@ -81,6 +81,7 @@ USERPROG_H = ../userprog/addrspace.h\
         ../userprog/syscall_utils.h\
         ../userprog/synchconsole.h\
         ../userprog/memorybitmap.h\
+        ../userprog/coremap.h\
         ../userprog/exception_imp.h
 
 USERPROG_C = ../userprog/addrspace.cc\
@@ -94,11 +95,12 @@ USERPROG_C = ../userprog/addrspace.cc\
         ../userprog/syscall_utils.cc\
         ../userprog/synchconsole.cc\
         ../userprog/memorybitmap.cc\
+        ../userprog/coremap.cc\
         ../userprog/exception_imp.cc
 
 USERPROG_O = addrspace.o bitmap.o exception.o progtest.o console.o machine.o \
 	mipssim.o translate.o exception_imp.o synchconsole.o syscall_utils.o \
-        memorybitmap.o
+        memorybitmap.o coremap.o
 
 VM_H = 
 VM_C = 

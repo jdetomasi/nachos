@@ -108,7 +108,7 @@ ExceptionHandler(ExceptionType which){
                 break;
             case SC_Join:
                 DEBUG('s', "System Call: %s Invoking Join.\n",currentThread->getName());
-                // arg1 :: SpaceId of the user program to join to.
+                // arg1 :: Pid of the user program to join to.
                 arg1 = machine->ReadRegister(4);
                 ret = join(arg1);
                 if(ret == -1){
@@ -210,8 +210,9 @@ ExceptionHandler(ExceptionType which){
         update_registers();
     } else if(which == PageFaultException) {
         // This is a TLB fault,
-        // the page may be in memory,
+        // the page might be in memory,
         // but not in the TLB
+        
         currentThread->space->UpdateTLB();
          
     } else {

@@ -104,6 +104,8 @@ class Thread {
 												// overflowed its stack
     void setStatus(ThreadStatus st) { status = st; }
     const char* getName() { return (name); }
+    int SetPid(int npid) { this->pid = npid; }
+    int GetPid() { return (pid); }
     void Print() { printf("%s, ", name); }
 	
 	
@@ -121,6 +123,7 @@ class Thread {
 								// Used internally by Fork()
     Semaphore *joinSemaphore;	// Used for joining the thread
     int priorityLevel;			// Scheduling priority level. Default is zero.
+    int pid;
 	
 #ifdef USER_PROGRAM
 // A thread running a user program actually has *two* sets of CPU registers -- 

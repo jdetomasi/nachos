@@ -21,11 +21,11 @@ std::map<OpenFileId,FileStruct*> openedFiles;
 static OpenFileId fresh_id = 3;
 
 // Mapping to store created Addresses
-std::map<int,SpaceStruct*> currentSpaces;
+std::map<Pid,ProcessStruct*> processTable;
 // This is used for storing a fresh AddrSpaceID
 // We can search for the a number not in the keys of the map
 // but decided for this for eficiency 
-static int freshAddrId = 0;
+static int freshPid = 0;
 
 void halt(){
     interrupt->Halt();
@@ -167,17 +167,17 @@ void startNewProcess(void* x){
 }
 
 int exec(OpenFile* executable, char* file_name, int argc, int argv, int isJoineable){
-    AddrSpace *newAddrSpace;
-    newAddrSpace = new AddrSpace(executable);
     // TODO cambiar esta crotada
-    //static char thread_name[128];
-    //strcpy(thread_name, (const char *) file_name);
     Thread *newThread;
     if (isJoineable > 0){
         newThread = new Thread(file_name, isJoineable);
     } else{
         newThread = new Thread(file_name);
     }
+    newThread->SetPid(freshPid);
+    AddrSpace *newAddrSpace;
+    newAddrSpace = new AddrSpace(executable);
+
     newAddrSpace->SetArguments(argc, argv, file_name);
     newThread->space = newAddrSpace;
     newThread->Fork(startNewProcess, NULL);
@@ -190,37 +190,36 @@ int exec(OpenFile* executable, char* file_name, int argc, int argv, int isJoinea
        if the thread dies?
     */
     if (isJoineable > 0){
-        SpaceStruct *addrSpaceStruct;
-        addrSpaceStruct = new SpaceStruct();
-        addrSpaceStruct->owner = newThread;
-        addrSpaceStruct->addrSpace = newAddrSpace;
-        currentSpaces.insert(
-            std::pair<SpaceId,SpaceStruct*>(freshAddrId, addrSpaceStruct));
+        ProcessStruct *processStruct;
+        processStruct = new ProcessStruct();
+        processStruct->owner = newThread;
+        processTable.insert(
+            std::pair<Pid,ProcessStruct*>(freshPid, processStruct));
     }
-    // TODO Refactorizar SpaceId por ProcessId
-    // y addrSpaceStruct por processStruct (o algo asi)
-    return freshAddrId++;
+    // TODO Refactorizar Pid por ProcessId
+    // y processStruct por processStruct (o algo asi)
+    return freshPid++;
 }
 
-int join(SpaceId pid){
-    if (currentSpaces.find(pid) ==  currentSpaces.end()){
-        // SpaceId does not exist
+int join(Pid pid){
+    if (processTable.find(pid) ==  processTable.end()){
+        // Pid does not exist
         return -1;
     }
     // Wait until the thread is done
-    currentSpaces[pid]->owner->Join();
+    processTable[pid]->owner->Join();
     int ret;
-    ret =  currentSpaces[pid]->ret; 
-    delete currentSpaces[pid];
+    ret =  processTable[pid]->ret; 
+    delete processTable[pid];
     return ret;
 }
 
 void sexit(int ret){
-    // Search for currentSpaces to find the one belonging to us (if any)
+    // Search for processTable to find the one belonging to us (if any)
     // TODO cambiar esta crotada, crear una variable pid en AddrSpace
     // y buscar el currensSpace con ese pid
-    std::map<SpaceId,SpaceStruct*>::iterator it;
-    for(it = currentSpaces.begin(); it != currentSpaces.end(); it++){
+    std::map<Pid,ProcessStruct*>::iterator it;
+    for(it = processTable.begin(); it != processTable.end(); it++){
         if(it->second->owner == currentThread){
             it->second->ret = ret;
             break;

@@ -16,6 +16,7 @@
 #include "copyright.h"
 #include "filesys.h"
 #include "memorybitmap.h"
+#include "coremap.h"
 #include "noff.h"
 
 #define UserStackSize		1024 	// increase this as necessary!
@@ -34,9 +35,10 @@ class AddrSpace {
     void RestoreState();		// info on a context switch 
     void SetArguments(int argc, int argv, char* file_name);
     void LoadArguments();
-
     void UpdateTLB();                   // On tlb miss, update the TLB to hold the
                                         // needed TranslationEntry
+    void SaveToSwap(int vpage);
+    void GetFromSwap(int vpage);
 
   private:
     TranslationEntry *pageTable;	// Assume linear page table translation
@@ -45,13 +47,16 @@ class AddrSpace {
 					// address space
     MemoryBitMap* memoryBitMap;
 
-    void CopyToMemory(int, int, int);
+    CoreMap* coreMap;
     void LoadPage(int virPage);
+    OpenFile *swap;
+    int last_modify;
+
+    void CopyToMemory(int, int, int);
     bool isCode (int addr);     // Check if addr belongs to code segment
     bool isData (int addr);     // Check if addr belongs to initData segment
     int argc;  
     char **argv;
-    int last_modify;
     OpenFile *executable;
     NoffHeader noffH;
     
