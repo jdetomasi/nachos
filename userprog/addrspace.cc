@@ -89,7 +89,7 @@ AddrSpace::AddrSpace(OpenFile *executable_file)
 
     coreMap = CoreMap::GetInstance();
     last_modify = 0;
-    DEBUG('a', "Creating pageTable, num pages %d,not loading anything\n", numPages);
+    DEBUG('f', "Creating pageTable, num pages %d,not loading anything\n", numPages);
     for (i = 0; i < numPages; i++) {
         pageTable[i].virtualPage = i;    // The translation is not valid
         pageTable[i].physicalPage = -1;  // assign -1 to show that
@@ -103,7 +103,7 @@ AddrSpace::AddrSpace(OpenFile *executable_file)
                                                 // check we're not trying
                                                 // to run anything too big --
 
-    DEBUG('a', "Initializing address space, num pages %d, size %d\n", 
+    DEBUG('f', "Initializing address space, num pages %d, size %d\n", 
                     numPages, size);
     // first, set up the translation 
     for (i = 0; i < numPages; i++) {
@@ -126,14 +126,14 @@ AddrSpace::AddrSpace(OpenFile *executable_file)
 
     // then, copy in the code and data segments into memory
     if (noffH.code.size > 0) {
-        DEBUG('a', "Initializing code segment, at 0x%x, size %d\n", 
+        DEBUG('f', "Initializing code segment, at 0x%x, size %d\n", 
             noffH.code.virtualAddr, noffH.code.size);
         CopyToMemory(noffH.code.virtualAddr,
                      noffH.code.inFileAddr,
                      noffH.code.size);
     }
     if (noffH.initData.size > 0) {
-        DEBUG('a', "Initializing data segment, at 0x%x, size %d\n", 
+        DEBUG('f', "Initializing data segment, at 0x%x, size %d\n", 
             noffH.initData.virtualAddr, noffH.initData.size);
         CopyToMemory(noffH.initData.virtualAddr,
                      noffH.initData.inFileAddr,
@@ -189,7 +189,7 @@ AddrSpace::InitRegisters()
     // accidentally reference off the end!
     machine->WriteRegister(StackReg, numPages * PageSize - 16);
 
-    DEBUG('a', "Initializing stack register to %d\n", numPages * PageSize - 16);
+    DEBUG('f', "Initializing stack register to %d\n", numPages * PageSize - 16);
 }
 
 //----------------------------------------------------------------------
@@ -243,10 +243,6 @@ void AddrSpace::CopyToMemory(int virtualAddr, int inFileAddr, int size){
                 &(machine->mainMemory[pageTable[pageNbr].physicalPage * PageSize + offset]), 
                 1, 
                 inFileAddr + i); 
-        DEBUG('a',"Loaded virtualAddr %d into physPage %d from position in file=%d\n", 
-                virtualAddr + i,
-                pageTable[pageNbr].physicalPage,
-                inFileAddr + i);
     }
 
 }
@@ -273,7 +269,7 @@ void AddrSpace::LoadPage(int badAddr){
         // Just in case...
         bzero((machine->mainMemory + pageTable[virtPage].physicalPage * PageSize), PageSize);
         pageTable[virtPage].valid = true;
-        DEBUG('a',"Copying virtual page %d from executable into physical page %d\n",virtPage, pageTable[virtPage].physicalPage );
+        DEBUG('f',"Copying virtual page %d from executable into physical page %d\n",virtPage, pageTable[virtPage].physicalPage );
         for(int i=0; i < PageSize; i++){
             if (isCode(virtAddr + i)){
                 CopyToMemory(virtAddr + i, noffH.code.inFileAddr + (virtAddr - noffH.code.virtualAddr + i) , 1); 
@@ -284,16 +280,15 @@ void AddrSpace::LoadPage(int badAddr){
         }
     }else if (pageTable[virtPage].physicalPage == -2){
         pageTable[virtPage].physicalPage = coreMap->Find(virtPage);
-        ASSERT(pageTable[virtPage].physicalPage >= 0);
+        ASSERT(coreMap->Check(virtPage,pageTable[virtPage].physicalPage));
         // Just in case...
         bzero((machine->mainMemory + pageTable[virtPage].physicalPage * PageSize), PageSize);
-        pageTable[virtPage].valid = true;
-        DEBUG('a',"Copying virtual page %d from swap into physical page %d\n",virtPage, pageTable[virtPage].physicalPage );
+        DEBUG('f',"Copying virtual page %d from swap into physical page %d\n",virtPage, pageTable[virtPage].physicalPage );
         GetFromSwap(virtPage);
         //pageTable[virtPage].physicalPage = CoreMap->Check(virtPage);
         //pageTable[virtPage].physicalPage = memoryBitmap->Check(virtPage, pagaTable[virtPage].physicalPage);
      }else { 
-        DEBUG('a',"Page %d was already loaded.\n", virtPage);
+        DEBUG('f',"Page %d was already loaded into %d.\n", virtPage,pageTable[virtPage].physicalPage);
     }
 
 }
@@ -318,6 +313,7 @@ void AddrSpace::LoadArguments(){
             pageTable[numPages - cantPag].physicalPage =  memoryBitMap->Find();
             #else
             pageTable[numPages - cantPag].physicalPage =  coreMap->Find(numPages - cantPag);
+            ASSERT(coreMap->Check(numPages - cantPag, pageTable[numPages - cantPag].physicalPage));
             #endif
             pageTable[numPages - cantPag].valid =  true;
             // Just in case...
@@ -367,11 +363,12 @@ void AddrSpace::SetArguments(int arg_count, int arg_vect, char* file_name){
 void AddrSpace::UpdateTLB(){
     int badAddr;
     badAddr = machine->ReadRegister(BadVAddrReg);
+    ASSERT(badAddr >= 0 && badAddr < numPages * PageSize);
     unsigned int virtPage;
     virtPage = badAddr / PageSize;
     LoadPage(badAddr);
     last_modify = last_modify % TLBSize;
-    DEBUG('a',
+    DEBUG('f',
       "Inserting into TLB in position %d\n\tpageTable.VirtPage=%d\n\tpageTable.physicalPage = %d\n",
       last_modify, virtPage, pageTable[virtPage].physicalPage);
     machine->tlb[last_modify] = pageTable[virtPage];
@@ -381,13 +378,8 @@ void AddrSpace::UpdateTLB(){
 void AddrSpace::SaveToSwap(int vpage){
 
     //Asigno valores a la pageTable del thread saliente
-    char page[PageSize];
-    for (int i = 0; i < PageSize; i++)
-    {
-        page[i] = machine->mainMemory[pageTable[vpage].physicalPage * PageSize + i];
-        //printf("Value: %d\n", pageTable[vpage].physicalPage * PageSize + i);
-    }
-    swap->WriteAt(page, PageSize, vpage*PageSize);
+    swap->WriteAt(&(machine->mainMemory[pageTable[vpage].physicalPage * PageSize]), 
+            PageSize, vpage*PageSize);
 
     pageTable[vpage].valid = false;
     pageTable[vpage].physicalPage = -2;
@@ -396,11 +388,29 @@ void AddrSpace::SaveToSwap(int vpage){
 void AddrSpace::GetFromSwap(int vpage){
 
     char page[PageSize];
+    ASSERT(coreMap->Check(vpage, pageTable[vpage].physicalPage));
     swap->ReadAt(page, PageSize, vpage*PageSize);
     for (int i = 0; i < PageSize; i++)
     {
         machine->mainMemory[pageTable[vpage].physicalPage * PageSize + i] = page[i];
-        //printf("Value: %d\n", pageTable[vpage].physicalPage * PageSize + i);
     }
+    DEBUG('f', "Loaded: %d to physical page %d\n", vpage, pageTable[vpage].physicalPage);
     pageTable[vpage].valid = true;
+}
+
+
+// Method to FreeMemory before exiting
+// Actually, we say to the memorybitmap that it can use the physical pages
+// that we are using at the moment. CoreMap->Find() will call memoryBitmap->Find()
+// before telling a thread to save a page to swap. This will ensure us that a
+// non-existing thread (i.e. one that has already ended) will be told to save 
+// a page to swap 
+void AddrSpace::FreeMemory(){
+    int tmp;
+    for (int i = 0; i < numPages; i++){
+         tmp = pageTable[i].physicalPage;
+         if (tmp != -1 && tmp != -2){
+             memoryBitMap->Clear(tmp);
+        }
+    }
 }

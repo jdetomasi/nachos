@@ -40,6 +40,10 @@ class AddrSpace {
     void SaveToSwap(int vpage);
     void GetFromSwap(int vpage);
 
+    void FreeMemory();                   // Let the memory bitmap know that we are
+                                         // not using the physical pages anymore
+
+
   private:
     TranslationEntry *pageTable;	// Assume linear page table translation
 					// for now!

@@ -36,7 +36,6 @@ const unsigned STACK_FENCEPOST = 0xdeadbeef;
 
 Thread::Thread(const char* threadName)
 {
-    // TODO!! 
     strcpy(name, (const char *) threadName);
     joinSemaphore = NULL;
     stackTop = NULL;

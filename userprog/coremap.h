@@ -12,6 +12,12 @@
 #define COREMAP_H
 class Thread;
 
+typedef struct node{
+    struct node* next;
+    struct node* last;
+    int physPage;
+}Node;
+
 class MemoryStatus {
   public:
       int virtPage;
@@ -25,12 +31,13 @@ private:
     ~CoreMap();
     MemoryBitMap *memoryBitMap;
     MemoryStatus *memoryStatus;
+    Node *order;
 
 public:
     static CoreMap* GetInstance();
     int Find(int virtPage);
     bool Check(int virtPage, int physPage);
-    int GetSwapCandidate();
+    int GetPage();
+    void SetPage(int page);
 };
-
 #endif //COREMAP_H

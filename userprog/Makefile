@@ -57,8 +57,8 @@ main.o: ../threads/main.cc ../threads/copyright.h ../threads/utility.h \
  ../machine/translate.h ../machine/disk.h ../userprog/addrspace.h \
  ../filesys/filesys.h ../filesys/openfile.h ../userprog/memorybitmap.h \
  ../userprog/bitmap.h ../filesys/openfile.h ../userprog/coremap.h \
- ../bin/noff.h ../threads/scheduler.h ../machine/interrupt.h \
- ../threads/list.h ../machine/stats.h ../machine/timer.h
+ ../threads/list.h ../bin/noff.h ../threads/scheduler.h \
+ ../machine/interrupt.h ../machine/stats.h ../machine/timer.h
 scheduler.o: ../threads/scheduler.cc ../threads/copyright.h \
  ../threads/scheduler.h ../threads/list.h ../threads/utility.h \
  ../machine/sysdep.h ../threads/copyright.h /usr/include/stdlib.h \
@@ -89,8 +89,8 @@ scheduler.o: ../threads/scheduler.cc ../threads/copyright.h \
  ../threads/utility.h ../machine/translate.h ../machine/disk.h \
  ../userprog/addrspace.h ../filesys/filesys.h ../filesys/openfile.h \
  ../userprog/memorybitmap.h ../userprog/bitmap.h ../filesys/openfile.h \
- ../userprog/coremap.h ../bin/noff.h ../threads/system.h \
- ../machine/interrupt.h ../threads/list.h ../machine/stats.h \
+ ../userprog/coremap.h ../threads/list.h ../bin/noff.h \
+ ../threads/system.h ../machine/interrupt.h ../machine/stats.h \
  ../machine/timer.h
 synch.o: ../threads/synch.cc ../threads/copyright.h ../threads/synch.h \
  ../threads/thread.h ../threads/utility.h ../machine/sysdep.h \
@@ -121,9 +121,9 @@ synch.o: ../threads/synch.cc ../threads/copyright.h ../threads/synch.h \
  ../machine/machine.h ../threads/utility.h ../machine/translate.h \
  ../machine/disk.h ../userprog/addrspace.h ../filesys/filesys.h \
  ../filesys/openfile.h ../userprog/memorybitmap.h ../userprog/bitmap.h \
- ../filesys/openfile.h ../userprog/coremap.h ../bin/noff.h \
- ../threads/list.h ../threads/system.h ../threads/scheduler.h \
- ../machine/interrupt.h ../threads/list.h ../machine/stats.h \
+ ../filesys/openfile.h ../userprog/coremap.h ../threads/list.h \
+ ../bin/noff.h ../threads/list.h ../threads/system.h \
+ ../threads/scheduler.h ../machine/interrupt.h ../machine/stats.h \
  ../machine/timer.h
 system.o: ../threads/system.cc ../threads/copyright.h ../threads/system.h \
  ../threads/utility.h ../machine/sysdep.h ../threads/copyright.h \
@@ -155,8 +155,8 @@ system.o: ../threads/system.cc ../threads/copyright.h ../threads/system.h \
  ../machine/machine.h ../threads/utility.h ../machine/translate.h \
  ../machine/disk.h ../userprog/addrspace.h ../filesys/filesys.h \
  ../filesys/openfile.h ../userprog/memorybitmap.h ../userprog/bitmap.h \
- ../filesys/openfile.h ../userprog/coremap.h ../bin/noff.h \
- ../threads/scheduler.h ../machine/interrupt.h ../threads/list.h \
+ ../filesys/openfile.h ../userprog/coremap.h ../threads/list.h \
+ ../bin/noff.h ../threads/scheduler.h ../machine/interrupt.h \
  ../machine/stats.h ../machine/timer.h ../threads/preemptive.h
 thread.o: ../threads/thread.cc ../threads/copyright.h ../threads/thread.h \
  ../threads/utility.h ../machine/sysdep.h ../threads/copyright.h \
@@ -188,9 +188,9 @@ thread.o: ../threads/thread.cc ../threads/copyright.h ../threads/thread.h \
  ../threads/utility.h ../machine/translate.h ../machine/disk.h \
  ../userprog/addrspace.h ../filesys/filesys.h ../filesys/openfile.h \
  ../userprog/memorybitmap.h ../userprog/bitmap.h ../filesys/openfile.h \
- ../userprog/coremap.h ../bin/noff.h ../threads/switch.h \
- ../threads/system.h ../threads/scheduler.h ../machine/interrupt.h \
- ../threads/list.h ../machine/stats.h ../machine/timer.h
+ ../userprog/coremap.h ../threads/list.h ../bin/noff.h \
+ ../threads/switch.h ../threads/system.h ../threads/scheduler.h \
+ ../machine/interrupt.h ../machine/stats.h ../machine/timer.h
 utility.o: ../threads/utility.cc ../threads/copyright.h \
  ../threads/utility.h ../machine/sysdep.h ../threads/copyright.h \
  /usr/include/stdlib.h /usr/include/features.h \
@@ -247,8 +247,8 @@ threadtest.o: ../threads/threadtest.cc ../threads/copyright.h \
  ../machine/machine.h ../threads/utility.h ../machine/translate.h \
  ../machine/disk.h ../userprog/addrspace.h ../filesys/filesys.h \
  ../filesys/openfile.h ../userprog/memorybitmap.h ../userprog/bitmap.h \
- ../filesys/openfile.h ../userprog/coremap.h ../bin/noff.h \
- ../threads/scheduler.h ../machine/interrupt.h ../threads/list.h \
+ ../filesys/openfile.h ../userprog/coremap.h ../threads/list.h \
+ ../bin/noff.h ../threads/scheduler.h ../machine/interrupt.h \
  ../machine/stats.h ../machine/timer.h
 interrupt.o: ../machine/interrupt.cc ../threads/copyright.h \
  ../machine/interrupt.h ../threads/list.h ../threads/copyright.h \
@@ -413,8 +413,8 @@ timer.o: ../machine/timer.cc ../threads/copyright.h ../machine/timer.h \
  ../machine/translate.h ../machine/disk.h ../userprog/addrspace.h \
  ../filesys/filesys.h ../filesys/openfile.h ../userprog/memorybitmap.h \
  ../userprog/bitmap.h ../filesys/openfile.h ../userprog/coremap.h \
- ../bin/noff.h ../threads/scheduler.h ../machine/interrupt.h \
- ../threads/list.h ../machine/stats.h ../machine/timer.h
+ ../threads/list.h ../bin/noff.h ../threads/scheduler.h \
+ ../machine/interrupt.h ../machine/stats.h ../machine/timer.h
 preemptive.o: ../threads/preemptive.cc ../threads/preemptive.h \
  ../threads/system.h ../threads/copyright.h ../threads/utility.h \
  ../machine/sysdep.h ../threads/copyright.h /usr/include/stdlib.h \
@@ -445,8 +445,8 @@ preemptive.o: ../threads/preemptive.cc ../threads/preemptive.h \
  ../machine/machine.h ../threads/utility.h ../machine/translate.h \
  ../machine/disk.h ../userprog/addrspace.h ../filesys/filesys.h \
  ../filesys/openfile.h ../userprog/memorybitmap.h ../userprog/bitmap.h \
- ../filesys/openfile.h ../userprog/coremap.h ../bin/noff.h \
- ../threads/scheduler.h ../machine/interrupt.h ../threads/list.h \
+ ../filesys/openfile.h ../userprog/coremap.h ../threads/list.h \
+ ../bin/noff.h ../threads/scheduler.h ../machine/interrupt.h \
  ../machine/stats.h ../machine/timer.h /usr/include/unistd.h \
  /usr/include/i386-linux-gnu/bits/posix_opt.h \
  /usr/include/i386-linux-gnu/bits/environments.h \
@@ -501,8 +501,8 @@ addrspace.o: ../userprog/addrspace.cc ../threads/copyright.h \
  ../machine/machine.h ../threads/utility.h ../machine/translate.h \
  ../machine/disk.h ../userprog/addrspace.h ../filesys/filesys.h \
  ../filesys/openfile.h ../userprog/memorybitmap.h ../userprog/bitmap.h \
- ../filesys/openfile.h ../userprog/coremap.h ../bin/noff.h \
- ../threads/scheduler.h ../machine/interrupt.h ../threads/list.h \
+ ../filesys/openfile.h ../userprog/coremap.h ../threads/list.h \
+ ../bin/noff.h ../threads/scheduler.h ../machine/interrupt.h \
  ../machine/stats.h ../machine/timer.h ../userprog/addrspace.h \
  ../userprog/syscall_utils.h
 bitmap.o: ../userprog/bitmap.cc ../threads/copyright.h \
@@ -562,8 +562,8 @@ exception.o: ../userprog/exception.cc ../threads/copyright.h \
  ../machine/machine.h ../threads/utility.h ../machine/translate.h \
  ../machine/disk.h ../userprog/addrspace.h ../filesys/filesys.h \
  ../filesys/openfile.h ../userprog/memorybitmap.h ../userprog/bitmap.h \
- ../filesys/openfile.h ../userprog/coremap.h ../bin/noff.h \
- ../threads/scheduler.h ../machine/interrupt.h ../threads/list.h \
+ ../filesys/openfile.h ../userprog/coremap.h ../threads/list.h \
+ ../bin/noff.h ../threads/scheduler.h ../machine/interrupt.h \
  ../machine/stats.h ../machine/timer.h ../userprog/syscall.h \
  ../userprog/syscall_utils.h ../userprog/addrspace.h \
  ../userprog/exception_imp.h ../userprog/synchconsole.h \
@@ -622,8 +622,8 @@ progtest.o: ../userprog/progtest.cc ../threads/copyright.h \
  ../machine/machine.h ../threads/utility.h ../machine/translate.h \
  ../machine/disk.h ../userprog/addrspace.h ../filesys/filesys.h \
  ../filesys/openfile.h ../userprog/memorybitmap.h ../userprog/bitmap.h \
- ../filesys/openfile.h ../userprog/coremap.h ../bin/noff.h \
- ../threads/scheduler.h ../machine/interrupt.h ../threads/list.h \
+ ../filesys/openfile.h ../userprog/coremap.h ../threads/list.h \
+ ../bin/noff.h ../threads/scheduler.h ../machine/interrupt.h \
  ../machine/stats.h ../machine/timer.h ../machine/console.h \
  ../userprog/addrspace.h ../threads/synch.h
 console.o: ../machine/console.cc ../threads/copyright.h \
@@ -657,8 +657,8 @@ console.o: ../machine/console.cc ../threads/copyright.h \
  ../machine/translate.h ../machine/disk.h ../userprog/addrspace.h \
  ../filesys/filesys.h ../filesys/openfile.h ../userprog/memorybitmap.h \
  ../userprog/bitmap.h ../filesys/openfile.h ../userprog/coremap.h \
- ../bin/noff.h ../threads/scheduler.h ../machine/interrupt.h \
- ../threads/list.h ../machine/stats.h ../machine/timer.h
+ ../threads/list.h ../bin/noff.h ../threads/scheduler.h \
+ ../machine/interrupt.h ../machine/stats.h ../machine/timer.h
 machine.o: ../machine/machine.cc ../threads/copyright.h \
  ../machine/machine.h ../threads/utility.h ../threads/copyright.h \
  ../machine/sysdep.h /usr/include/stdlib.h /usr/include/features.h \
@@ -690,8 +690,8 @@ machine.o: ../machine/machine.cc ../threads/copyright.h \
  ../threads/list.h ../machine/machine.h ../userprog/addrspace.h \
  ../filesys/filesys.h ../filesys/openfile.h ../userprog/memorybitmap.h \
  ../userprog/bitmap.h ../filesys/openfile.h ../userprog/coremap.h \
- ../bin/noff.h ../threads/scheduler.h ../machine/interrupt.h \
- ../threads/list.h ../machine/stats.h ../machine/timer.h
+ ../threads/list.h ../bin/noff.h ../threads/scheduler.h \
+ ../machine/interrupt.h ../machine/stats.h ../machine/timer.h
 mipssim.o: ../machine/mipssim.cc ../threads/copyright.h \
  ../machine/machine.h ../threads/utility.h ../threads/copyright.h \
  ../machine/sysdep.h /usr/include/stdlib.h /usr/include/features.h \
@@ -723,8 +723,8 @@ mipssim.o: ../machine/mipssim.cc ../threads/copyright.h \
  ../threads/synch.h ../threads/list.h ../machine/machine.h \
  ../userprog/addrspace.h ../filesys/filesys.h ../filesys/openfile.h \
  ../userprog/memorybitmap.h ../userprog/bitmap.h ../filesys/openfile.h \
- ../userprog/coremap.h ../bin/noff.h ../threads/scheduler.h \
- ../machine/interrupt.h ../threads/list.h ../machine/stats.h \
+ ../userprog/coremap.h ../threads/list.h ../bin/noff.h \
+ ../threads/scheduler.h ../machine/interrupt.h ../machine/stats.h \
  ../machine/timer.h
 translate.o: ../machine/translate.cc ../threads/copyright.h \
  ../machine/machine.h ../threads/utility.h ../threads/copyright.h \
@@ -755,10 +755,10 @@ translate.o: ../machine/translate.cc ../threads/copyright.h \
  ../machine/translate.h ../machine/disk.h ../userprog/addrspace.h \
  ../filesys/filesys.h ../filesys/openfile.h ../userprog/memorybitmap.h \
  ../userprog/bitmap.h ../filesys/openfile.h ../machine/machine.h \
- ../userprog/coremap.h ../bin/noff.h ../threads/system.h \
- ../threads/utility.h ../threads/thread.h ../threads/synch.h \
+ ../userprog/coremap.h ../threads/list.h ../threads/utility.h \
+ ../bin/noff.h ../threads/system.h ../threads/thread.h ../threads/synch.h \
  ../threads/list.h ../threads/scheduler.h ../machine/interrupt.h \
- ../threads/list.h ../machine/stats.h ../machine/timer.h
+ ../machine/stats.h ../machine/timer.h
 syscall_utils.o: ../userprog/syscall_utils.cc ../threads/system.h \
  ../threads/copyright.h ../threads/utility.h ../machine/sysdep.h \
  ../threads/copyright.h /usr/include/stdlib.h /usr/include/features.h \
@@ -789,8 +789,8 @@ syscall_utils.o: ../userprog/syscall_utils.cc ../threads/system.h \
  ../machine/machine.h ../threads/utility.h ../machine/translate.h \
  ../machine/disk.h ../userprog/addrspace.h ../filesys/filesys.h \
  ../filesys/openfile.h ../userprog/memorybitmap.h ../userprog/bitmap.h \
- ../filesys/openfile.h ../userprog/coremap.h ../bin/noff.h \
- ../threads/scheduler.h ../machine/interrupt.h ../threads/list.h \
+ ../filesys/openfile.h ../userprog/coremap.h ../threads/list.h \
+ ../bin/noff.h ../threads/scheduler.h ../machine/interrupt.h \
  ../machine/stats.h ../machine/timer.h ../userprog/syscall_utils.h \
  ../userprog/addrspace.h /usr/include/c++/4.6/map \
  /usr/include/c++/4.6/bits/stl_tree.h \
@@ -848,8 +848,8 @@ synchconsole.o: ../userprog/synchconsole.cc ../userprog/synchconsole.h \
  ../machine/translate.h ../machine/disk.h ../userprog/addrspace.h \
  ../filesys/filesys.h ../filesys/openfile.h ../userprog/memorybitmap.h \
  ../userprog/bitmap.h ../filesys/openfile.h ../userprog/coremap.h \
- ../bin/noff.h ../threads/list.h ../machine/console.h ../threads/system.h \
- ../threads/scheduler.h ../machine/interrupt.h ../threads/list.h \
+ ../threads/list.h ../bin/noff.h ../threads/list.h ../machine/console.h \
+ ../threads/system.h ../threads/scheduler.h ../machine/interrupt.h \
  ../machine/stats.h ../machine/timer.h
 memorybitmap.o: ../userprog/memorybitmap.cc ../userprog/memorybitmap.h \
  ../userprog/bitmap.h ../threads/copyright.h ../threads/utility.h \
@@ -906,11 +906,11 @@ coremap.o: ../userprog/coremap.cc ../userprog/memorybitmap.h \
  /usr/include/i386-linux-gnu/bits/stdio_lim.h \
  /usr/include/i386-linux-gnu/bits/sys_errlist.h /usr/include/string.h \
  ../filesys/openfile.h ../machine/machine.h ../machine/translate.h \
- ../machine/disk.h ../userprog/coremap.h ../threads/system.h \
- ../threads/utility.h ../threads/thread.h ../threads/synch.h \
- ../threads/list.h ../userprog/addrspace.h ../filesys/filesys.h \
- ../filesys/openfile.h ../bin/noff.h ../threads/scheduler.h \
- ../machine/interrupt.h ../threads/list.h ../machine/stats.h \
+ ../machine/disk.h ../userprog/coremap.h ../threads/list.h \
+ ../threads/utility.h ../threads/system.h ../threads/thread.h \
+ ../threads/synch.h ../threads/list.h ../userprog/addrspace.h \
+ ../filesys/filesys.h ../filesys/openfile.h ../bin/noff.h \
+ ../threads/scheduler.h ../machine/interrupt.h ../machine/stats.h \
  ../machine/timer.h
 exception_imp.o: ../userprog/exception_imp.cc ../threads/system.h \
  ../threads/copyright.h ../threads/utility.h ../machine/sysdep.h \
@@ -942,8 +942,8 @@ exception_imp.o: ../userprog/exception_imp.cc ../threads/system.h \
  ../machine/machine.h ../threads/utility.h ../machine/translate.h \
  ../machine/disk.h ../userprog/addrspace.h ../filesys/filesys.h \
  ../filesys/openfile.h ../userprog/memorybitmap.h ../userprog/bitmap.h \
- ../filesys/openfile.h ../userprog/coremap.h ../bin/noff.h \
- ../threads/scheduler.h ../machine/interrupt.h ../threads/list.h \
+ ../filesys/openfile.h ../userprog/coremap.h ../threads/list.h \
+ ../bin/noff.h ../threads/scheduler.h ../machine/interrupt.h \
  ../machine/stats.h ../machine/timer.h ../userprog/synchconsole.h \
  ../threads/synch.h ../machine/console.h ../userprog/syscall.h \
  ../userprog/syscall_utils.h ../userprog/addrspace.h \

@@ -23,7 +23,7 @@ typedef struct filesStruct {
 } FileStruct;
 
 // Structure to manage multiple processes 
-typedef struct ProcessStruct {
+typedef struct processStruct {
     Thread* owner;
     int ret;
     int isJoineable;

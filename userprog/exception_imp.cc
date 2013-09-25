@@ -211,20 +211,25 @@ int join(Pid pid){
     int ret;
     ret =  processTable[pid]->ret; 
     delete processTable[pid];
+    processTable.erase(pid);
     return ret;
 }
+
+
 
 void sexit(int ret){
     // Search for processTable to find the one belonging to us (if any)
     // TODO cambiar esta crotada, crear una variable pid en AddrSpace
     // y buscar el currensSpace con ese pid
-    std::map<Pid,ProcessStruct*>::iterator it;
-    for(it = processTable.begin(); it != processTable.end(); it++){
-        if(it->second->owner == currentThread){
-            it->second->ret = ret;
-            break;
-        }
+    int pid;
+    pid = currentThread->GetPid();
+    if (processTable.find(pid) !=  processTable.end()){
+        // Pid exist
+        processTable[pid]->ret = ret;
     }
+    currentThread->space->FreeMemory();
     currentThread->Finish(); 
     ASSERT(false);
 }
+
+

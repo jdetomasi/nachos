@@ -72,6 +72,7 @@ ExceptionHandler(ExceptionType which){
                 // arg1 :: int the value to return on sexit .
                 arg1 = machine->ReadRegister(4);
                 DEBUG('s', "System Call: %s Invoking Exit with value %d.\n",currentThread->getName(), arg1);
+                DEBUG('e', "System Call: %s Invoking Exit with value %d.\n",currentThread->getName(), arg1);
                 update_registers();
                 sexit(arg1);
                 //      deallocate physical memory. It is sufficient with next line?
@@ -216,8 +217,7 @@ ExceptionHandler(ExceptionType which){
         currentThread->space->UpdateTLB();
          
     } else {
-        DEBUG('s', "Ignoring System Call: %s Unexpecter user mode exception.\n",currentThread->getName());
-        //printf("ERROR!! Ignoring Syscall. Unexpected user mode exception %d %d\n", which, type);
+        DEBUG('s', "Ignoring System Call: %s Unexpected user mode exception.\n",currentThread->getName());
         machine->WriteRegister(2, -1);
         update_registers();
     
