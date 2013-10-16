@@ -16,7 +16,7 @@ int main(){
     char* argv[8];
     char cmd[64];
     char *prompt = "root@nachos:~# ";
-    char *argv_aux[] = {"test_files/hola_mundo", "test_files/si_senior", NULL};   
+    //char *argv_aux[] = {"test_files/hola_mundo", "test_files/si_senior", NULL};   
 
     while (1) {
 
@@ -46,6 +46,9 @@ int main(){
 
         // user has entered some text, specting a command
         while(ch != '\n' && ch != ' '){
+            if (chars_read >= 63){
+                continue;
+            }
             cmd[chars_read] = ch;
             chars_read = chars_read + 1;
             Read(&ch, 1, ConsoleInput);
@@ -59,7 +62,7 @@ int main(){
         // some arguments where entered
         i = 0;
         argc = 0;
-        while (ch != '\n'){
+        while (ch != '\n' && chars_read < 64){
             switch(ch) {
                 case ' ':
                     buff[i] = '\0';
@@ -87,7 +90,9 @@ int main(){
             i = i + 1;
         }
         // Arguments ended in the previous iteration
-        buff[i - 1] = '\0';
+        if (i > 0){
+            buff[i - 1] = '\0';
+        }
         argv[argc] = NULL;
 
         // exit !

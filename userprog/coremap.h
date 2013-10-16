@@ -22,6 +22,10 @@ class MemoryStatus {
   public:
       int virtPage;
       Thread* owner;
+      MemoryStatus(){
+          virtPage = -1;
+          owner = NULL;
+    };
 };
 
 class CoreMap{
@@ -39,5 +43,8 @@ public:
     bool Check(int virtPage, int physPage);
     int GetPage();
     void SetPage(int page);
+    int GetPageFIFO();
+    void SetPageFIFO(int page);
+    int GetPidOwner(int physPage);
 };
 #endif //COREMAP_H

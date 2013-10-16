@@ -43,6 +43,10 @@ class AddrSpace {
     void FreeMemory();                   // Let the memory bitmap know that we are
                                          // not using the physical pages anymore
 
+    //bool IsDirty(int vpage); 
+    bool IsUsed(int vpage); 
+    void SetUsed(int vpage); 
+
 
   private:
     TranslationEntry *pageTable;	// Assume linear page table translation

@@ -25,7 +25,7 @@ std::map<Pid,ProcessStruct*> processTable;
 // This is used for storing a fresh AddrSpaceID
 // We can search for the a number not in the keys of the map
 // but decided for this for eficiency 
-static int freshPid = 0;
+static int freshPid = 1;
 
 void halt(){
     interrupt->Halt();

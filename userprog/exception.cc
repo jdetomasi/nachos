@@ -216,6 +216,14 @@ ExceptionHandler(ExceptionType which){
         
         currentThread->space->UpdateTLB();
          
+    } else if(which == ReadOnlyException) {
+        // This is a TLB fault,
+        // the page might be in memory,
+        // but not in the TLB
+        
+        printf("Arrrrrgh ReadOnlyException!!");
+        //currentThread->space->UpdateTLB();
+         
     } else {
         DEBUG('s', "Ignoring System Call: %s Unexpected user mode exception.\n",currentThread->getName());
         machine->WriteRegister(2, -1);

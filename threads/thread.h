@@ -103,7 +103,8 @@ class Thread {
     void CheckOverflow();			   			// Check if thread has 
 												// overflowed its stack
     void setStatus(ThreadStatus st) { status = st; }
-    const char* getName() { return (name); }
+    //const char* getName() { return (sprintf("[%d] %s",pid,name)); }
+    char* getName() { sprintf(buffer, "[%d] %s",pid,name);return buffer; }
     int SetPid(int npid) { this->pid = npid; }
     int GetPid() { return (pid); }
     void Print() { printf("%s, ", name); }
@@ -117,6 +118,7 @@ class Thread {
 									// (If NULL, don't deallocate stack)
     ThreadStatus status;			// ready, running or blocked
     char name[128];
+char buffer[140]; 
 
     void StackAllocate(VoidFunctionPtr func, void* arg);
 								// Allocate a stack for thread.

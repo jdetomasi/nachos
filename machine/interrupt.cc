@@ -265,6 +265,7 @@ void
 Interrupt::Schedule(VoidFunctionPtr handler, void* arg, int fromNow, IntType type)
 {
     int when = stats->totalTicks + fromNow;
+    ASSERT(when >= 0);
     PendingInterrupt *toOccur = new PendingInterrupt(handler, arg, when, type);
 
     DEBUG('i', "Scheduling interrupt handler the %s at time = %d\n", 

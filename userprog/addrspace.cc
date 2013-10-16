@@ -202,7 +202,21 @@ AddrSpace::InitRegisters()
 
 void AddrSpace::SaveState() 
 {
-    currentThread->SaveUserState();
+#ifdef USE_TLB
+    int i;
+    for (i = 0; i < TLBSize; i++){
+        if(machine->tlb[i].valid){
+            pageTable[machine->tlb[i].virtualPage].virtualPage = machine->tlb[i].virtualPage;
+            pageTable[machine->tlb[i].virtualPage].physicalPage = machine->tlb[i].physicalPage;
+            pageTable[machine->tlb[i].virtualPage].valid = machine->tlb[i].valid;
+            pageTable[machine->tlb[i].virtualPage].use = machine->tlb[i].use;
+            pageTable[machine->tlb[i].virtualPage].dirty = machine->tlb[i].dirty;
+            pageTable[machine->tlb[i].virtualPage].readOnly = machine->tlb[i].readOnly;
+    //        machine->tlb[i].valid = false;
+    //      pagetable[i] = machine->tlb[i];
+        }
+    }
+#endif
 }
 
 
@@ -225,7 +239,6 @@ void AddrSpace::RestoreState() {
     machine->pageTableSize = numPages;
 #endif
 }
-
 
 void AddrSpace::CopyToMemory(int virtualAddr, int inFileAddr, int size){
     int pageNbr;
@@ -280,7 +293,9 @@ void AddrSpace::LoadPage(int badAddr){
         }
     }else if (pageTable[virtPage].physicalPage == -2){
         pageTable[virtPage].physicalPage = coreMap->Find(virtPage);
+
         ASSERT(coreMap->Check(virtPage,pageTable[virtPage].physicalPage));
+
         // Just in case...
         bzero((machine->mainMemory + pageTable[virtPage].physicalPage * PageSize), PageSize);
         DEBUG('f',"Copying virtual page %d from swap into physical page %d\n",virtPage, pageTable[virtPage].physicalPage );
@@ -371,6 +386,11 @@ void AddrSpace::UpdateTLB(){
     DEBUG('f',
       "Inserting into TLB in position %d\n\tpageTable.VirtPage=%d\n\tpageTable.physicalPage = %d\n",
       last_modify, virtPage, pageTable[virtPage].physicalPage);
+
+
+    //pageTable[machine->tlb[last_modify].virtPage] = machine->tlb[last_modify];
+    
+    
     machine->tlb[last_modify] = pageTable[virtPage];
     last_modify = last_modify + 1;
 }
@@ -381,8 +401,16 @@ void AddrSpace::SaveToSwap(int vpage){
     swap->WriteAt(&(machine->mainMemory[pageTable[vpage].physicalPage * PageSize]), 
             PageSize, vpage*PageSize);
 
+    // Una crotada para marcar la entrada en la TLB como invalida if any
+    int i;
+    for (i = 0; i < TLBSize; i++){
+        if(machine->tlb[i].valid && machine->tlb[i].virtualPage == vpage){
+                machine->tlb[i].valid = false;
+        }
+    }
     pageTable[vpage].valid = false;
     pageTable[vpage].physicalPage = -2;
+
 }
 
 void AddrSpace::GetFromSwap(int vpage){
@@ -394,7 +422,8 @@ void AddrSpace::GetFromSwap(int vpage){
     {
         machine->mainMemory[pageTable[vpage].physicalPage * PageSize + i] = page[i];
     }
-    DEBUG('f', "Loaded: %d to physical page %d\n", vpage, pageTable[vpage].physicalPage);
+    DEBUG('f', "Loaded: vitrPage %d of thread %s to phys page %d\n", 
+            vpage, currentThread->getName(), pageTable[vpage].physicalPage);
     pageTable[vpage].valid = true;
 }
 
@@ -409,8 +438,33 @@ void AddrSpace::FreeMemory(){
     int tmp;
     for (int i = 0; i < numPages; i++){
          tmp = pageTable[i].physicalPage;
-         if (tmp != -1 && tmp != -2){
+         if (tmp != -1 && tmp != -2 && pageTable[i].valid){
              memoryBitMap->Clear(tmp);
         }
     }
+}
+
+void AddrSpace::SetUsed(int vpage){
+#ifdef USE_TLB
+    int i;
+    for (i = 0; i < TLBSize; i++){
+        if(vpage == machine->tlb[i].virtualPage && machine->tlb[i].valid ){
+            machine->tlb[i].use = false;
+        }
+    }
+    pageTable[vpage].use = false; 
+#endif
+}
+
+bool AddrSpace::IsUsed(int vpage){
+#ifdef USE_TLB
+    int i;
+    bool ret;
+    for (i = 0; i < TLBSize; i++){
+        if(vpage == machine->tlb[i].virtualPage && machine->tlb[i].valid ){
+            return machine->tlb[i].use;
+        }
+    }
+    return pageTable[vpage].use; 
+#endif
 }
