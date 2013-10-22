@@ -104,6 +104,7 @@ int main(){
         pid = Exec(cmd, argc, argv, bg);
 
         // search cmd in test/ just in case path was not full
+        /*
         if (pid == -1) {
             if (chars_read < 59){
                 for (j = chars_read;  j >= 0; j--){
@@ -115,6 +116,7 @@ int main(){
             }
             pid = Exec(cmd, argc, argv, bg);
         }
+        */
         if (pid == -1) {
             j = 0;
             while ((ch = cmd[j]) != '\0') {

@@ -35,7 +35,10 @@ CPP = /lib/cpp
 INCDIR =-I../userprog -I../threads
 CFLAGS = -G 0 -c $(INCDIR) -mips1
 
-all: halt shell matmult sort hola_mundo write_console run_hola_mundo run_halt run_2_threads\
+
+all: halt shell matmult sort $(patsubst %.c,%,$(wildcard *.c))
+
+#all: halt shell matmult sort hola_mundo write_console run_hola_mundo run_halt run_2_threads\
      run_5_threads run_matmult\
      print_a print_b print_ab print_args array join_10 join_endless debug_args shell_ori\
      echo cat test_cat cp
@@ -51,7 +54,9 @@ halt: halt.o start.o
 	$(LD) $(LDFLAGS) start.o halt.o -o halt.coff
 	../bin/coff2noff halt.coff halt
 	$(SH) -c "cp halt ../userprog/bin"
-	$(SH) -c "cp halt ../vm/bin"
+	$(SH) -c "mv halt ../vm/bin"
+	$(SH) -c "rm halt.o"
+	$(SH) -c "rm halt.coff"
 
 shell.o: shell.c
 	$(CC) $(CFLAGS) -c shell.c
@@ -59,7 +64,9 @@ shell: shell.o start.o
 	$(LD) $(LDFLAGS) start.o shell.o -o shell.coff
 	../bin/coff2noff shell.coff shell
 	$(SH) -c "cp shell ../userprog/bin"
-	$(SH) -c "cp shell ../vm/bin"
+	$(SH) -c "mv shell ../vm/bin"
+	$(SH) -c "rm shell.o"
+	$(SH) -c "rm shell.coff"
 
 sort.o: sort.c
 	$(CC) $(CFLAGS) -c sort.c
@@ -67,7 +74,9 @@ sort: sort.o start.o
 	$(LD) $(LDFLAGS) start.o sort.o -o sort.coff
 	../bin/coff2noff sort.coff sort
 	$(SH) -c "cp sort ../userprog/bin"
-	$(SH) -c "cp sort ../vm/bin"
+	$(SH) -c "mv sort ../vm/bin"
+	$(SH) -c "rm sort.o"
+	$(SH) -c "rm sort.coff"
 
 matmult.o: matmult.c
 	$(CC) $(CFLAGS) -c matmult.c
@@ -75,7 +84,9 @@ matmult: matmult.o start.o
 	$(LD) $(LDFLAGS) start.o matmult.o -o matmult.coff
 	../bin/coff2noff matmult.coff matmult
 	$(SH) -c "cp matmult ../userprog/bin"
-	$(SH) -c "cp matmult ../vm/bin"
+	$(SH) -c "mv matmult ../vm/bin"
+	$(SH) -c "rm matmult.o" 
+	$(SH) -c "rm matmult.coff" 
 
 # Estas reglas sirven para compilar programas simples,
 # que consistan en un único fuente.
@@ -89,6 +100,8 @@ matmult: matmult.o start.o
 	../bin/coff2noff $*.coff $@
 	$(SH) -c "cp $@ ../userprog/bin/"
 	$(SH) -c "mv $@ ../vm/bin/"
+	$(SH) -c "rm $@.o"
+	$(SH) -c "rm $@.coff"
 
 
 	

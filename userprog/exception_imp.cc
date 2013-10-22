@@ -64,6 +64,7 @@ int read(int* addr,int size, OpenFileId file_id){
         }
         chars_read[num_read] = '\0';
         writeString(*addr, chars_read, num_read); 
+        delete [] chars_read;
         return size;
     }
     if (openedFiles.find(file_id) ==  openedFiles.end() || file_id == ConsoleOutput){
@@ -160,8 +161,8 @@ int mySeek(OpenFileId file_id, FilePosition newPos, int reference){
 
 void startNewProcess(void* x){
     currentThread->space->RestoreState();
-    currentThread->space->InitRegisters();
     currentThread->space->LoadArguments();
+    currentThread->space->InitRegisters();
     machine->Run();
     ASSERT(false);
 }
@@ -228,6 +229,8 @@ void sexit(int ret){
         processTable[pid]->ret = ret;
     }
     currentThread->space->FreeMemory();
+    delete currentThread->space;
+    currentThread->space = NULL;
     currentThread->Finish(); 
     ASSERT(false);
 }

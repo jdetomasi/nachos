@@ -129,6 +129,7 @@ Lock::~Lock(){
 //----------------------------------------------------------------------
 void Lock::Acquire() {
     
+    IntStatus oldLevel = interrupt->SetLevel(IntOff);	// disable interrupts
     // Arrgh! - Thread already owns the lock!
     ASSERT(!isHeldByCurrentThread());
 
@@ -145,9 +146,11 @@ void Lock::Acquire() {
     lockSem->P();				
     
     // Sets the holder to be the current thread and saves its priority.
+    ASSERT(holderThread == NULL);
     holderThread = currentThread;
     DEBUG('l', "Thread %s acquired lock %s\n", holderThread->getName(), this->getName());
     oldPriority = currentThread->GetPriority();
+    interrupt->SetLevel(oldLevel);		// re-enable interrupts
 }
 
 //----------------------------------------------------------------------

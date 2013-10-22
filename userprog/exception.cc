@@ -73,12 +73,11 @@ ExceptionHandler(ExceptionType which){
                 arg1 = machine->ReadRegister(4);
                 DEBUG('s', "System Call: %s Invoking Exit with value %d.\n",currentThread->getName(), arg1);
                 DEBUG('e', "System Call: %s Invoking Exit with value %d.\n",currentThread->getName(), arg1);
-                update_registers();
                 sexit(arg1);
                 //      deallocate physical memory. It is sufficient with next line?
                 break;
             case SC_Exec:
-                DEBUG('s', "System Call: %s Invoking Exec.\n",currentThread->getName());
+                DEBUG('s', "System Call 1: %s Invoking Exec.\n",currentThread->getName());
                 // arg1 :: char * the name of the file that stores the executable .
                 arg1 = machine->ReadRegister(4);
                 // arg2 :: argc to the new thread.
@@ -89,6 +88,7 @@ ExceptionHandler(ExceptionType which){
                 arg4 = machine->ReadRegister(7);
                 readString(arg1, file_name);
 
+                DEBUG('e', "System Call 2: %s Invoking Exec.\n",file_name);
                 // check if executable exists
                 file = fileSystem->Open(file_name);
                 if (file != NULL) {
@@ -138,7 +138,6 @@ ExceptionHandler(ExceptionType which){
                 machine->WriteRegister(2, ret);
                 break;
             case SC_Read:
-                DEBUG('s', "System Call: %s Invoking Read.\n",currentThread->getName());
                 // char *buffer
                 arg1 = machine->ReadRegister(4);
                 // int size
@@ -147,6 +146,7 @@ ExceptionHandler(ExceptionType which){
                 arg3 = machine->ReadRegister(6);
 
                 ret = read(&arg1,arg2,arg3);
+                DEBUG('e', "System Call: %s Invoking Read.\n",currentThread->getName());
                 if (ret < 0){
                     syscall_has_fail = 1;
                     break;
