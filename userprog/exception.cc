@@ -88,7 +88,6 @@ ExceptionHandler(ExceptionType which){
                 arg4 = machine->ReadRegister(7);
                 readString(arg1, file_name);
 
-                DEBUG('e', "System Call 2: %s Invoking Exec.\n",file_name);
                 // check if executable exists
                 file = fileSystem->Open(file_name);
                 if (file != NULL) {
@@ -146,7 +145,6 @@ ExceptionHandler(ExceptionType which){
                 arg3 = machine->ReadRegister(6);
 
                 ret = read(&arg1,arg2,arg3);
-                DEBUG('e', "System Call: %s Invoking Read.\n",currentThread->getName());
                 if (ret < 0){
                     syscall_has_fail = 1;
                     break;

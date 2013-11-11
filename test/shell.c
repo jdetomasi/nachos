@@ -11,7 +11,7 @@ int main(){
     int chars_read;
     int pid;
     char ch;
-    static char buff[128];
+    static char buff[512];
     int argc;
     char* argv[8];
     char cmd[64];
@@ -73,10 +73,6 @@ int main(){
                         argc = argc + 1;
                     }
                     break;
-                case '\0':
-                    buff[i] = '\0';
-                    Read(&ch, 1, ConsoleInput);
-                    break;
                 case '&':
                     bg = 0;
                     buff[i] = '\0';
@@ -85,6 +81,9 @@ int main(){
                 default:
                     buff[i] = ch;
                     Read(&ch, 1, ConsoleInput);
+                    if (ch == '\n') {
+                        i = i + 1;
+                    }
                     break;
             }
             i = i + 1;
@@ -103,8 +102,7 @@ int main(){
         //pid = Exec("bin/cat", 2, argv_aux, 1);
         pid = Exec(cmd, argc, argv, bg);
 
-        // search cmd in test/ just in case path was not full
-        /*
+        // search cmd in SBIN/ just in case path was not full
         if (pid == -1) {
             if (chars_read < 59){
                 for (j = chars_read;  j >= 0; j--){
@@ -116,7 +114,6 @@ int main(){
             }
             pid = Exec(cmd, argc, argv, bg);
         }
-        */
         if (pid == -1) {
             j = 0;
             while ((ch = cmd[j]) != '\0') {

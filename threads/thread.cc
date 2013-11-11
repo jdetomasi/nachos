@@ -186,7 +186,7 @@ Thread::Finish ()
 void
 Thread::Yield ()
 {
-    // Thread *nextThread;   DEPRECATED
+    Thread *nextThread;
     IntStatus oldLevel = interrupt->SetLevel(IntOff);
     
     ASSERT(this == currentThread);
@@ -194,17 +194,11 @@ Thread::Yield ()
     DEBUG('t', "Yielding thread \"%s\"\n", getName());
     
     
-    /*
     nextThread = scheduler->FindNextToRun();
     if (nextThread != NULL) {
 	   scheduler->ReadyToRun(this);
 	   scheduler->Run(nextThread);
-    } */
-    
-    // The new implementation is insensitive to any change in the scheduler implementation
-    // There is always some thread ready to run (at least the current one).
-    scheduler->ReadyToRun(this);
-    scheduler->Run(scheduler->FindNextToRun());
+    }     
 
     interrupt->SetLevel(oldLevel);
 
@@ -383,6 +377,10 @@ Thread::SaveUserState()
 {
     for (int i = 0; i < NumTotalRegs; i++)
 	userRegisters[i] = machine->ReadRegister(i);
+
+#ifdef USER_PROGRAM
+	space->SaveState();
+#endif
 }
 
 //----------------------------------------------------------------------
@@ -399,6 +397,9 @@ Thread::RestoreUserState()
 {
     for (int i = 0; i < NumTotalRegs; i++)
 	   machine->WriteRegister(i, userRegisters[i]);
+#ifdef USER_PROGRAM
+	space->RestoreState();
+#endif
 }
 
 #endif

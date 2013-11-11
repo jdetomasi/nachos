@@ -105,7 +105,7 @@ class Thread {
     void setStatus(ThreadStatus st) { status = st; }
     //const char* getName() { return (sprintf("[%d] %s",pid,name)); }
     char* getName() { sprintf(buffer, "[%d] %s",pid,name);return buffer; }
-    int SetPid(int npid) { this->pid = npid; }
+    void SetPid(int npid) { this->pid = npid; }
     int GetPid() { return (pid); }
     void Print() { printf("%s, ", name); }
 	

@@ -32,7 +32,7 @@ typedef struct processStruct {
 // Mapping to store opened Files 
 extern std::map<OpenFileId,FileStruct*> openedFiles;
 
-// Mapping to store created Addresses
+// Mapping to store created Processes
 extern std::map<Pid,ProcessStruct*> processTable;
 
 void halt();

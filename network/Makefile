@@ -986,7 +986,8 @@ exception_imp.o: ../userprog/exception_imp.cc ../threads/system.h \
  ../machine/stats.h ../machine/timer.h ../filesys/synchdisk.h \
  ../machine/disk.h ../threads/synch.h ../network/post.h \
  ../machine/network.h ../threads/synchlist.h ../userprog/synchconsole.h \
- ../machine/console.h ../userprog/syscall.h ../userprog/syscall_utils.h \
+ ../machine/console.h ../userprog/syscall.h \
+ ../userprog/../threads/synch.h ../userprog/syscall_utils.h \
  ../userprog/addrspace.h ../userprog/exception_imp.h \
  /usr/include/c++/4.6/map /usr/include/c++/4.6/bits/stl_tree.h \
  /usr/include/c++/4.6/bits/stl_algobase.h \

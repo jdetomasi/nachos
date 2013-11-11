@@ -157,9 +157,9 @@ AddrSpace::AddrSpace(OpenFile *executable_file)
 AddrSpace::~AddrSpace()
 {
 
-    int i;
+    unsigned int i;
     int ppage;
-    for(i = 0; i < (unsigned int) numPages ; i++){  
+    for(i = 0; i < numPages ; i++){  
         ppage = pageTable[i].physicalPage;
         if (-1 != ppage && -2 != ppage && pageTable[i].valid){
             memoryBitMap->Clear(ppage);
@@ -216,13 +216,13 @@ void AddrSpace::SaveState()
     int i;
     for (i = 0; i < TLBSize; i++){
         if(machine->tlb[i].valid){
-            if(!(pageTable[machine->tlb[i].virtualPage].virtualPage == machine->tlb[i].virtualPage))
-                printf("1!!!!!!!!!!!\n\n");
             ASSERT(pageTable[machine->tlb[i].virtualPage].virtualPage == machine->tlb[i].virtualPage);
-            if(!(pageTable[machine->tlb[i].virtualPage].physicalPage == machine->tlb[i].physicalPage))
-                printf("2!!!!!\n\n");
+            if (!(pageTable[machine->tlb[i].virtualPage].physicalPage == machine->tlb[i].physicalPage)){
+                printf("Arrrgh! 2!");
+            }
             ASSERT(pageTable[machine->tlb[i].virtualPage].physicalPage == machine->tlb[i].physicalPage);
             pageTable[machine->tlb[i].virtualPage] = machine->tlb[i];
+            machine->tlb[i].valid = false;
         }
     }
 #endif
@@ -424,7 +424,6 @@ void AddrSpace::SaveToSwap(int vpage){
     pageTable[vpage].physicalPage = -2;
 
 }
-
 void AddrSpace::GetFromSwap(int vpage){
 
     char page[PageSize];
@@ -443,19 +442,33 @@ void AddrSpace::GetFromSwap(int vpage){
 
 }
 
-
 // Method to FreeMemory before exiting
 // Actually, we say to the memorybitmap that it can use the physical pages
 // that we are using at the moment. CoreMap->Find() will call memoryBitmap->Find()
 // before telling a thread to save a page to swap. This will ensure us that a
-// non-existing thread (i.e. one that has already ended) will be told to save 
+// non-existing thread (i.e. one that has already ended) will not be told to save 
 // a page to swap 
+// Also, we put valid TLB entries that are valid, to not valid
 void AddrSpace::FreeMemory(){
     int tmp;
-    for (int i = 0; i < numPages; i++){
-         tmp = pageTable[i].physicalPage;
-         if (tmp != -1 && tmp != -2 && pageTable[i].valid){
-             memoryBitMap->Clear(tmp);
+    unsigned int i;
+    for (i = 0; i < numPages; i++){
+        tmp = pageTable[i].physicalPage;
+        if (tmp != -1 && tmp != -2 && pageTable[i].valid){
+            memoryBitMap->Clear(tmp);
+            if (i < TLBSize && machine->tlb[i].valid){
+                ASSERT(pageTable[machine->tlb[i].virtualPage].virtualPage == machine->tlb[i].virtualPage);
+                ASSERT(pageTable[machine->tlb[i].virtualPage].physicalPage == machine->tlb[i].physicalPage);
+                machine->tlb[i].valid = false;
+            }
+       }
+    }
+    // Just in case we had less numPages than TLBSize...
+    for (i; i < TLBSize; i++){
+        if(machine->tlb[i].valid){
+            ASSERT(pageTable[machine->tlb[i].virtualPage].virtualPage == machine->tlb[i].virtualPage);
+            ASSERT(pageTable[machine->tlb[i].virtualPage].physicalPage == machine->tlb[i].physicalPage);
+            machine->tlb[i].valid = false;
         }
     }
 }
@@ -475,12 +488,13 @@ void AddrSpace::SetUsed(int vpage){
 bool AddrSpace::IsUsed(int vpage){
 #ifdef USE_TLB
     int i;
-    bool ret;
     for (i = 0; i < TLBSize; i++){
         if(vpage == machine->tlb[i].virtualPage && machine->tlb[i].valid ){
             return machine->tlb[i].use;
         }
     }
     return pageTable[vpage].use; 
+#else
+    return false;
 #endif
 }

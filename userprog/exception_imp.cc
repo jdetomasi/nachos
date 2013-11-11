@@ -6,6 +6,7 @@
 #include "synchconsole.h"
 #include "filesys.h"
 #include "syscall.h"
+#include "../threads/synch.h"
 #include "syscall_utils.h"
 #include "exception_imp.h"
 #include <map>
@@ -160,15 +161,14 @@ int mySeek(OpenFileId file_id, FilePosition newPos, int reference){
 }
 
 void startNewProcess(void* x){
-    currentThread->space->RestoreState();
-    currentThread->space->LoadArguments();
     currentThread->space->InitRegisters();
+    currentThread->space->LoadArguments();
+    currentThread->space->RestoreState();
     machine->Run();
     ASSERT(false);
 }
 
 int exec(OpenFile* executable, char* file_name, int argc, int argv, int isJoineable){
-    // TODO cambiar esta crotada
     Thread *newThread;
     if (isJoineable > 0){
         newThread = new Thread(file_name, isJoineable);
@@ -197,8 +197,6 @@ int exec(OpenFile* executable, char* file_name, int argc, int argv, int isJoinea
         processTable.insert(
             std::pair<Pid,ProcessStruct*>(freshPid, processStruct));
     }
-    // TODO Refactorizar Pid por ProcessId
-    // y processStruct por processStruct (o algo asi)
     return freshPid++;
 }
 
@@ -220,8 +218,6 @@ int join(Pid pid){
 
 void sexit(int ret){
     // Search for processTable to find the one belonging to us (if any)
-    // TODO cambiar esta crotada, crear una variable pid en AddrSpace
-    // y buscar el currensSpace con ese pid
     int pid;
     pid = currentThread->GetPid();
     if (processTable.find(pid) !=  processTable.end()){
