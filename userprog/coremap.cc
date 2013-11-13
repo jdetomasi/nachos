@@ -59,7 +59,9 @@ bool CoreMap::Check(int virtPage, int physPage){
             && physPage >= 0);
 }
 
-int CoreMap::GetPageFIFO(){
+#ifdef USE_FIFO
+
+int CoreMap::GetPage(){
     ASSERT(order != NULL);
     int ret;
     ret = order->physPage;
@@ -73,7 +75,7 @@ int CoreMap::GetPageFIFO(){
     return ret;
 }
 
-void CoreMap::SetPageFIFO(int physPage){
+void CoreMap::SetPage(int physPage){
     if (NULL == order){
         order = new Node();
         order->physPage = physPage;
@@ -88,6 +90,7 @@ void CoreMap::SetPageFIFO(int physPage){
     }
 }
 
+#else
 
 int CoreMap::GetPage(){
     ASSERT(order != NULL);
@@ -126,3 +129,4 @@ void CoreMap::SetPage(int physPage){
         order->last = tmp;
     }
 }
+#endif

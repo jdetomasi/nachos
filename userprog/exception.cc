@@ -77,7 +77,7 @@ ExceptionHandler(ExceptionType which){
                 //      deallocate physical memory. It is sufficient with next line?
                 break;
             case SC_Exec:
-                DEBUG('s', "System Call 1: %s Invoking Exec.\n",currentThread->getName());
+                DEBUG('s', "System Call: %s Invoking Exec.\n",currentThread->getName());
                 // arg1 :: char * the name of the file that stores the executable .
                 arg1 = machine->ReadRegister(4);
                 // arg2 :: argc to the new thread.
@@ -107,9 +107,9 @@ ExceptionHandler(ExceptionType which){
                 machine->WriteRegister(2, ret);
                 break;
             case SC_Join:
-                DEBUG('s', "System Call: %s Invoking Join.\n",currentThread->getName());
                 // arg1 :: Pid of the user program to join to.
                 arg1 = machine->ReadRegister(4);
+                DEBUG('s', "System Call: %s Invoking Join with pid %d.\n",currentThread->getName(),arg1);
                 ret = join(arg1);
                 if(ret == -1){
                     syscall_has_fail = 1;

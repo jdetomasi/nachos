@@ -41,7 +41,6 @@ int open(char *file_name){
         return -1;
     }
     file_str->owner = currentThread;
-    // TODO Implementamos esto? Si lo hacemos..como?
     file_str->mode = O_RDWR;
 
     openedFiles.insert(
@@ -74,7 +73,6 @@ int read(int* addr,int size, OpenFileId file_id){
     }
     if (openedFiles[file_id]->owner != currentThread){
         // The file is open but by other thread
-        // TODO si agregamos los modos, hacerlo aca
         return -1;
     }
     num_read = openedFiles[file_id]->file->Read(chars_read,size);
@@ -100,7 +98,6 @@ int write(char *in_string, int size, OpenFileId file_id){
     }
     if (openedFiles[file_id]->owner != currentThread){
         // The file is open but by other thread
-        // TODO si agregamos los modos, hacerlo aca
         return -1;
     }
 
@@ -115,7 +112,7 @@ int close(OpenFileId file_id){
     }
     delete openedFiles[file_id];
     openedFiles.erase(file_id);
-    // TODO Como manejamos la fresh_id ? Este file_id deberia "quedar" libre...que hacemos?
+    // Este file_id deberia "quedar" libre...
     return 0;
 }
 
@@ -127,7 +124,6 @@ int mySeek(OpenFileId file_id, FilePosition newPos, int reference){
     }
     if (openedFiles[file_id]->owner != currentThread){
         // The file is open but by other thread
-        // TODO si agregamos los modos, hacerlo aca
         return -1;
     }
     int ret; ret = -1;
@@ -160,15 +156,22 @@ int mySeek(OpenFileId file_id, FilePosition newPos, int reference){
 
 }
 
+Semaphore * asd1;
+Semaphore * asd2;
+
 void startNewProcess(void* x){
+    currentThread->space->RestoreState();
     currentThread->space->InitRegisters();
     currentThread->space->LoadArguments();
-    currentThread->space->RestoreState();
+    asd1->V();
+    asd2->P();
     machine->Run();
     ASSERT(false);
 }
 
 int exec(OpenFile* executable, char* file_name, int argc, int argv, int isJoineable){
+    asd1 = new Semaphore("exec hs1",0);
+    asd2 = new Semaphore("exec hs2",0);
     Thread *newThread;
     if (isJoineable > 0){
         newThread = new Thread(file_name, isJoineable);
@@ -182,6 +185,7 @@ int exec(OpenFile* executable, char* file_name, int argc, int argv, int isJoinea
     newAddrSpace->SetArguments(argc, argv, file_name);
     newThread->space = newAddrSpace;
     newThread->Fork(startNewProcess, NULL);
+    asd1->P();
     /*
        If thread is not going to be joined, is unnecesary to create this
        data structure.
@@ -196,8 +200,11 @@ int exec(OpenFile* executable, char* file_name, int argc, int argv, int isJoinea
         processStruct->owner = newThread;
         processTable.insert(
             std::pair<Pid,ProcessStruct*>(freshPid, processStruct));
+        printf("Process %s has Pid %d and will be joined\n", file_name, newThread->GetPid());
     }
-    return freshPid++;
+    freshPid = freshPid + 1;
+    asd2->V();
+    return freshPid - 1;
 }
 
 int join(Pid pid){
@@ -209,8 +216,10 @@ int join(Pid pid){
     processTable[pid]->owner->Join();
     int ret;
     ret =  processTable[pid]->ret; 
-    delete processTable[pid];
-    processTable.erase(pid);
+    printf("DELETING processTable[%d]\n",pid);
+    //delete processTable[pid];
+    //processTable.erase(pid);
+    printf("ERASING processTable[%d]\n",pid);
     return ret;
 }
 
@@ -222,9 +231,13 @@ void sexit(int ret){
     pid = currentThread->GetPid();
     if (processTable.find(pid) !=  processTable.end()){
         // Pid exist
+        printf("Saving ret value %d for Process %d\n",pid, ret);
         processTable[pid]->ret = ret;
+        processTable[pid]->owner = NULL;
     }
+#ifdef USE_TLB
     currentThread->space->FreeMemory();
+#endif
     delete currentThread->space;
     currentThread->space = NULL;
     currentThread->Finish(); 

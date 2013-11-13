@@ -69,6 +69,7 @@ Semaphore::P()
     while (value == 0) { 			// semaphore not available
 	queue->Append(currentThread);		// so go to sleep
         DEBUG('l', "Sleeping thread %s 'cause of semaphore %s\n", currentThread->getName(), this->getName());
+        DEBUG('e', "Sleeping thread %s 'cause of semaphore %s\n", currentThread->getName(), this->getName());
 	currentThread->Sleep();
         //DEBUG('l', "Sleeping thread \"%s\"\n", currentThread->getName());
     } 
@@ -89,8 +90,8 @@ Semaphore::P()
 void
 Semaphore::V()
 {
-    Thread *thread;
     IntStatus oldLevel = interrupt->SetLevel(IntOff);
+    Thread *thread;
 
     thread = queue->Remove();
     if (thread != NULL){	   // make thread ready, consuming the V immediately

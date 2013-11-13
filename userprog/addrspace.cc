@@ -77,10 +77,8 @@ AddrSpace::AddrSpace(OpenFile *executable_file)
     size = numPages * PageSize;
 
     pageTable = new TranslationEntry[numPages];
-    #ifdef USE_TLB
+#ifdef USE_TLB
     
-    // TODO cambier esta crotada!!!
-    //std::string file_name("/tmp/swap." + std::to_string(this));
     char* file_name; 
     file_name = new char[200];
     sprintf (file_name, "/tmp/swap.%d", (int)this);
@@ -216,10 +214,6 @@ void AddrSpace::SaveState()
     int i;
     for (i = 0; i < TLBSize; i++){
         if(machine->tlb[i].valid){
-            ASSERT(pageTable[machine->tlb[i].virtualPage].virtualPage == machine->tlb[i].virtualPage);
-            if (!(pageTable[machine->tlb[i].virtualPage].physicalPage == machine->tlb[i].physicalPage)){
-                printf("Arrrgh! 2!");
-            }
             ASSERT(pageTable[machine->tlb[i].virtualPage].physicalPage == machine->tlb[i].physicalPage);
             pageTable[machine->tlb[i].virtualPage] = machine->tlb[i];
             machine->tlb[i].valid = false;
@@ -279,6 +273,9 @@ bool AddrSpace::isData (int addr) {
 
 void AddrSpace::LoadPage(int badAddr){
 
+#ifndef USE_TLB
+    ASSERT(false);
+#endif
     unsigned int virtPage;
     // virtPage is the virtual pager # where badAddr is
     virtPage = badAddr / PageSize;
@@ -339,9 +336,7 @@ void AddrSpace::LoadArguments(){
         // tener que llamar a LazyCall que "saca" las cosas del executable
         if (tmpSize > PageSize * cantPag ){
             cantPag = cantPag + 1;
-            #ifndef USE_TLB
-            pageTable[numPages - cantPag].physicalPage =  memoryBitMap->Find();
-            #else
+            #ifdef USE_TLB
             pageTable[numPages - cantPag].physicalPage =  coreMap->Find(numPages - cantPag);
             ASSERT(coreMap->Check(numPages - cantPag, pageTable[numPages - cantPag].physicalPage));
             #endif
@@ -356,7 +351,7 @@ void AddrSpace::LoadArguments(){
 
     sp = sp - argc * 4;
     sp = sp - sp % 4;
-    machine->WriteRegister(StackReg, sp - 4*4);
+    machine->WriteRegister(StackReg, sp - 16);
     machine->WriteRegister(4,argc);
     machine->WriteRegister(5,sp);
  
@@ -385,10 +380,15 @@ void AddrSpace::SetArguments(int arg_count, int arg_vect, char* file_name){
         readString(arg_ptr, tempStr);
         this->argv[i+1] = new char[strlen(tempStr) + 1];
         strcpy(this->argv[i+1], tempStr);
+        printf("Argumento %d: %s\n",i, tempStr); 
     }
 }
 
 void AddrSpace::UpdateTLB(){
+
+#ifndef USE_TLB
+    ASSERT(false);
+#endif
     int badAddr;
     badAddr = machine->ReadRegister(BadVAddrReg);
     ASSERT(badAddr >= 0 && badAddr < numPages * PageSize);
@@ -402,12 +402,16 @@ void AddrSpace::UpdateTLB(){
 
     //pageTable[machine->tlb[last_modify].virtPage] = machine->tlb[last_modify];
     
+    ASSERT(pageTable[virtPage].valid);
     machine->tlb[last_modify] = pageTable[virtPage];
     last_modify = last_modify + 1;
 }
 
 void AddrSpace::SaveToSwap(int vpage){
 
+#ifndef USE_TLB
+    ASSERT(false);
+#endif
     //Asigno valores a la pageTable del thread saliente
     swap->WriteAt(&(machine->mainMemory[pageTable[vpage].physicalPage * PageSize]), 
             PageSize, vpage*PageSize);
@@ -415,7 +419,8 @@ void AddrSpace::SaveToSwap(int vpage){
     // Una crotada para marcar la entrada en la TLB como invalida if any
     int i;
     for (i = 0; i < TLBSize; i++){
-        if(machine->tlb[i].valid && machine->tlb[i].virtualPage == vpage){
+        if(machine->tlb[i].valid && currentThread->space == this && machine->tlb[i].virtualPage == vpage){
+                ASSERT(pageTable[vpage].physicalPage == machine->tlb[i].physicalPage);
                 machine->tlb[i].valid = false;
                 pageTable[vpage] = machine->tlb[i];
         }
@@ -426,6 +431,9 @@ void AddrSpace::SaveToSwap(int vpage){
 }
 void AddrSpace::GetFromSwap(int vpage){
 
+#ifndef USE_TLB
+    ASSERT(false);
+#endif
     char page[PageSize];
     ASSERT(coreMap->Check(vpage, pageTable[vpage].physicalPage));
     swap->ReadAt(page, PageSize, vpage*PageSize);
@@ -450,6 +458,9 @@ void AddrSpace::GetFromSwap(int vpage){
 // a page to swap 
 // Also, we put valid TLB entries that are valid, to not valid
 void AddrSpace::FreeMemory(){
+#ifndef USE_TLB
+    ASSERT(false);
+#endif
     int tmp;
     unsigned int i;
     for (i = 0; i < numPages; i++){
@@ -457,7 +468,6 @@ void AddrSpace::FreeMemory(){
         if (tmp != -1 && tmp != -2 && pageTable[i].valid){
             memoryBitMap->Clear(tmp);
             if (i < TLBSize && machine->tlb[i].valid){
-                ASSERT(pageTable[machine->tlb[i].virtualPage].virtualPage == machine->tlb[i].virtualPage);
                 ASSERT(pageTable[machine->tlb[i].virtualPage].physicalPage == machine->tlb[i].physicalPage);
                 machine->tlb[i].valid = false;
             }
@@ -466,7 +476,6 @@ void AddrSpace::FreeMemory(){
     // Just in case we had less numPages than TLBSize...
     for (i; i < TLBSize; i++){
         if(machine->tlb[i].valid){
-            ASSERT(pageTable[machine->tlb[i].virtualPage].virtualPage == machine->tlb[i].virtualPage);
             ASSERT(pageTable[machine->tlb[i].virtualPage].physicalPage == machine->tlb[i].physicalPage);
             machine->tlb[i].valid = false;
         }

@@ -43,8 +43,6 @@ public:
     bool Check(int virtPage, int physPage);
     int GetPage();
     void SetPage(int page);
-    int GetPageFIFO();
-    void SetPageFIFO(int page);
     int GetPidOwner(int physPage);
 };
 #endif //COREMAP_H

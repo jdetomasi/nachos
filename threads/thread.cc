@@ -38,6 +38,7 @@ Thread::Thread(const char* threadName)
 {
     strcpy(name, (const char *) threadName);
     joinSemaphore = NULL;
+    joinSemaphoreHS = NULL;
     stackTop = NULL;
     stack = NULL;
     status = JUST_CREATED;
@@ -157,8 +158,12 @@ Thread::Finish ()
     
     threadToBeDestroyed = currentThread;
     
-    if (joinSemaphore != NULL)
-        joinSemaphore -> V();
+    if (joinSemaphore != NULL){
+        joinSemaphore->V();
+    }
+    if (joinSemaphoreHS != NULL){
+        joinSemaphoreHS->P();
+    }
     
     Sleep();					// invokes SWITCH
     // not reached
@@ -310,8 +315,10 @@ Thread::Thread(const char* threadName, int isJoinable)
     // Se llamara a un Join sobre este thread.
     if (isJoinable > 0) {	
         joinSemaphore = new Semaphore("Join Semaphore", 0);
+        joinSemaphoreHS = new Semaphore("Join Semaphore Hand Shake", 0);
     } else {
         joinSemaphore = NULL;
+        joinSemaphoreHS = NULL;
     }
 }
 
@@ -327,9 +334,11 @@ void
 Thread::Join(){
         // Thread being joined must be joineable
 	ASSERT(joinSemaphore != NULL);
+	ASSERT(joinSemaphoreHS != NULL);
         // No thread can call join on itself, otherwise, it will be deadlock
 	ASSERT(this != currentThread);
 	joinSemaphore->P();
+        joinSemaphoreHS->V();
 }
 
 //---------------------------------------------------------------------

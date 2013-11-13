@@ -32,8 +32,12 @@ const int PageSize = SectorSize; 	// set the page size equal to
 					// the disk sector size, for
 					// simplicity
 
+#ifdef USE_TLB
+const int NumPhysPages = 16;
+#else
 const int NumPhysPages = 32768;
-//const int NumPhysPages = 16;
+#endif
+
 const int MemorySize = NumPhysPages * PageSize;
 //const int TLBSize = 32;		// if there is a TLB, make it small
 const int TLBSize = 4;  		// if there is a TLB, make it small

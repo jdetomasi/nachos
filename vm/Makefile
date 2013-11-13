@@ -12,7 +12,13 @@
 # All rights reserved.  See copyright.h for copyright notice and limitation 
 # of liability and disclaimer of warranty provisions.
 
-DEFINES = -DUSER_PROGRAM  -DFILESYS_NEEDED -DFILESYS_STUB -DVM -DUSE_TLB
+#
+# FOR USING FIFO AS PAGINATION STRTEGY "SWAP COMMENT" OF THE FOLLOWING TWO LINES
+#
+
+DEFINES = -DUSER_PROGRAM  -DFILESYS_NEEDED -DFILESYS_STUB -DVM -DUSE_TLB -DUSE_FIFO
+#DEFINES = -DUSER_PROGRAM  -DFILESYS_NEEDED -DFILESYS_STUB -DVM -DUSE_TLB 
+
 INCPATH = -I../filesys -I../bin -I../vm -I../userprog -I../threads -I../machine
 HFILES = $(THREAD_H) $(USERPROG_H) $(VM_H)
 CFILES = $(THREAD_C) $(USERPROG_C) $(VM_C)

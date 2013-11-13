@@ -4,12 +4,6 @@
  *   Utility functions to read arguments from records upon a syscall 
  */
 
-/**
- * Read a string from memory
- * @param dir Memory address of the first element of the sting. 
- * @param buff Pointer where result string will be returned. 
- * @return ??? TODO!!!
- */
 #include "system.h"
 #include "syscall_utils.h"
 #include "addrspace.h"
