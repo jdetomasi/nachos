@@ -156,22 +156,15 @@ int mySeek(OpenFileId file_id, FilePosition newPos, int reference){
 
 }
 
-Semaphore * asd1;
-Semaphore * asd2;
-
 void startNewProcess(void* x){
     currentThread->space->RestoreState();
     currentThread->space->InitRegisters();
     currentThread->space->LoadArguments();
-    asd1->V();
-    asd2->P();
     machine->Run();
     ASSERT(false);
 }
 
 int exec(OpenFile* executable, char* file_name, int argc, int argv, int isJoineable){
-    asd1 = new Semaphore("exec hs1",0);
-    asd2 = new Semaphore("exec hs2",0);
     Thread *newThread;
     if (isJoineable > 0){
         newThread = new Thread(file_name, isJoineable);
@@ -185,7 +178,7 @@ int exec(OpenFile* executable, char* file_name, int argc, int argv, int isJoinea
     newAddrSpace->SetArguments(argc, argv, file_name);
     newThread->space = newAddrSpace;
     newThread->Fork(startNewProcess, NULL);
-    asd1->P();
+
     /*
        If thread is not going to be joined, is unnecesary to create this
        data structure.
@@ -203,7 +196,6 @@ int exec(OpenFile* executable, char* file_name, int argc, int argv, int isJoinea
         printf("Process %s has Pid %d and will be joined\n", file_name, newThread->GetPid());
     }
     freshPid = freshPid + 1;
-    asd2->V();
     return freshPid - 1;
 }
 
@@ -216,10 +208,9 @@ int join(Pid pid){
     processTable[pid]->owner->Join();
     int ret;
     ret =  processTable[pid]->ret; 
-    printf("DELETING processTable[%d]\n",pid);
-    //delete processTable[pid];
-    //processTable.erase(pid);
-    printf("ERASING processTable[%d]\n",pid);
+    delete processTable[pid];
+    processTable.erase(pid);
+    
     return ret;
 }
 
@@ -233,7 +224,7 @@ void sexit(int ret){
         // Pid exist
         printf("Saving ret value %d for Process %d\n",pid, ret);
         processTable[pid]->ret = ret;
-        processTable[pid]->owner = NULL;
+        //processTable[pid]->owner = NULL;
     }
 #ifdef USE_TLB
     currentThread->space->FreeMemory();

@@ -463,6 +463,7 @@ void AddrSpace::FreeMemory(){
 #endif
     int tmp;
     unsigned int i;
+    
     for (i = 0; i < numPages; i++){
         tmp = pageTable[i].physicalPage;
         if (tmp != -1 && tmp != -2 && pageTable[i].valid){
@@ -473,6 +474,7 @@ void AddrSpace::FreeMemory(){
             }
        }
     }
+    
     // Just in case we had less numPages than TLBSize...
     for (i; i < TLBSize; i++){
         if(machine->tlb[i].valid){

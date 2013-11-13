@@ -25,8 +25,8 @@
 # All rights reserved.  See copyright.h for copyright notice and limitation 
 # of liability and disclaimer of warranty provisions.
 
-#CFLAGS = -g -fpermissive -Wshadow $(INCPATH) $(DEFINES) $(HOST) -DCHANGED
-CFLAGS = -g -Wall -Wshadow $(INCPATH) $(DEFINES) $(HOST) -DCHANGED
+CFLAGS = -g -fpermissive -Wshadow $(INCPATH) $(DEFINES) $(HOST) -DCHANGED
+#CFLAGS = -g -Wall -Wshadow $(INCPATH) $(DEFINES) $(HOST) -DCHANGED
 LDFLAGS =
 
 # These definitions may change as the software is updated.

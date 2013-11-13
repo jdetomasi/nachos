@@ -24,7 +24,7 @@
 // for detecting stack overflows
 const unsigned STACK_FENCEPOST = 0xdeadbeef;
 
-//Semaphore* joinSemaphore;
+//Semaphore* joinSemaphoreHS1;
 
 //---------------------------------------------------------------------
 // Thread::Thread
@@ -37,8 +37,8 @@ const unsigned STACK_FENCEPOST = 0xdeadbeef;
 Thread::Thread(const char* threadName)
 {
     strcpy(name, (const char *) threadName);
-    joinSemaphore = NULL;
-    joinSemaphoreHS = NULL;
+    joinSemaphoreHS1 = NULL;
+    joinSemaphoreHS2 = NULL;
     stackTop = NULL;
     stack = NULL;
     status = JUST_CREATED;
@@ -156,14 +156,14 @@ Thread::Finish ()
     
     DEBUG('t', "Finishing thread \"%s\"\n", getName());
     
-    threadToBeDestroyed = currentThread;
     
-    if (joinSemaphore != NULL){
-        joinSemaphore->V();
+    if (joinSemaphoreHS1 != NULL){
+        joinSemaphoreHS1->V();
+	joinSemaphoreHS2->P();
     }
-    if (joinSemaphoreHS != NULL){
-        joinSemaphoreHS->P();
-    }
+    
+    
+    threadToBeDestroyed = currentThread;
     
     Sleep();					// invokes SWITCH
     // not reached
@@ -314,11 +314,11 @@ Thread::Thread(const char* threadName, int isJoinable)
 
     // Se llamara a un Join sobre este thread.
     if (isJoinable > 0) {	
-        joinSemaphore = new Semaphore("Join Semaphore", 0);
-        joinSemaphoreHS = new Semaphore("Join Semaphore Hand Shake", 0);
+        joinSemaphoreHS1 = new Semaphore("Join Semaphore 1", 0);
+	joinSemaphoreHS2 = new Semaphore("Join Semaphore 2", 0);
     } else {
-        joinSemaphore = NULL;
-        joinSemaphoreHS = NULL;
+        joinSemaphoreHS1 = NULL;
+	joinSemaphoreHS2 = NULL;
     }
 }
 
@@ -333,12 +333,11 @@ Thread::Thread(const char* threadName, int isJoinable)
 void 
 Thread::Join(){
         // Thread being joined must be joineable
-	ASSERT(joinSemaphore != NULL);
-	ASSERT(joinSemaphoreHS != NULL);
+	ASSERT(joinSemaphoreHS1 != NULL);
         // No thread can call join on itself, otherwise, it will be deadlock
 	ASSERT(this != currentThread);
-	joinSemaphore->P();
-        joinSemaphoreHS->V();
+	joinSemaphoreHS1->P();
+	joinSemaphoreHS2->V();
 }
 
 //---------------------------------------------------------------------

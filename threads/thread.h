@@ -123,8 +123,8 @@ char buffer[140];
     void StackAllocate(VoidFunctionPtr func, void* arg);
 								// Allocate a stack for thread.
 								// Used internally by Fork()
-    Semaphore *joinSemaphore;	// Used for joining the thread
-    Semaphore *joinSemaphoreHS;	// Used for joining the thread and shake it 
+    Semaphore *joinSemaphoreHS1;	// Used for joining the thread
+    Semaphore *joinSemaphoreHS2;
     int priorityLevel;			// Scheduling priority level. Default is zero.
     int pid;
 	
