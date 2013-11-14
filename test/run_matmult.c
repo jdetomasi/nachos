@@ -11,6 +11,9 @@ int main(){
     for(i=0; i < LEN; i++){
         ret += Join(fid[i]);
     }
+    if (ret == LEN * 810){
+        Write("Finalizando con valor correcto!!\n", 33,ConsoleOutput);
+    }
     Exit(ret);
 }
 

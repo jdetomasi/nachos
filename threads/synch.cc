@@ -69,7 +69,6 @@ Semaphore::P()
     while (value == 0) { 			// semaphore not available
 	queue->Append(currentThread);		// so go to sleep
         DEBUG('l', "Sleeping thread %s 'cause of semaphore %s\n", currentThread->getName(), this->getName());
-        DEBUG('e', "Sleeping thread %s 'cause of semaphore %s\n", currentThread->getName(), this->getName());
 	currentThread->Sleep();
         //DEBUG('l', "Sleeping thread \"%s\"\n", currentThread->getName());
     } 

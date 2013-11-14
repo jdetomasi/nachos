@@ -96,7 +96,7 @@ AddrSpace::AddrSpace(OpenFile *executable_file)
     DEBUG('f', "Creating pageTable, num pages %d,not loading anything\n", numPages);
     for (i = 0; i < numPages; i++) {
         pageTable[i].virtualPage = i;    // The translation is not valid
-        pageTable[i].physicalPage = -1;  // assign -1 to show that
+        pageTable[i].physicalPage = NEVER_LOADED;  // assign NEVER_LOADED to show that
         pageTable[i].valid = false;
         pageTable[i].use = false;
         pageTable[i].dirty = false;
@@ -159,7 +159,7 @@ AddrSpace::~AddrSpace()
     int ppage;
     for(i = 0; i < numPages ; i++){  
         ppage = pageTable[i].physicalPage;
-        if (-1 != ppage && -2 != ppage && pageTable[i].valid){
+        if (NEVER_LOADED != ppage && IN_SWAP != ppage && pageTable[i].valid){
             memoryBitMap->Clear(ppage);
         }
     }
@@ -285,7 +285,7 @@ void AddrSpace::LoadPage(int badAddr){
     
     ASSERT(currentThread->space == this);
 
-    if(pageTable[virtPage].physicalPage == -1){
+    if(pageTable[virtPage].physicalPage == NEVER_LOADED){
         // Page was never loaded into memory...
         pageTable[virtPage].physicalPage = coreMap->Find(virtPage);
         ASSERT(pageTable[virtPage].physicalPage >= 0);
@@ -303,7 +303,7 @@ void AddrSpace::LoadPage(int badAddr){
                 CopyToMemory(virtAddr + i, noffH.initData.inFileAddr + (virtAddr - noffH.initData.virtualAddr + i) , 1); 
             }
         }
-    }else if (pageTable[virtPage].physicalPage == -2){
+    }else if (pageTable[virtPage].physicalPage == IN_SWAP){
         pageTable[virtPage].physicalPage = coreMap->Find(virtPage);
 
         ASSERT(coreMap->Check(virtPage,pageTable[virtPage].physicalPage));
@@ -425,7 +425,7 @@ void AddrSpace::SaveToSwap(int vpage){
         }
     }
     pageTable[vpage].valid = false;
-    pageTable[vpage].physicalPage = -2;
+    pageTable[vpage].physicalPage = IN_SWAP;
 
 }
 void AddrSpace::GetFromSwap(int vpage){
@@ -465,7 +465,7 @@ void AddrSpace::FreeMemory(){
     
     for (i = 0; i < numPages; i++){
         tmp = pageTable[i].physicalPage;
-        if (tmp != -1 && tmp != -2 && pageTable[i].valid){
+        if (tmp != NEVER_LOADED && tmp != IN_SWAP && pageTable[i].valid){
             memoryBitMap->Clear(tmp);
             if (i < TLBSize && machine->tlb[i].valid){
                 ASSERT(pageTable[machine->tlb[i].virtualPage].physicalPage == machine->tlb[i].physicalPage);

@@ -33,7 +33,7 @@ const int PageSize = SectorSize; 	// set the page size equal to
 					// simplicity
 
 #ifdef USE_TLB
-const int NumPhysPages = 16;
+const int NumPhysPages = 8;
 #else
 const int NumPhysPages = 32768;
 #endif

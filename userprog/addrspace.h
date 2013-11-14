@@ -21,6 +21,9 @@
 
 #define UserStackSize		1024 	// increase this as necessary!
 
+#define NEVER_LOADED    -1
+#define IN_SWAP         -2
+
 class AddrSpace {
   public:
     AddrSpace(OpenFile *executable);	// Create an address space,
