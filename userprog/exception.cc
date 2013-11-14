@@ -189,18 +189,13 @@ ExceptionHandler(ExceptionType which){
                 break; 
             case SC_Fork:
                 DEBUG('s', "System Call: %s Invoking Fork.\n",currentThread->getName());
-                printf("Exception Handler: %s  Fork\n",currentThread->getName());
-                // Not Necessary !
                 break;
             case SC_Yield:
                 DEBUG('s', "System Call: %s Invoking Yield.\n",currentThread->getName());
-                printf("Exception Handler: %s  Yield\n",currentThread->getName());
-                // Not Necessary !
                 break;
             default:
                 DEBUG('s', "System Call: %s Unknown syscall.\n",currentThread->getName());
                 machine->WriteRegister(2, -1);
-                //printf("Unknown syscall: %d\n", type);
                 break;
         }
         if(syscall_has_fail){ 

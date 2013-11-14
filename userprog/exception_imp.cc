@@ -193,7 +193,6 @@ int exec(OpenFile* executable, char* file_name, int argc, int argv, int isJoinea
         processStruct->owner = newThread;
         processTable.insert(
             std::pair<Pid,ProcessStruct*>(freshPid, processStruct));
-        printf("Process %s has Pid %d and will be joined\n", file_name, newThread->GetPid());
     }
     freshPid = freshPid + 1;
     return freshPid - 1;
@@ -222,9 +221,7 @@ void sexit(int ret){
     pid = currentThread->GetPid();
     if (processTable.find(pid) !=  processTable.end()){
         // Pid exist
-        printf("Saving ret value %d for Process %d\n",pid, ret);
         processTable[pid]->ret = ret;
-        //processTable[pid]->owner = NULL;
     }
 #ifdef USE_TLB
     currentThread->space->FreeMemory();

@@ -380,7 +380,6 @@ void AddrSpace::SetArguments(int arg_count, int arg_vect, char* file_name){
         readString(arg_ptr, tempStr);
         this->argv[i+1] = new char[strlen(tempStr) + 1];
         strcpy(this->argv[i+1], tempStr);
-        printf("Argumento %d: %s\n",i, tempStr); 
     }
 }
 
