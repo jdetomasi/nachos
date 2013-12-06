@@ -400,7 +400,10 @@ void AddrSpace::UpdateTLB(){
       last_modify, virtPage, pageTable[virtPage].physicalPage);
 
     //pageTable[machine->tlb[last_modify].virtPage] = machine->tlb[last_modify];
-    
+    if (machine->tlb[last_modify].valid) {
+    	pageTable[machine->tlb[last_modify].virtualPage] = machine->tlb[last_modify];
+    }
+
     ASSERT(pageTable[virtPage].valid);
     machine->tlb[last_modify] = pageTable[virtPage];
     last_modify = last_modify + 1;
@@ -411,9 +414,6 @@ void AddrSpace::SaveToSwap(int vpage){
 #ifndef USE_TLB
     ASSERT(false);
 #endif
-    //Asigno valores a la pageTable del thread saliente
-    swap->WriteAt(&(machine->mainMemory[pageTable[vpage].physicalPage * PageSize]), 
-            PageSize, vpage*PageSize);
 
     // Una crotada para marcar la entrada en la TLB como invalida if any
     int i;
@@ -424,9 +424,16 @@ void AddrSpace::SaveToSwap(int vpage){
                 pageTable[vpage] = machine->tlb[i];
         }
     }
-    pageTable[vpage].valid = false;
-    pageTable[vpage].physicalPage = IN_SWAP;
 
+    if (pageTable[vpage].dirty) {
+        //Asigno valores a la pageTable del thread saliente
+        swap->WriteAt(&(machine->mainMemory[pageTable[vpage].physicalPage * PageSize]), 
+            PageSize, vpage*PageSize);
+        pageTable[vpage].physicalPage = IN_SWAP;
+    } else {
+        pageTable[vpage].physicalPage = NEVER_LOADED;
+    }
+    pageTable[vpage].valid = false;
 }
 void AddrSpace::GetFromSwap(int vpage){
 
@@ -445,8 +452,6 @@ void AddrSpace::GetFromSwap(int vpage){
     pageTable[vpage].valid = true;
     pageTable[vpage].readOnly = false;
     pageTable[vpage].use = false;
-    pageTable[vpage].dirty = false;
-
 }
 
 // Method to FreeMemory before exiting
